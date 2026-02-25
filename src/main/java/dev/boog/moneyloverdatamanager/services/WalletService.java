@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.service;
+package dev.boog.moneyloverdatamanager.services;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
@@ -31,27 +31,8 @@ public class WalletService implements Service<RequestWalletDto, ResponseWalletDt
         }
     }
 
-    @Override
-    public ResponseEntity<List<ResponseWalletDto>> get(String userId, Long id) {
+    public ResponseEntity<List<ResponseWalletDto>> get(String userId, String query) {
         return null;
-    }
-
-    @Override
-    public ResponseEntity<List<ResponseWalletDto>> getAll(String userId) {
-        try {
-            List<Wallet> walletList = walletRepository.getAllByUserId(Long.parseLong(userId));
-            List<ResponseWalletDto> responseDtoList = walletRepository
-                    .getAllByUserId(Long.parseLong(userId))
-                    .stream()
-                    .map(WalletMapper.INSTANCE::toResponseDto)
-                    .toList();
-
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @Override

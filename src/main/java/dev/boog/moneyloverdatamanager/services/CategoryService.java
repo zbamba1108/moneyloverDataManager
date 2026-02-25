@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.service;
+package dev.boog.moneyloverdatamanager.services;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
@@ -32,23 +32,8 @@ public class CategoryService implements Service<RequestCategoryDto, ResponseCate
     }
 
     @Override
-    public ResponseEntity<List<ResponseCategoryDto>> get(String userId, Long id) {
+    public ResponseEntity<List<ResponseCategoryDto>> get(String userId, String query) {
         return null;
-    }
-
-    @Override
-    public ResponseEntity<List<ResponseCategoryDto>> getAll(String userId) {
-        try {
-            List<ResponseCategoryDto> responseDtoList = categoryRepository
-                    .getAllByUserId(Long.parseLong(userId))
-                    .stream()
-                    .map(CategoryMapper.INSTANCE::toResponseDto)
-                    .toList();
-
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @Override

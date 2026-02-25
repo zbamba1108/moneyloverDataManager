@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.entities;
 
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,19 +21,18 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "wallet_id", nullable = false)
+    @JoinColumn(name = Constants.Transaction.ColumnsName.WALLET, nullable = false)
     private Wallet wallet;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = Constants.Transaction.ColumnsName.USER, nullable = false)
+    private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = Constants.Transaction.ColumnsName.EVENT)
     private Event event;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = Constants.Transaction.ColumnsName.CATEGORY, nullable = false)
     private Category category;
 
     @Column(name = "amount", nullable = false, precision = 8, scale = 2)

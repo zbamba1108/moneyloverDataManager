@@ -1,9 +1,8 @@
-package dev.boog.moneyloverdatamanager.service;
+package dev.boog.moneyloverdatamanager.services;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestBudgetDto;
 
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseBudgetDto;
-import dev.boog.moneyloverdatamanager.entities.Budget;
 import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import dev.boog.moneyloverdatamanager.repositories.BudgetRepository;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +23,7 @@ public class BudgetService implements Service<RequestBudgetDto, ResponseBudgetDt
         return null;
     }
 
-    @Override
-    public ResponseEntity<List<ResponseBudgetDto>> get(String userId, Long id) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<ResponseBudgetDto>> getAll(String userId) {
+    public ResponseEntity<List<ResponseBudgetDto>> get(String userId, String query) {
         return null;
     }
 

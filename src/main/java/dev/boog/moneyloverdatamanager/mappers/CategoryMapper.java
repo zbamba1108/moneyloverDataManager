@@ -12,11 +12,11 @@ public interface CategoryMapper extends BaseMapper<Category, RequestCategoryDto,
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
     @Override
-    @Mapping( target="parent.id", source="parentId", ignore = true)
+    @Mapping( target="parent.id", source="parentId")
     Category toEntity(RequestCategoryDto dto);
 
     @Override
-    @Mapping( target="parentId", source="parent.id", ignore = true)
+    @Mapping( target="parentId", source="parent.id")
     ResponseCategoryDto toResponseDto(Category entity);
 
     @AfterMapping

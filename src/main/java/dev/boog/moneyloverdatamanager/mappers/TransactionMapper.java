@@ -12,15 +12,11 @@ public interface TransactionMapper extends BaseMapper<Transaction, RequestTransa
     TransactionMapper INSTANCE = Mappers.getMapper(TransactionMapper.class);
 
     @Mappings({
-            @Mapping(target="user.id", source = "userId"),
             @Mapping(target="category.id", source = "categoryId"),
             @Mapping(target="wallet.id", source = "walletId"),
             @Mapping(target="event.id", source = "eventId")
     })
     Transaction toEntity(RequestTransactionDto dto);
-
-    @Mapping(target="userId", source = "user.id")
-    ResponseTransactionDto toResponseDto(Transaction transaction);
 
     @AfterMapping
     default Transaction postProcessing(@MappingTarget Transaction transaction) {

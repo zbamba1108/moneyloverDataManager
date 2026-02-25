@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.service;
+package dev.boog.moneyloverdatamanager.services;
 
 import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,7 @@ public interface Service<I, O, ID extends Number> {
 
     ResponseEntity<String> create(String userId, I req);
 
-    ResponseEntity<List<O>> get(String userId, ID id );
-
-    ResponseEntity<List<O>> getAll(String userId);
+    ResponseEntity<List<O>> get(String userId, String query);
 
     ResponseEntity<O> update(String userId, I req);
 

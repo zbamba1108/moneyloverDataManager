@@ -2,7 +2,7 @@ package dev.boog.moneyloverdatamanager.controllers;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseUserDto;
-import dev.boog.moneyloverdatamanager.service.Service;
+import dev.boog.moneyloverdatamanager.services.Service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/users")
-public record UserController(@Qualifier("userService") Service<RequestUserDto, ResponseUserDto, Long> service) implements Controller<RequestUserDto, ResponseUserDto, Long> {
+public record UserController(@Qualifier("userService") Service<RequestUserDto, ResponseUserDto, Long> service) implements Controller<RequestUserDto, ResponseUserDto> {
 
 
     @PostMapping
@@ -20,13 +20,8 @@ public record UserController(@Qualifier("userService") Service<RequestUserDto, R
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseUserDto>> get(@RequestHeader("User-ID") String userId, @RequestParam("id") Long id) {
-        return service.get(userId, id);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<ResponseUserDto>> getAll(String userId) {
-        return service.getAll(userId);
+    public ResponseEntity<List<ResponseUserDto>> get(@RequestHeader("User-ID") String userId, @RequestParam(value = "query", required = false) String query) {
+        return service.get(userId, query);
     }
 
     @PutMapping

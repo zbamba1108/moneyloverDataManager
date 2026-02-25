@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.service;
+package dev.boog.moneyloverdatamanager.services;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
@@ -7,13 +7,17 @@ import dev.boog.moneyloverdatamanager.mappers.TransactionMapper;
 import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 
+import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TransactionService implements Service<RequestTransactionDto, ResponseTransactionDto, Long> {
+
+    private static final Logger log = Logger.getLogger(String.valueOf(TransactionService.class));
 
     private TransactionRepository transactionRepository;
 
@@ -33,47 +37,20 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
         }
     }
 
-    public ResponseEntity<List<ResponseTransactionDto>> get(String userId, Long id, Long walletId, Long categoryId) {
+    public ResponseEntity<List<ResponseTransactionDto>> get(String userId, String query) {
         try {
-
-            // TODO fix
-
-            HashMap<String, Long> params = new HashMap<>();
-            params.put("id", id);
-            params.put("walletId", walletId);
-            params.put("categoryId", categoryId);
-            params.put("userId", Long.parseLong(userId));
             List<ResponseTransactionDto> responseDtoList = transactionRepository
-                    .searchWithMultipleOPtionalParams(Long.parseLong(userId), params)
+                    .searchWithMultipleOptionalParams(ServiceHelper
+                            .mapQueryParams(query), Transaction.class)
                     .stream()
                     .map(TransactionMapper.INSTANCE::toResponseDto)
                     .toList();
             return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Override
-    public ResponseEntity<List<ResponseTransactionDto>> get(String userId, Long id) {
-        return null;
-    }
-
-
-    @Override
-    public ResponseEntity<List<ResponseTransactionDto>> getAll(String userId) {
-        try {
-            List<Transaction> transactions = transactionRepository.getAllByUserId(Long.parseLong(userId));
-            List<ResponseTransactionDto> responseDtoList = transactionRepository
-                    .getAllByUserId(Long.parseLong(userId))
-                    .stream()
-                    .map(TransactionMapper.INSTANCE::toResponseDto)
-                    .toList();
-
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-        } catch (NumberFormatException e) {
+        } catch (InvalidDataAccessApiUsageException e) {
+            log.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
+            log.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

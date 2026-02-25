@@ -6,10 +6,12 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-@Entity
-@Table(name = "category")
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "category", uniqueConstraints = {
+        @UniqueConstraint( name = "nameAndUserId", columnNames = { "name", "user_id"})
+})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
-package dev.boog.moneyloverdatamanager.service.config;
+package dev.boog.moneyloverdatamanager.services.config;
 
 import dev.boog.moneyloverdatamanager.repositories.*;
-import dev.boog.moneyloverdatamanager.service.*;
+import dev.boog.moneyloverdatamanager.services.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

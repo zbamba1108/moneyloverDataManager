@@ -4,13 +4,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface Controller<I, O, ID> {
+public interface Controller<I, O> {
 
     ResponseEntity<String> create(String userId, I req);
 
-    ResponseEntity<List<O>> get(String userId, ID id);
-
-    ResponseEntity<List<O>> getAll(String userId);
+    ResponseEntity<List<O>> get(String userId, String query);
 
     ResponseEntity<O> update(String userId, I req);
 

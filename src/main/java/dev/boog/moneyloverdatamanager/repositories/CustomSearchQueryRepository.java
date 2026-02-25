@@ -7,5 +7,5 @@ import java.util.List;
 public interface CustomSearchQueryRepository<E, ID> {
 
 
-    List<E> searchWithMultipleOPtionalParams(ID userId, HashMap<String, ID> params);
+    List<E> searchWithMultipleOptionalParams(HashMap<String, ID> params, Class<E> clazz);
 }
