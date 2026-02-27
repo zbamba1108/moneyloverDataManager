@@ -23,7 +23,7 @@ public record CategoryController(@Qualifier("categoryService") Service<RequestCa
     @PostMapping("/search")
     public ResponseEntity<List<ResponseCategoryDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                          @RequestBody(required = false) RequestCategoryDto req) {
-        return null;
+        return service.get(userId, req);
     }
 
     @PutMapping

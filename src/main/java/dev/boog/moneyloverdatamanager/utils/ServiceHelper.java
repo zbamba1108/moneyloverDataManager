@@ -21,7 +21,7 @@ public class ServiceHelper {
         } else if (req instanceof RequestWalletDto) {
             return null;
         } else if (req instanceof RequestCategoryDto) {
-            return null;
+            return mapCategoryQueryParams((RequestCategoryDto) req, userId);
         } else if (req instanceof RequestEventDto) {
             return null;
         } else if (req instanceof RequestUserDto) {
@@ -29,14 +29,22 @@ public class ServiceHelper {
         } else if (req instanceof RequestBudgetDto) {
             return null;
         } else {
-            return mapUserId(new HashMap<>(), userId);
+            return mapUserId(userId);
         }
     }
 
-    private static HashMap<String, String> mapTransactionQueryParams(RequestTransactionDto req, String userId) {
+    private static HashMap<String, String> mapUserId(String userId) {
         HashMap<String, String> params = new HashMap<>();
+        if (StringUtils.hasText(userId)) {
+            params.put("user.id", userId);
+        }
 
-        mapUserId(params, userId);
+        return params;
+    }
+
+    private static HashMap<String, String> mapTransactionQueryParams(RequestTransactionDto req, String userId) {
+        HashMap<String, String> params = mapUserId(userId);
+
         if (req.getId() != null) {
             params.put("id", String.valueOf(req.getId()));
         }
@@ -50,9 +58,17 @@ public class ServiceHelper {
         return params;
     }
 
-    private static HashMap<String, String> mapUserId(HashMap<String, String> params, String userId) {
-        if (StringUtils.hasText(userId)) {
-            params.put("user.id", userId);
+    private static HashMap<String, String> mapCategoryQueryParams(RequestCategoryDto req, String userId) {
+        HashMap<String, String> params = mapUserId(userId);
+
+        if (req.getId() != null) {
+            params.put("id", String.valueOf(req.getId()));
+        }
+        if (req.getType() != null) {
+            params.put("type", String.valueOf(req.getType()));
+        }
+        if (req.getParentId() != null) {
+            params.put("parent.id", String.valueOf(req.getParentId()));
         }
 
         return params;

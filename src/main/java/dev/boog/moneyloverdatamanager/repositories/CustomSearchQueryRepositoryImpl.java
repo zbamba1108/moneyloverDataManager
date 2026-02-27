@@ -32,8 +32,13 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
         String sql = "SELECT e from " + classSimpleName + " e where";
         sql = QueryHelper.buildQueryAndCreateQueryParam(sql, params, queryParams);
 
-        TypedQuery<E> query = em.createQuery(sql, clazz)
-                .setHint(HINT_NAME_FETCHGRAPH, entityGraph);
+        TypedQuery<E> query = null;
+        if (entityGraph != null) {
+            em.createQuery(sql, clazz)
+                    .setHint(HINT_NAME_FETCHGRAPH, entityGraph);
+        } else {
+            query = em.createQuery(sql, clazz);
+        }
 
         queryParams.forEach(query::setParameter);
 

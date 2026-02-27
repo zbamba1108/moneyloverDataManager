@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class TransactionService implements Service<RequestTransactionDto, ResponseTransactionDto, Long> {
 
-    private static final Logger log = Logger.getLogger(String.valueOf(TransactionService.class));
+    private static final Logger LOGGER = Logger.getLogger(String.valueOf(TransactionService.class));
 
     private TransactionRepository transactionRepository;
 
@@ -49,10 +49,10 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
                     .toList();
             return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
-            log.severe(e.getMessage());
+            LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            log.severe(e.getMessage());
+            LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

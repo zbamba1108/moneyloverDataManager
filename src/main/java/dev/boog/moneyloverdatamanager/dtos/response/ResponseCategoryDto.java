@@ -14,8 +14,6 @@ public class ResponseCategoryDto {
 
     private String name;
 
-    private Long userId;
-
     private Integer type;
 
     private Long parentId;

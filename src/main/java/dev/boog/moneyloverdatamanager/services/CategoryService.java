@@ -6,12 +6,18 @@ import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
+import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class CategoryService implements Service<RequestCategoryDto, ResponseCategoryDto, Long> {
+
+    private static final Logger LOGGER = Logger.getLogger(CategoryService.class.getName());
 
     private CategoryRepository categoryRepository;
 
@@ -35,7 +41,22 @@ public class CategoryService implements Service<RequestCategoryDto, ResponseCate
 
     @Override
     public ResponseEntity<List<ResponseCategoryDto>> get(String userId, RequestCategoryDto req) {
-        return null;
+        try {
+            final List<ResponseCategoryDto> responseDtoList = categoryRepository
+                    .searchWithMultipleOptionalParams(
+                            ServiceHelper.mapQueryParams(userId, req),
+                            Category.class)
+                    .stream()
+                    .map(CategoryMapper.INSTANCE::toResponseDto)
+                    .toList();
+            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
