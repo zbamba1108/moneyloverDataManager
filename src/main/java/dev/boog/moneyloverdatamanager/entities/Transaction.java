@@ -5,14 +5,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import lombok.experimental.*;
 
-@Entity
-@Table(name = "transaction")
-@Setter
-@Getter
-@Builder
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "transaction")
 @NamedEntityGraph(
         name = Constants.EntityGraph.TRANSACTION_WALLET_CATEGORY,
         attributeNodes = {
@@ -20,12 +22,7 @@ import java.math.BigDecimal;
                 @NamedAttributeNode("category")
         }
 )
-public class Transaction {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = Constants.Transaction.ColumnsName.WALLET, nullable = false)

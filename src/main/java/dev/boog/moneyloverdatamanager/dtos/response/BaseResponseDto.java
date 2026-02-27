@@ -1,17 +1,16 @@
 package dev.boog.moneyloverdatamanager.dtos.response;
 
 import lombok.*;
-
-import java.io.Serializable;
 import lombok.experimental.*;
 
-@Setter
-@Getter
+@Data
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResponseUserDto extends BaseResponseDto {
+@AllArgsConstructor
+public class BaseResponseDto {
 
     private Long id;
+
+    private Long createdAt;
 
 }

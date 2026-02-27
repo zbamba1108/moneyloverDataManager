@@ -41,9 +41,11 @@ public class WalletService implements Service<RequestWalletDto, ResponseWalletDt
     public ResponseEntity<List<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
         try {
             List<ResponseWalletDto> responseDtoList = walletRepository
-                    .searchWithMultipleOptionalParams(
-                            ServiceHelper.mapQueryParams(userId, req),
-                            Wallet.class
+                    .searchByUserIdAndIds(
+                            Wallet.class,
+                            userId,
+                            req != null ? req.getIds() : null,
+                            ServiceHelper.filter(req)
                     )
                     .stream()
                     .map(WalletMapper.INSTANCE::toResponseDto)

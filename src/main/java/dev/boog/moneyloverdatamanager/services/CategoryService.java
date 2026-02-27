@@ -43,9 +43,13 @@ public class CategoryService implements Service<RequestCategoryDto, ResponseCate
     public ResponseEntity<List<ResponseCategoryDto>> get(String userId, RequestCategoryDto req) {
         try {
             final List<ResponseCategoryDto> responseDtoList = categoryRepository
-                    .searchWithMultipleOptionalParams(
+                    .searchByUserIdAndIdsAndOptionalParams(
+                            Category.class,
+                            userId,
+                            req != null ? req.getIds() : null,
                             ServiceHelper.mapQueryParams(userId, req),
-                            Category.class)
+                            ServiceHelper.filter(req)
+                    )
                     .stream()
                     .map(CategoryMapper.INSTANCE::toResponseDto)
                     .toList();

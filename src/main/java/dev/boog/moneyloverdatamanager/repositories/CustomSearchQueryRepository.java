@@ -1,11 +1,19 @@
 package dev.boog.moneyloverdatamanager.repositories;
 
 
-import java.util.HashMap;
-import java.util.List;
+import dev.boog.moneyloverdatamanager.utils.*;
+import java.util.*;
 
 public interface CustomSearchQueryRepository<E> {
 
+    List<E> searchByUserId(Class<E> clazz, String userId, ResultFilters resultFilters);
 
-    List<E> searchWithMultipleOptionalParams(HashMap<String, String> params, Class<E> clazz);
+    List<E> searchByUserIdAndIds(Class<E> clazz, String userId, List<String> ids, ResultFilters resultFilters);
+
+    List<E> searchByUserIdAndOptionalParams(Class<E> clazz, String userId, HashMap<String, String> optionalParams, ResultFilters resultFilters);
+
+    List<E> searchByUserIdAndIdsAndOptionalParams(Class<E> clazz, String userId, List<String> ids, HashMap<String, String> optionalParams, ResultFilters resultFilters);
+
+    List<E> search(Class<E> clazz , String userId, List<String> ids, HashMap<String, String> optionalParams, ResultFilters resultFilters);
+
 }

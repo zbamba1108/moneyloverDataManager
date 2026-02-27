@@ -29,8 +29,7 @@ public class QueryHelper {
         return null;
     }
 
-    public static String buildQueryAndCreateQueryParam(String query, HashMap<String, String> inputMap, HashMap<String, String> outputMap) {
-        StringBuilder sb = new StringBuilder(query);
+    public static String buildQueryAndCreateQueryParam(StringBuilder sb, HashMap<String, String> inputMap, HashMap<String, String> outputMap) {
 
         Iterator<String> iterator = inputMap.keySet().iterator();
 

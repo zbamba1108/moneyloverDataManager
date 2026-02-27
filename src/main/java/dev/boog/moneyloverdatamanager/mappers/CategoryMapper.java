@@ -16,7 +16,10 @@ public interface CategoryMapper extends BaseMapper<Category, RequestCategoryDto,
     Category toEntity(RequestCategoryDto dto);
 
     @Override
-    @Mapping( target="parentId", source="parent.id")
+    @Mappings({
+            @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "timestampToLong"),
+            @Mapping( target="parentId", source="parent.id")
+    })
     ResponseCategoryDto toResponseDto(Category entity);
 
     @AfterMapping

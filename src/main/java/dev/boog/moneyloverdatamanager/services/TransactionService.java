@@ -42,8 +42,12 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
     public ResponseEntity<List<ResponseTransactionDto>> get(String userId, RequestTransactionDto req) {
         try {
             final List<ResponseTransactionDto> responseDtoList = transactionRepository
-                    .searchWithMultipleOptionalParams(ServiceHelper
-                            .mapQueryParams(userId, req), Transaction.class)
+                    .searchByUserIdAndOptionalParams(
+                            Transaction.class,
+                            userId,
+                            ServiceHelper.mapQueryParams(userId, req),
+                            ServiceHelper.filter(req)
+                    )
                     .stream()
                     .map(TransactionMapper.INSTANCE::toResponseDto)
                     .toList();

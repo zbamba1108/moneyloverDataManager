@@ -1,6 +1,7 @@
 package dev.boog.moneyloverdatamanager.entities;
 
 import jakarta.persistence.*;
+import java.util.*;
 import lombok.*;
 
 import java.math.BigDecimal;

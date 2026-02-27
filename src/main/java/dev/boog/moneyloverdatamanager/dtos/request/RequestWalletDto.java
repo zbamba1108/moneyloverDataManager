@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-@AllArgsConstructor
+@AllArgsConstructor()
 @NoArgsConstructor
 public class RequestWalletDto extends BaseRequestDto {
 

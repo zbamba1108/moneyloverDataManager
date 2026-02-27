@@ -50,17 +50,38 @@ public class MoneyLoverDataManagerApplication {
             int categoryNumber = 1000;
 
             for (int i = 0; i < userNumber; i++) {
-                userRepository.save(new User(null,"User#" + (i + 1), "Doe"));
+                userRepository.save(User.builder()
+                        .email("User#" + (i + 1))
+                        .password("password")
+                        .build());
             }
 
             for (int i = 0; i < walletNumber; i++) {
                 int randomUserId = ThreadLocalRandom.current().nextInt(1, userNumber);
-                walletRepository.save(new Wallet(null, "Wallet #" + (i + 1), new User((long) randomUserId, null, null)));
+                User user = User.builder()
+                        .id((long) randomUserId)
+                        .build();
+
+                Wallet wallet = Wallet.builder()
+                        .walletName("Wallet #" + (i + 1))
+                        .user(user)
+                        .build();
+                walletRepository.save(wallet);
             }
 
             for (int i = 0; i < categoryNumber; i++) {
                 int randomUserId = ThreadLocalRandom.current().nextInt(1, userNumber);
-                categoryRepository.save(new Category(null, "Category #" + (i + 1), new User((long) randomUserId, null, null), 1, null));
+                User user = User.builder()
+                        .id((long) randomUserId)
+                        .build();
+
+                Category category = Category.builder()
+                        .name("Category #" + (i + 1))
+                        .type(1)
+                        .user(user)
+                        .build();
+
+                categoryRepository.save(category);
             }
 
             for (int i = 0; i < transactionNumber; i++) {
@@ -68,14 +89,27 @@ public class MoneyLoverDataManagerApplication {
                 int randomWalletId = ThreadLocalRandom.current().nextInt(1, walletNumber);
                 int randomCategoryId = ThreadLocalRandom.current().nextInt(1, categoryNumber);
                 int randomAmount = ThreadLocalRandom.current().nextInt(1, 5000);
-                transactionRepository.save(new Transaction(
-                        null,
-                        new Wallet((long) randomWalletId, null, null),
-                        new User((long) randomUserId, null, null),
-                        null,
-                        new Category((long) randomCategoryId, null, null, null, null),
-                        new BigDecimal(randomAmount),
-                        null));
+
+                User user = User.builder()
+                        .id((long) randomUserId)
+                        .build();
+
+                Wallet wallet = Wallet.builder()
+                        .id((long) randomWalletId)
+                        .build();
+
+                Category category = Category.builder()
+                        .id((long) randomCategoryId)
+                        .build();
+
+                Transaction transaction = Transaction.builder()
+                        .amount(new BigDecimal(randomAmount))
+                        .category(category)
+                        .wallet(wallet)
+                        .user(user)
+                        .build();
+
+                transactionRepository.save(transaction);
             }
 
             System.out.println("Ready!!!");

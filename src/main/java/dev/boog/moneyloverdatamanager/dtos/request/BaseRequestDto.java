@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
+import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BaseRequestDto {
 
-    private Long id;
+    private List<String> ids;
 
     private OrderBy orderBy;
 
-    private LocalDateTime searchStartDate;
-
-    private LocalDateTime searchEndDate;
+    private String[] dateRange;
 
 }

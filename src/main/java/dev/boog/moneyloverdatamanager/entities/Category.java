@@ -2,21 +2,18 @@ package dev.boog.moneyloverdatamanager.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.*;
 
-@Setter
-@Getter
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "category", uniqueConstraints = {
         @UniqueConstraint( name = "nameAndUserId", columnNames = { "name", "user_id"})
 })
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Category extends BaseEntity {
 
     @Column(name = "name", nullable = false)
     private String name;

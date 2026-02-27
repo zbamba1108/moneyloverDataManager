@@ -2,21 +2,18 @@ package dev.boog.moneyloverdatamanager.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.*;
 
-@Setter
-@Getter
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "wallet", uniqueConstraints = {
         @UniqueConstraint( name = "walletNameAndUserId", columnNames = { "wallet_name", "user_id"})
 })
-public class Wallet {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Wallet extends BaseEntity {
 
     @Column(name = "wallet_name", nullable = false)
     private String walletName;

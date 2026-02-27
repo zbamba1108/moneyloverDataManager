@@ -4,13 +4,14 @@ import dev.boog.moneyloverdatamanager.dtos.response.models.TransactionDto;
 import lombok.*;
 
 import java.util.List;
+import lombok.experimental.*;
 
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseWalletDto {
+public class ResponseWalletDto extends BaseResponseDto {
 
     private Long id;
 

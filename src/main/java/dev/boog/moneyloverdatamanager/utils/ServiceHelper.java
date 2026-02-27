@@ -8,7 +8,6 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestEventDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 
@@ -29,28 +28,22 @@ public class ServiceHelper {
         } else if (req instanceof RequestBudgetDto) {
             return null;
         } else {
-            return mapUserId(userId);
+            return null;
         }
     }
 
-    private static HashMap<String, String> mapUserId(String userId) {
-        return mapIdAndUserId(userId, null);
-    }
-
-    private static HashMap<String, String> mapIdAndUserId(String userId, Number id) {
-        HashMap<String, String> params = new HashMap<>();
-        if (StringUtils.hasText(userId)) {
-            params.put("user.id", userId);
-        }
-        if (id != null) {
-            params.put("id", String.valueOf(id));
-        }
-
-        return params;
+    public static ResultFilters filter(BaseRequestDto req) {
+        return req != null ?
+                ResultFilters.builder()
+                    .sort(null)
+                    .pageable(null)
+                    .dateRange(req.getDateRange())
+                    .build()
+                : null;
     }
 
     private static HashMap<String, String> mapTransactionQueryParams(RequestTransactionDto req, String userId) {
-        HashMap<String, String> params = mapIdAndUserId(userId, req.getId());
+        HashMap<String, String> params = new HashMap<>();
 
         if (req.getWalletId() != null) {
             params.put("wallet.id", String.valueOf(req.getWalletId()));
@@ -63,7 +56,7 @@ public class ServiceHelper {
     }
 
     private static HashMap<String, String> mapCategoryQueryParams(RequestCategoryDto req, String userId) {
-        HashMap<String, String> params = mapIdAndUserId(userId, req.getId());
+        HashMap<String, String> params = new HashMap<>();
 
         if (req.getType() != null) {
             params.put("type", String.valueOf(req.getType()));
@@ -76,6 +69,6 @@ public class ServiceHelper {
     }
 
     private static HashMap<String, String> mapWalletQueryParams(RequestWalletDto req, String userId) {
-        return mapIdAndUserId(userId, req.getId());
+        return null;
     }
 }
