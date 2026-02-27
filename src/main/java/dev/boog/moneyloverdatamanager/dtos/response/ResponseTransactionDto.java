@@ -17,8 +17,6 @@ public class ResponseTransactionDto {
 
     private WalletDto wallet;
 
-    private Long userId;
-
     private CategoryDto category;
 
     private BigDecimal amount;

@@ -22,8 +22,9 @@ public class Event {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -33,5 +34,13 @@ public class Event {
 
     @Column(name = "amount", nullable = false, precision = 8, scale = 2)
     private BigDecimal amount;
+
+    public Event userId(String userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(Long.parseLong(userId));
+        return this;
+    }
 
 }

@@ -1,15 +1,16 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
-@Setter
-@Getter
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestUserDto implements Serializable {
+public class RequestUserDto extends BaseRequestDto implements Serializable {
 
     private Long id;
 

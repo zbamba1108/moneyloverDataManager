@@ -29,7 +29,9 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
     @Override
     public ResponseEntity<String> create(String userId, RequestTransactionDto req) {
         try {
-            Transaction entity = TransactionMapper.INSTANCE.toEntity(req);
+            Transaction entity = TransactionMapper.INSTANCE
+                    .toEntity(req)
+                    .userId(userId);
             transactionRepository.save(entity);
             return new ResponseEntity<>("Transaction created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -37,11 +39,11 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
         }
     }
 
-    public ResponseEntity<List<ResponseTransactionDto>> get(String userId, String query) {
+    public ResponseEntity<List<ResponseTransactionDto>> get(String userId, RequestTransactionDto req) {
         try {
-            List<ResponseTransactionDto> responseDtoList = transactionRepository
+            final List<ResponseTransactionDto> responseDtoList = transactionRepository
                     .searchWithMultipleOptionalParams(ServiceHelper
-                            .mapQueryParams(query), Transaction.class)
+                            .mapQueryParams(userId, req), Transaction.class)
                     .stream()
                     .map(TransactionMapper.INSTANCE::toResponseDto)
                     .toList();

@@ -1,48 +1,43 @@
 package dev.boog.moneyloverdatamanager.repositories;
 
+import dev.boog.moneyloverdatamanager.utils.QueryHelper;
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
-public class CustomSearchQueryRepositoryImpl<E, ID> implements CustomSearchQueryRepository<E, ID> {
+public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepository<E> {
+
+    private static final String HINT_NAME_FETCHGRAPH = "jakarta.persistence.fetchgraph";
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public List<E> searchWithMultipleOptionalParams(HashMap<String, ID> params, Class<E> clazz) {
+    public List<E> searchWithMultipleOptionalParams(HashMap<String, String> params, Class<E> clazz) {
 
         if (params == null || params.isEmpty()) {
             throw new IllegalArgumentException("params is null or empty");
         }
 
-        String className = clazz.getSimpleName();
+        final HashMap<String, String> queryParams = new HashMap<>();
 
-        String sql = "SELECT e FROM " + className + " e where";
+        final String classSimpleName = clazz.getSimpleName();
 
-        StringBuilder sb = new StringBuilder(sql);
+        final EntityGraph<E> entityGraph = (EntityGraph<E>) QueryHelper.getEntityGraph(em, classSimpleName);
 
-        Iterator<String> iterator = params.keySet().iterator();
+        String sql = "SELECT e from " + classSimpleName + " e where";
+        sql = QueryHelper.buildQueryAndCreateQueryParam(sql, params, queryParams);
 
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            sb.append(" e.").append(key).append(" = :").append(key.replace("\\.", ""));
+        TypedQuery<E> query = em.createQuery(sql, clazz)
+                .setHint(HINT_NAME_FETCHGRAPH, entityGraph);
 
-            if (iterator.hasNext()) {
-                sb.append(" AND ");
-            }
-        }
-
-        sql = sb.toString();
-
-        TypedQuery<E> query = em.createQuery(sql, clazz);
-
-        params.forEach(query::setParameter);
+        queryParams.forEach(query::setParameter);
 
         return query.getResultList();
     }
+
 }

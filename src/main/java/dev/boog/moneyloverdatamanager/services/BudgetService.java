@@ -23,7 +23,7 @@ public class BudgetService implements Service<RequestBudgetDto, ResponseBudgetDt
         return null;
     }
 
-    public ResponseEntity<List<ResponseBudgetDto>> get(String userId, String query) {
+    public ResponseEntity<List<ResponseBudgetDto>> get(String userId, RequestBudgetDto req) {
         return null;
     }
 

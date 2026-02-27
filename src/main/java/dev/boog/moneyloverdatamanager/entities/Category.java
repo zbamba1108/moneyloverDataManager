@@ -21,8 +21,9 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "user_id", nullable = false)
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "type", nullable = false)
     private Integer type;
@@ -30,5 +31,13 @@ public class Category {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
+
+    public Category userId(String userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(Long.parseLong(userId));
+        return this;
+    }
 
 }

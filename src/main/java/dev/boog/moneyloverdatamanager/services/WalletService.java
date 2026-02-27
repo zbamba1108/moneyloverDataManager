@@ -23,7 +23,9 @@ public class WalletService implements Service<RequestWalletDto, ResponseWalletDt
     @Override
     public ResponseEntity<String> create(String userId, RequestWalletDto req) {
         try {
-            Wallet entity = WalletMapper.INSTANCE.toEntity(req);
+            Wallet entity = WalletMapper.INSTANCE
+                    .toEntity(req)
+                    .userId(userId);
             walletRepository.save(entity);
             return new ResponseEntity<>("Wallet created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -31,7 +33,7 @@ public class WalletService implements Service<RequestWalletDto, ResponseWalletDt
         }
     }
 
-    public ResponseEntity<List<ResponseWalletDto>> get(String userId, String query) {
+    public ResponseEntity<List<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
         return null;
     }
 

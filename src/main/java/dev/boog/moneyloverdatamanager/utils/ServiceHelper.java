@@ -1,37 +1,60 @@
 package dev.boog.moneyloverdatamanager.utils;
 
 
-import java.util.Arrays;
+import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestBudgetDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestEventDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import org.springframework.util.StringUtils;
+
 import java.util.HashMap;
 
 public class ServiceHelper {
 
-    public static HashMap<String, Long> mapQueryParams(String query) {
-        String[] params = query.split("\\-");
+    public static HashMap<String, String> mapQueryParams(String userId, BaseRequestDto req) {
 
-        HashMap<String, Long> map = new HashMap<>();
-
-        Arrays.stream(params).forEach(param -> map.put(param.split("=")[0], Long.valueOf(param.split("=")[1])));
-
-        return map;
+        if (req instanceof RequestTransactionDto) {
+            return mapTransactionQueryParams((RequestTransactionDto) req, userId);
+        } else if (req instanceof RequestWalletDto) {
+            return null;
+        } else if (req instanceof RequestCategoryDto) {
+            return null;
+        } else if (req instanceof RequestEventDto) {
+            return null;
+        } else if (req instanceof RequestUserDto) {
+            return null;
+        } else if (req instanceof RequestBudgetDto) {
+            return null;
+        } else {
+            return mapUserId(new HashMap<>(), userId);
+        }
     }
 
-    /*public static HashMap<String, Long> mapTransactionQueryParams(String userId, Long id, Long walletId, Long categoryId) {
-        HashMap<String, Long> params = new HashMap<>();
+    private static HashMap<String, String> mapTransactionQueryParams(RequestTransactionDto req, String userId) {
+        HashMap<String, String> params = new HashMap<>();
 
-        if (id != null) {
-            params.put("id", id);
+        mapUserId(params, userId);
+        if (req.getId() != null) {
+            params.put("id", String.valueOf(req.getId()));
         }
-        if (walletId != null) {
-            params.put("walletId", walletId);
+        if (req.getWalletId() != null) {
+            params.put("wallet.id", String.valueOf(req.getWalletId()));
         }
-        if (categoryId != null) {
-            params.put("categoryId", categoryId);
-        }
-        if (StringUtils.hasText(userId)) {
-            params.put("userId", Long.parseLong(userId));
+        if (req.getCategoryId() != null) {
+            params.put("category.id", String.valueOf(req.getCategoryId()));
         }
 
         return params;
-    }*/
+    }
+
+    private static HashMap<String, String> mapUserId(HashMap<String, String> params, String userId) {
+        if (StringUtils.hasText(userId)) {
+            params.put("user.id", userId);
+        }
+
+        return params;
+    }
 }

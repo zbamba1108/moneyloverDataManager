@@ -23,7 +23,9 @@ public class CategoryService implements Service<RequestCategoryDto, ResponseCate
     @Override
     public ResponseEntity<String> create(String userId, RequestCategoryDto req) {
         try {
-            Category category = CategoryMapper.INSTANCE.toEntity(req);
+            Category category = CategoryMapper.INSTANCE
+                    .toEntity(req)
+                    .userId(userId);
             categoryRepository.save(category);
             return new ResponseEntity<>("Category created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -32,7 +34,7 @@ public class CategoryService implements Service<RequestCategoryDto, ResponseCate
     }
 
     @Override
-    public ResponseEntity<List<ResponseCategoryDto>> get(String userId, String query) {
+    public ResponseEntity<List<ResponseCategoryDto>> get(String userId, RequestCategoryDto req) {
         return null;
     }
 

@@ -1,17 +1,14 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Setter
-@Getter
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestWalletDto {
-
-    private Long id;
+public class RequestWalletDto extends BaseRequestDto {
 
     private String walletName;
-
-    private Long userId;
 }

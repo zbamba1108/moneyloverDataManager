@@ -29,7 +29,7 @@ public class UserService implements Service<RequestUserDto, ResponseUserDto, Lon
         }
     }
 
-    public ResponseEntity<List<ResponseUserDto>> get(String userId, String query) {
+    public ResponseEntity<List<ResponseUserDto>> get(String userId, RequestUserDto req) {
         /*try {
             ResponseUserDto responseDto = UserMapper.INSTANCE.toResponseDto(userRepository.(transactionId));
             return new ResponseEntity<>(Collections.singletonList(responseDto), HttpStatus.OK);

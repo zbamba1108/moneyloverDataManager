@@ -18,10 +18,19 @@ public class Wallet {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "wallet_name", nullable = false, unique = true)
+    @Column(name = "wallet_name", nullable = false)
     private String walletName;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Wallet userId(String userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(Long.parseLong(userId));
+        return this;
+    }
 
 }

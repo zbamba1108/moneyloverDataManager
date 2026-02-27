@@ -22,7 +22,7 @@ public class EventService implements Service<RequestEventDto, ResponseEventDto, 
         return null;
     }
 
-    public ResponseEntity<List<ResponseEventDto>> get(String userId, String query) {
+    public ResponseEntity<List<ResponseEventDto>> get(String userId, RequestEventDto req) {
         return null;
     }
 
