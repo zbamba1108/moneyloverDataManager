@@ -6,12 +6,17 @@ import dev.boog.moneyloverdatamanager.entities.Wallet;
 import dev.boog.moneyloverdatamanager.mappers.WalletMapper;
 import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
+import dev.boog.moneyloverdatamanager.utils.*;
+import java.util.logging.*;
+import org.springframework.dao.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public class WalletService implements Service<RequestWalletDto, ResponseWalletDto, Long> {
+
+    private static final Logger LOGGER = Logger.getLogger(WalletService.class.getName());
 
     private WalletRepository walletRepository;
 
@@ -34,7 +39,23 @@ public class WalletService implements Service<RequestWalletDto, ResponseWalletDt
     }
 
     public ResponseEntity<List<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
-        return null;
+        try {
+            List<ResponseWalletDto> responseDtoList = walletRepository
+                    .searchWithMultipleOptionalParams(
+                            ServiceHelper.mapQueryParams(userId, req),
+                            Wallet.class
+                    )
+                    .stream()
+                    .map(WalletMapper.INSTANCE::toResponseDto)
+                    .toList();
+            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

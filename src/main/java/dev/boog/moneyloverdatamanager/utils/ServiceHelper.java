@@ -19,7 +19,7 @@ public class ServiceHelper {
         if (req instanceof RequestTransactionDto) {
             return mapTransactionQueryParams((RequestTransactionDto) req, userId);
         } else if (req instanceof RequestWalletDto) {
-            return null;
+            return mapWalletQueryParams((RequestWalletDto) req, userId);
         } else if (req instanceof RequestCategoryDto) {
             return mapCategoryQueryParams((RequestCategoryDto) req, userId);
         } else if (req instanceof RequestEventDto) {
@@ -34,20 +34,24 @@ public class ServiceHelper {
     }
 
     private static HashMap<String, String> mapUserId(String userId) {
+        return mapIdAndUserId(userId, null);
+    }
+
+    private static HashMap<String, String> mapIdAndUserId(String userId, Number id) {
         HashMap<String, String> params = new HashMap<>();
         if (StringUtils.hasText(userId)) {
             params.put("user.id", userId);
+        }
+        if (id != null) {
+            params.put("id", String.valueOf(id));
         }
 
         return params;
     }
 
     private static HashMap<String, String> mapTransactionQueryParams(RequestTransactionDto req, String userId) {
-        HashMap<String, String> params = mapUserId(userId);
+        HashMap<String, String> params = mapIdAndUserId(userId, req.getId());
 
-        if (req.getId() != null) {
-            params.put("id", String.valueOf(req.getId()));
-        }
         if (req.getWalletId() != null) {
             params.put("wallet.id", String.valueOf(req.getWalletId()));
         }
@@ -59,11 +63,8 @@ public class ServiceHelper {
     }
 
     private static HashMap<String, String> mapCategoryQueryParams(RequestCategoryDto req, String userId) {
-        HashMap<String, String> params = mapUserId(userId);
+        HashMap<String, String> params = mapIdAndUserId(userId, req.getId());
 
-        if (req.getId() != null) {
-            params.put("id", String.valueOf(req.getId()));
-        }
         if (req.getType() != null) {
             params.put("type", String.valueOf(req.getType()));
         }
@@ -72,5 +73,9 @@ public class ServiceHelper {
         }
 
         return params;
+    }
+
+    private static HashMap<String, String> mapWalletQueryParams(RequestWalletDto req, String userId) {
+        return mapIdAndUserId(userId, req.getId());
     }
 }
