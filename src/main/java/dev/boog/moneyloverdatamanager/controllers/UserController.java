@@ -2,7 +2,7 @@ package dev.boog.moneyloverdatamanager.controllers;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseUserDto;
-import dev.boog.moneyloverdatamanager.services.Service;
+import dev.boog.moneyloverdatamanager.services.UserService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -13,8 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/users")
-public record UserController(@Qualifier("userService") Service<RequestUserDto, ResponseUserDto, Long> service) implements Controller<RequestUserDto, ResponseUserDto> {
+public class UserController implements Controller<RequestUserDto, ResponseUserDto> {
 
+    private final UserService<RequestUserDto, ResponseUserDto> service;
+
+    public UserController(@Qualifier("userService") UserService<RequestUserDto, ResponseUserDto> service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody RequestUserDto dto) {
@@ -30,6 +35,11 @@ public record UserController(@Qualifier("userService") Service<RequestUserDto, R
     public ResponseEntity<List<ResponseUserDto>> get(@RequestHeader(value = Constants.Headers.USER_ID, required = false) String userId,
                                                      @RequestBody(required = false) RequestUserDto req) {
         return service.get(userId, req);
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseUserDto>> details(String userId, RequestUserDto req) {
+        return null;
     }
 
     @PutMapping

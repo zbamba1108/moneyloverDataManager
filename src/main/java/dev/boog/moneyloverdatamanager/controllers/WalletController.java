@@ -2,7 +2,7 @@ package dev.boog.moneyloverdatamanager.controllers;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
-import dev.boog.moneyloverdatamanager.services.Service;
+import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wallets")
-public record WalletController(@Qualifier("walletService") Service<RequestWalletDto, ResponseWalletDto, Long> service) implements Controller<RequestWalletDto, ResponseWalletDto> {
+public class WalletController implements Controller<RequestWalletDto, ResponseWalletDto> {
 
+    private final WalletService<RequestWalletDto, ResponseWalletDto> service;
+
+    public WalletController(@Qualifier("walletService") WalletService<RequestWalletDto, ResponseWalletDto> service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<String> create(@RequestHeader(Constants.Headers.USER_ID) String userId,
@@ -25,6 +30,11 @@ public record WalletController(@Qualifier("walletService") Service<RequestWallet
     public ResponseEntity<List<ResponseWalletDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                        @RequestBody(required = false) RequestWalletDto req) {
         return service.get(userId, req);
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
+        return null;
     }
 
     @PutMapping

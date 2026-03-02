@@ -1,0 +1,102 @@
+package dev.boog.moneyloverdatamanager.services.impl;
+
+import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
+import dev.boog.moneyloverdatamanager.entities.Wallet;
+import dev.boog.moneyloverdatamanager.mappers.WalletMapper;
+import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
+import dev.boog.moneyloverdatamanager.services.WalletService;
+import dev.boog.moneyloverdatamanager.utils.*;
+import java.util.logging.*;
+import org.springframework.dao.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+
+public class WalletServiceImpl implements WalletService<RequestWalletDto, ResponseWalletDto> {
+
+    private static final Logger LOGGER = Logger.getLogger(WalletServiceImpl.class.getName());
+
+    private final WalletRepository walletRepository;
+
+    public WalletServiceImpl(WalletRepository walletRepository) {
+        this.walletRepository = walletRepository;
+    }
+
+    @Override
+    public ResponseEntity<String> create(String userId, RequestWalletDto req) {
+        try {
+            Wallet entity = WalletMapper.INSTANCE
+                    .toEntity(req)
+                    .userId(userId);
+            walletRepository.save(entity);
+            return new ResponseEntity<>("Wallet created successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<List<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
+        try {
+            List<ResponseWalletDto> responseDtoList = walletRepository
+                    .searchByUserIdAndIds(
+                            Wallet.class,
+                            userId,
+                            req != null ? req.getIds() : null,
+                            ServiceHelper.filter(req)
+                    )
+                    .stream()
+                    .map(WalletMapper.INSTANCE::toResponseDto)
+                    .toList();
+            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseWalletDto> update(String userId, RequestWalletDto req) {
+        try {
+            ResponseWalletDto responseDto = WalletMapper.INSTANCE
+                    .toResponseDto(walletRepository.save(WalletMapper.INSTANCE
+                            .toEntity(req)));
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> delete(String userId, RequestWalletDto req) {
+        try {
+            walletRepository.deleteByIds(
+                    Wallet.class,
+                    Long.parseLong(userId),
+                    req.getIds()
+                            .stream()
+                            .map(Long::parseLong)
+                            .toList());
+            return new ResponseEntity<>("Wallet(s) deleted successfully", HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseWalletDto>> details(String userId, RequestWalletDto requestDto) {
+        return null;
+    }
+}

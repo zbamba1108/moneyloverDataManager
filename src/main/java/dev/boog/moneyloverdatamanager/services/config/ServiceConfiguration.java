@@ -1,7 +1,7 @@
 package dev.boog.moneyloverdatamanager.services.config;
 
 import dev.boog.moneyloverdatamanager.repositories.*;
-import dev.boog.moneyloverdatamanager.services.*;
+import dev.boog.moneyloverdatamanager.services.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,45 +9,33 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceConfiguration {
 
     @Bean("transactionService")
-    public TransactionService transactionService(TransactionRepository transactionRepository) {
-        TransactionService transactionService = new TransactionService();
-        transactionService.setRepository(transactionRepository);
-        return transactionService;
+    public TransactionServiceImpl transactionService(TransactionRepository transactionRepository) {
+        return new TransactionServiceImpl(transactionRepository);
     }
 
     @Bean("userService")
-    public UserService userService(UserRepository userRepository) {
-        UserService userService = new UserService();
-        userService.setRepository(userRepository);
-        return userService;
+    public UserServiceImpl userService(UserRepository userRepository) {
+        return new UserServiceImpl(userRepository);
     }
 
     @Bean("budgetService")
-    public BudgetService budgetService(BudgetRepository budgetRepository) {
-        BudgetService budgetService = new BudgetService();
-        budgetService.setRepository(budgetRepository);
-        return budgetService;
+    public BudgetServiceImpl budgetService(BudgetRepository budgetRepository) {
+        return new BudgetServiceImpl(budgetRepository);
     }
 
     @Bean("categoryService")
-    public CategoryService categoryService(CategoryRepository categoryRepository) {
-        CategoryService categoryService = new CategoryService();
-        categoryService.setRepository(categoryRepository);
-        return categoryService;
+    public CategoryServiceImpl categoryService(CategoryRepository categoryRepository) {
+        return new CategoryServiceImpl(categoryRepository);
     }
 
     @Bean("eventService")
-    public EventService eventService(EventRepository eventRepository) {
-        EventService eventService = new EventService();
-        eventService.setRepository(eventRepository);
-        return eventService;
+    public EventServiceImpl eventService(EventRepository eventRepository) {
+        return new EventServiceImpl(eventRepository);
     }
 
     @Bean("walletService")
-    public WalletService walletService(WalletRepository walletRepository) {
-        WalletService walletService = new WalletService();
-        walletService.setRepository(walletRepository);
-        return walletService;
+    public WalletServiceImpl walletService(WalletRepository walletRepository) {
+        return new WalletServiceImpl(walletRepository);
     }
 
 }

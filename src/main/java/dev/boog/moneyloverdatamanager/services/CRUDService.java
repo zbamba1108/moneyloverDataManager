@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface Service<I extends BaseRequestDto, O, ID extends Number> {
-
-    void setRepository(BaseRepository<?, ID> repository);
+public interface CRUDService<I extends BaseRequestDto, O> {
 
     ResponseEntity<String> create(String userId, I req);
 
