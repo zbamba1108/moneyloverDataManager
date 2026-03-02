@@ -4,11 +4,8 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
 import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.mappers.CategoryMapper;
-import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
-import dev.boog.moneyloverdatamanager.services.CRUDService;
 import dev.boog.moneyloverdatamanager.services.CategoryService;
-import dev.boog.moneyloverdatamanager.services.DetailsService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
@@ -49,7 +46,8 @@ public class CategoryServiceImpl implements CategoryService<RequestCategoryDto, 
                             userId,
                             req != null ? req.getIds() : null,
                             ServiceHelper.mapQueryParams(userId, req),
-                            ServiceHelper.filter(req)
+                            ServiceHelper.filter(req),
+                            false
                     )
                     .stream()
                     .map(CategoryMapper.INSTANCE::toResponseDto)
@@ -101,8 +99,4 @@ public class CategoryServiceImpl implements CategoryService<RequestCategoryDto, 
         }
     }
 
-    @Override
-    public ResponseEntity<List<ResponseCategoryDto>> details(String userId, RequestCategoryDto requestDto) {
-        return null;
-    }
 }

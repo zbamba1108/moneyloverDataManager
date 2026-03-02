@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/users")
-public class UserController implements Controller<RequestUserDto, ResponseUserDto> {
+public class UserController implements CRUDController<RequestUserDto, ResponseUserDto> {
 
     private final UserService<RequestUserDto, ResponseUserDto> service;
 
@@ -36,12 +36,6 @@ public class UserController implements Controller<RequestUserDto, ResponseUserDt
                                                      @RequestBody(required = false) RequestUserDto req) {
         return service.get(userId, req);
     }
-
-    @Override
-    public ResponseEntity<List<ResponseUserDto>> details(String userId, RequestUserDto req) {
-        return null;
-    }
-
     @PutMapping
     public ResponseEntity<ResponseUserDto> update(@RequestHeader(value = Constants.Headers.USER_ID, required = false) String userId,
                                                   @RequestBody RequestUserDto dto) {

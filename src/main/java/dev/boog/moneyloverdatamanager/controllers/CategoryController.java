@@ -12,9 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-public class CategoryController implements Controller<RequestCategoryDto, ResponseCategoryDto> {
+public class CategoryController implements CRUDController<RequestCategoryDto, ResponseCategoryDto> {
 
-    private CategoryService<RequestCategoryDto, ResponseCategoryDto> service;
+    private final CategoryService<RequestCategoryDto, ResponseCategoryDto> service;
 
     public CategoryController(@Qualifier("categoryService") CategoryService<RequestCategoryDto, ResponseCategoryDto> service) {
         this.service = service;
@@ -30,11 +30,6 @@ public class CategoryController implements Controller<RequestCategoryDto, Respon
     public ResponseEntity<List<ResponseCategoryDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                          @RequestBody(required = false) RequestCategoryDto req) {
         return service.get(userId, req);
-    }
-
-    @Override
-    public ResponseEntity<List<ResponseCategoryDto>> details(String userId, RequestCategoryDto req) {
-        return null;
     }
 
     @PutMapping

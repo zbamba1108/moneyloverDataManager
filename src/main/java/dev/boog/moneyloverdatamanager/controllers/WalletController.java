@@ -12,7 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wallets")
-public class WalletController implements Controller<RequestWalletDto, ResponseWalletDto> {
+public class WalletController implements CRUDController<RequestWalletDto, ResponseWalletDto>,
+                                         DetailsController<RequestWalletDto, ResponseWalletDto> {
 
     private final WalletService<RequestWalletDto, ResponseWalletDto> service;
 
@@ -32,9 +33,10 @@ public class WalletController implements Controller<RequestWalletDto, ResponseWa
         return service.get(userId, req);
     }
 
-    @Override
-    public ResponseEntity<List<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
-        return null;
+    @PostMapping("/search/details")
+    public ResponseEntity<List<ResponseWalletDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                           @RequestBody(required = false) RequestWalletDto req) {
+        return service.details(userId, req);
     }
 
     @PutMapping

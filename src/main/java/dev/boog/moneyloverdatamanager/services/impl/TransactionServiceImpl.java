@@ -51,7 +51,8 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
                             Transaction.class,
                             userId,
                             ServiceHelper.mapQueryParams(userId, req),
-                            ServiceHelper.filter(req)
+                            ServiceHelper.filter(req),
+                            false
                     )
                     .stream()
                     .map(TransactionMapper.INSTANCE::toResponseDto)
@@ -88,6 +89,30 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
         try {
             transactionRepository.delete(TransactionMapper.INSTANCE.toEntity(req));
             return new ResponseEntity<>("Transaction deleted successfully", HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseTransactionDto>> details(String userId, RequestTransactionDto req) {
+        try {
+            final List<ResponseTransactionDto> responseDtoList = transactionRepository
+                    .searchByUserIdAndOptionalParams(
+                            Transaction.class,
+                            userId,
+                            ServiceHelper.mapQueryParams(userId, req),
+                            ServiceHelper.filter(req),
+                            true
+                    )
+                    .stream()
+                    .map(TransactionMapper.INSTANCE::toResponseDtoDetails)
+                    .toList();
+            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

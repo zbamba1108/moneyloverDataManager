@@ -27,7 +27,7 @@ public class MoneyLoverDataManagerApplication {
         SpringApplication.run(MoneyLoverDataManagerApplication.class, args);
     }
 
-    @Autowired
+    /*@Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -74,7 +74,6 @@ public class MoneyLoverDataManagerApplication {
 
                     categoryRepository.save(category);
                 }
-
                 List<Long> walletIds = walletRepository
                         .getAllByUserId(user.getId())
                         .stream()
@@ -113,5 +112,5 @@ public class MoneyLoverDataManagerApplication {
 
             System.out.println("Ready!!!");
         };
-    }
+    } */
 }

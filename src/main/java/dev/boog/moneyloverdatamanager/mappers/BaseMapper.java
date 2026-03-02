@@ -27,6 +27,13 @@ public interface BaseMapper<E extends BaseEntity,
     )
     O toResponseDto(E entity);
 
+    @Mappings(
+            {
+                    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "timestampToLong")
+            }
+    )
+    O toResponseDtoDetails(E entity);
+
     @Named("timestampToLong")
     default long timestampToLong(Timestamp timestamp) {
         return timestamp.getTime();

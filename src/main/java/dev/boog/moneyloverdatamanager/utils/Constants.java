@@ -25,6 +25,9 @@ public class Constants {
 
     public static class EntityGraph {
 
+        public static final String HINT_NAME_FETCHGRAPH = "jakarta.persistence.fetchgraph";
         public static final String TRANSACTION_WALLET_CATEGORY = "transaction.wallet_category";
+        public static final String TRANSACTION_CATEGORY = "transaction.category";
+        public static final String WALLET_TRANSACTION = "wallet.transaction";
     }
 }

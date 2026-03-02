@@ -1,6 +1,7 @@
 package dev.boog.moneyloverdatamanager.utils;
 
 import dev.boog.moneyloverdatamanager.entities.Transaction;
+import dev.boog.moneyloverdatamanager.entities.Wallet;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 
@@ -24,6 +25,8 @@ public class QueryHelper {
     public static EntityGraph<?> getEntityGraph(EntityManager em, String classSimpleName) {
         if (classSimpleName.equals(Transaction.class.getSimpleName())) {
             return em.getEntityGraph(Constants.EntityGraph.TRANSACTION_WALLET_CATEGORY);
+        } else if (classSimpleName.equals(Wallet.class.getSimpleName())) {
+            return em.getEntityGraph(Constants.EntityGraph.WALLET_TRANSACTION);
         }
 
         return null;

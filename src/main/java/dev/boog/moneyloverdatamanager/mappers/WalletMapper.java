@@ -4,6 +4,8 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
@@ -12,4 +14,10 @@ public interface WalletMapper extends BaseMapper<Wallet, RequestWalletDto, Respo
 
     WalletMapper INSTANCE = Mappers.getMapper(WalletMapper.class);
 
+    @Override
+    @Mappings({
+            @Mapping(target = "transactionList", ignore = true),
+            @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "timestampToLong")
+    })
+    ResponseWalletDto toResponseDto(Wallet wallet);
 }

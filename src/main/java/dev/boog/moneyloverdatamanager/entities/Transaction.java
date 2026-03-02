@@ -15,13 +15,21 @@ import lombok.experimental.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "transaction")
-@NamedEntityGraph(
-        name = Constants.EntityGraph.TRANSACTION_WALLET_CATEGORY,
-        attributeNodes = {
-                @NamedAttributeNode("wallet"),
-                @NamedAttributeNode("category")
-        }
-)
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = Constants.EntityGraph.TRANSACTION_WALLET_CATEGORY,
+                attributeNodes = {
+                        @NamedAttributeNode("wallet"),
+                        @NamedAttributeNode("category")
+                }
+        ),
+        @NamedEntityGraph(
+                name = Constants.EntityGraph.TRANSACTION_CATEGORY,
+                attributeNodes = {
+                        @NamedAttributeNode("category")
+                }
+        )
+})
 public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +40,7 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name = Constants.Transaction.ColumnsName.USER, nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = Constants.Transaction.ColumnsName.EVENT)
     private Event event;
 

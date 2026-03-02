@@ -12,7 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/transactions")
-public class TransactionController implements Controller<RequestTransactionDto, ResponseTransactionDto> {
+public class TransactionController implements CRUDController<RequestTransactionDto, ResponseTransactionDto>,
+                                              DetailsController<RequestTransactionDto, ResponseTransactionDto> {
 
     private final TransactionService<RequestTransactionDto, ResponseTransactionDto> service;
 
@@ -32,9 +33,10 @@ public class TransactionController implements Controller<RequestTransactionDto, 
         return service.get(userId, req);
     }
 
-    @Override
-    public ResponseEntity<List<ResponseTransactionDto>> details(String userId, RequestTransactionDto req) {
-        return null;
+    @PostMapping("/search/details")
+    public ResponseEntity<List<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                                @RequestBody(required = false) RequestTransactionDto req) {
+        return service.details(userId, req);
     }
 
     @PutMapping

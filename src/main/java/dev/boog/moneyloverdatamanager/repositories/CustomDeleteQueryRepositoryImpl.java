@@ -59,11 +59,9 @@ public class CustomDeleteQueryRepositoryImpl<E, ID extends Number> implements Cu
     }
 
     private void executeSqlWithIds(String sql, List<ID> ids) {
-        int deleted = em.createQuery(sql)
+        em.createQuery(sql)
                 .setParameter("ids", ids)
                 .executeUpdate();
-
-        System.out.println(sql + "\n" + "deleted: " + deleted);
     }
 
     private void executeSqlWithIdsAndUserId(String sql, ID userId, List<ID> ids) {

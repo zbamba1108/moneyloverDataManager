@@ -44,7 +44,8 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
                             Wallet.class,
                             userId,
                             req != null ? req.getIds() : null,
-                            ServiceHelper.filter(req)
+                            ServiceHelper.filter(req),
+                            false
                     )
                     .stream()
                     .map(WalletMapper.INSTANCE::toResponseDto)
@@ -96,7 +97,26 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
     }
 
     @Override
-    public ResponseEntity<List<ResponseWalletDto>> details(String userId, RequestWalletDto requestDto) {
-        return null;
+    public ResponseEntity<List<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
+        try {
+            List<ResponseWalletDto> responseDtoList = walletRepository
+                    .searchByUserIdAndIds(
+                            Wallet.class,
+                            userId,
+                            req != null ? req.getIds() : null,
+                            ServiceHelper.filter(req),
+                            true
+                    )
+                    .stream()
+                    .map(WalletMapper.INSTANCE::toResponseDtoDetails)
+                    .toList();
+            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

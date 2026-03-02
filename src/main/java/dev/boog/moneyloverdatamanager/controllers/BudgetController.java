@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/budgets")
-public class BudgetController implements Controller<RequestBudgetDto, ResponseBudgetDto> {
+public class BudgetController implements CRUDController<RequestBudgetDto, ResponseBudgetDto> {
 
     private final BudgetService<RequestBudgetDto, ResponseBudgetDto> service;
 
@@ -29,11 +29,6 @@ public class BudgetController implements Controller<RequestBudgetDto, ResponseBu
     @PostMapping("/search")
     public ResponseEntity<List<ResponseBudgetDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                        @RequestBody(required = false) RequestBudgetDto req) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<ResponseBudgetDto>> details(String userId, RequestBudgetDto req) {
         return null;
     }
 

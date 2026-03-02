@@ -1,8 +1,11 @@
 package dev.boog.moneyloverdatamanager.entities;
 
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.*;
+
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -13,6 +16,21 @@ import lombok.experimental.*;
 @Table(name = "wallet", uniqueConstraints = {
         @UniqueConstraint( name = "walletNameAndUserId", columnNames = { "wallet_name", "user_id"})
 })
+@NamedEntityGraph(
+        name = Constants.EntityGraph.WALLET_TRANSACTION,
+        attributeNodes = {
+                @NamedAttributeNode("transactionList"),
+                @NamedAttributeNode(value = "transactionList", subgraph = Constants.EntityGraph.WALLET_TRANSACTION)
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = Constants.EntityGraph.WALLET_TRANSACTION,
+                        attributeNodes = {
+                                @NamedAttributeNode("category")
+                        }
+                )
+        }
+)
 public class Wallet extends BaseEntity {
 
     @Column(name = "wallet_name", nullable = false)
@@ -21,6 +39,9 @@ public class Wallet extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
+    private List<Transaction> transactionList;
 
     public Wallet userId(String userId) {
         if (this.user == null) {
