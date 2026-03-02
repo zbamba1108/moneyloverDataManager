@@ -29,12 +29,12 @@ public record CategoryController(@Qualifier("categoryService") Service<RequestCa
     @PutMapping
     public ResponseEntity<ResponseCategoryDto> update(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                       @RequestBody RequestCategoryDto dto) {
-        return null;
+        return service.update(userId, dto);
     }
 
     @DeleteMapping
     public ResponseEntity<String> delete(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                          @RequestBody RequestCategoryDto dto) {
-        return null;
+        return service.delete(userId, dto);
     }
 }

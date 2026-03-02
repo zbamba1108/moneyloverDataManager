@@ -62,11 +62,37 @@ public class WalletService implements Service<RequestWalletDto, ResponseWalletDt
 
     @Override
     public ResponseEntity<ResponseWalletDto> update(String userId, RequestWalletDto req) {
-        return null;
+        try {
+            ResponseWalletDto responseDto = WalletMapper.INSTANCE
+                    .toResponseDto(walletRepository.save(WalletMapper.INSTANCE
+                            .toEntity(req)));
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<String> delete(String userId, RequestWalletDto dto) {
-        return null;
+    public ResponseEntity<String> delete(String userId, RequestWalletDto req) {
+        try {
+            walletRepository.deleteByIds(
+                    Wallet.class,
+                    Long.parseLong(userId),
+                    req.getIds()
+                            .stream()
+                            .map(Long::parseLong)
+                            .toList());
+            return new ResponseEntity<>("Wallet(s) deleted successfully", HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

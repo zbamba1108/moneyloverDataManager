@@ -54,14 +54,8 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
 
         if (optionalParams != null && !optionalParams.isEmpty()) {
             remappedOptionalParams = new HashMap<>();
-            sb.append(" AND ")
-                    .append(QueryHelper
-                            .buildQueryAndCreateQueryParam(
-                                    sb,
-                                    optionalParams,
-                                    remappedOptionalParams
-                            )
-                    );
+            sb.append(" AND ");
+            QueryHelper.buildQueryAndCreateQueryParam(sb, optionalParams, remappedOptionalParams);
         }
 
         String[] dateRange = null;

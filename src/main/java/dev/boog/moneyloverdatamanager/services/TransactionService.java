@@ -34,8 +34,12 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
                     .userId(userId);
             transactionRepository.save(entity);
             return new ResponseEntity<>("Transaction created successfully", HttpStatus.CREATED);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,11 +67,32 @@ public class TransactionService implements Service<RequestTransactionDto, Respon
 
     @Override
     public ResponseEntity<ResponseTransactionDto> update(String userId, RequestTransactionDto req) {
-        return null;
+        try {
+            ResponseTransactionDto responseDto = TransactionMapper.INSTANCE
+                    .toResponseDto(transactionRepository
+                            .save(TransactionMapper.INSTANCE
+                                    .toEntity(req)));
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<String> delete(String userId, RequestTransactionDto dto) {
-        return null;
+    public ResponseEntity<String> delete(String userId, RequestTransactionDto req) {
+        try {
+            transactionRepository.delete(TransactionMapper.INSTANCE.toEntity(req));
+            return new ResponseEntity<>("Transaction deleted successfully", HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

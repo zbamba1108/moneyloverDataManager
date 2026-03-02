@@ -4,12 +4,19 @@ import dev.boog.moneyloverdatamanager.dtos.request.*;
 import dev.boog.moneyloverdatamanager.dtos.response.*;
 import dev.boog.moneyloverdatamanager.entities.*;
 import java.sql.*;
+import java.util.List;
+import java.util.Objects;
+
 import org.mapstruct.*;
 
 public interface BaseMapper<E extends BaseEntity,
                             I extends BaseRequestDto,
                             O extends BaseResponseDto> {
-
+    @Mappings(
+            {
+                    @Mapping(target = "id", source = "ids", qualifiedByName = "getFirstId")
+            }
+    )
     E toEntity(I req);
 
 
@@ -23,5 +30,10 @@ public interface BaseMapper<E extends BaseEntity,
     @Named("timestampToLong")
     default long timestampToLong(Timestamp timestamp) {
         return timestamp.getTime();
+    }
+
+    @Named("getFirstId")
+    default long getFirstId(List<String> ids) {
+        return Long.parseLong(Objects.requireNonNull(ids.stream().findFirst().orElse(null)));
     }
 }

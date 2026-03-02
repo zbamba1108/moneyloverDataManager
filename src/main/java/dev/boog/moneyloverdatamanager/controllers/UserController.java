@@ -33,13 +33,13 @@ public record UserController(@Qualifier("userService") Service<RequestUserDto, R
     }
 
     @PutMapping
-    public ResponseEntity<ResponseUserDto> update(@RequestHeader(Constants.Headers.USER_ID) String userId,
+    public ResponseEntity<ResponseUserDto> update(@RequestHeader(value = Constants.Headers.USER_ID, required = false) String userId,
                                                   @RequestBody RequestUserDto dto) {
         return service.update(userId, dto);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> delete(@RequestHeader(Constants.Headers.USER_ID) String userId,
+    public ResponseEntity<String> delete(@RequestHeader(value = Constants.Headers.USER_ID, required = false) String userId,
                                          @RequestBody RequestUserDto dto) {
         return service.delete(userId, dto);
     }

@@ -12,8 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class RequestUserDto extends BaseRequestDto implements Serializable {
 
-    private Long id;
-
     private String email;
 
     private String password;

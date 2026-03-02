@@ -29,7 +29,7 @@ public class QueryHelper {
         return null;
     }
 
-    public static String buildQueryAndCreateQueryParam(StringBuilder sb, HashMap<String, String> inputMap, HashMap<String, String> outputMap) {
+    public static void buildQueryAndCreateQueryParam(StringBuilder sb, HashMap<String, String> inputMap, HashMap<String, String> outputMap) {
 
         Iterator<String> iterator = inputMap.keySet().iterator();
 
@@ -43,7 +43,5 @@ public class QueryHelper {
                 sb.append(" AND");
             }
         }
-
-        return sb.toString();
     }
 }

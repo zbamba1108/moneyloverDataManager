@@ -7,7 +7,6 @@ import dev.boog.moneyloverdatamanager.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,11 +64,39 @@ public class CategoryService implements Service<RequestCategoryDto, ResponseCate
 
     @Override
     public ResponseEntity<ResponseCategoryDto> update(String userId, RequestCategoryDto req) {
-        return null;
+        try {
+            ResponseCategoryDto responseCategoryDto = CategoryMapper.INSTANCE
+                    .toResponseDto(categoryRepository.save(CategoryMapper.INSTANCE
+                            .toEntity(req)));
+            return new ResponseEntity<>(responseCategoryDto, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<String> delete(String userId, RequestCategoryDto dto) {
-        return null;
+    public ResponseEntity<String> delete(String userId, RequestCategoryDto req) {
+        try {
+            categoryRepository.deleteByIds(
+                    Category.class,
+                    Long.parseLong(userId),
+                    req.getIds()
+                            .stream()
+                            .map(Long::parseLong)
+                            .toList()
+            );
+            return new ResponseEntity<>("Category(s) deleted successfully", HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 }
