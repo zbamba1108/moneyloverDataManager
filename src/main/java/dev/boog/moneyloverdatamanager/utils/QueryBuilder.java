@@ -32,17 +32,14 @@ public class QueryBuilder<E> {
 
     private List<String> ids;
 
-    public QueryBuilder(EntityManager em, Class<E> clazz, String userId, ResultFilters resultFilters, boolean mapDetails, boolean count) {
+    public QueryBuilder(EntityManager em, Class<E> clazz, StringBuilder sb, String userId, ResultFilters resultFilters, boolean mapDetails, boolean returnLong) {
         this.em = em;
         this.clazz = clazz;
         this.userId = userId;
         this.resultFilters = resultFilters;
         this.mapDetails = mapDetails;
-        this.count = count;
-        sb = new StringBuilder()
-                .append(count ? "SELECT COUNT(e) FROM " : "SELECT e FROM ")
-                .append(clazz.getSimpleName())
-                .append(" e WHERE e.user.id = :userId");
+        this.count = returnLong;
+        this.sb = sb;
     }
 
     public QueryBuilder<E> createQuery() {

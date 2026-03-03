@@ -49,7 +49,8 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
                             userId,
                             req != null ? req.getIds() : null,
                             ServiceHelper.filter(req),
-                            false
+                            false,
+                            true
                     );
 
             final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
@@ -118,6 +119,7 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
                             userId,
                             req != null ? req.getIds() : null,
                             ServiceHelper.filter(req),
+                            true,
                             true
                     );
 

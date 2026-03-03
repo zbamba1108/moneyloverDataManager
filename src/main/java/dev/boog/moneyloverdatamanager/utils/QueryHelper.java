@@ -2,6 +2,7 @@ package dev.boog.moneyloverdatamanager.utils;
 
 import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
+import dev.boog.moneyloverdatamanager.utils.enums.StringBuilderType;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 
@@ -46,5 +47,27 @@ public class QueryHelper {
                 sb.append(" AND");
             }
         }
+    }
+
+    public static java.lang.StringBuilder getStringBuilder(StringBuilderType type, String classSimpleName) {
+
+        if (type.equals(StringBuilderType.COUNT)) {
+            return new StringBuilder()
+                    .append("SELECT COUNT(e) FROM ")
+                    .append(classSimpleName)
+                    .append(" e WHERE e.user.id = :userId");
+        } else if (type.equals(StringBuilderType.RETRIEVE_IDS)) {
+            return new StringBuilder()
+                    .append("SELECT e.id FROM ")
+                    .append(classSimpleName)
+                    .append(" e WHERE e.user.id = :userId");
+        } else if (type.equals(StringBuilderType.COMPLETE_QUERY)) {
+            return new StringBuilder()
+                    .append("SELECT e FROM ")
+                    .append(classSimpleName)
+                    .append(" e WHERE e.user.id = :userId");
+        }
+
+        return null;
     }
 }

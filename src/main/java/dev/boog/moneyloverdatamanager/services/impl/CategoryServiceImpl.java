@@ -50,6 +50,7 @@ public class CategoryServiceImpl implements CategoryService<RequestCategoryDto, 
                             req != null ? req.getIds() : null,
                             ServiceHelper.mapQueryParams(userId, req),
                             ServiceHelper.filter(req),
+                            false,
                             false
                     );
 

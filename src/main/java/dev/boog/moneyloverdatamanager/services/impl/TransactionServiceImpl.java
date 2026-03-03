@@ -53,6 +53,7 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
                             userId,
                             ServiceHelper.mapQueryParams(userId, req),
                             ServiceHelper.filter(req),
+                            false,
                             false
                     );
 
@@ -116,7 +117,8 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
                             userId,
                             ServiceHelper.mapQueryParams(userId, req),
                             ServiceHelper.filter(req),
-                            true
+                            true,
+                            false
                     );
 
             final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
