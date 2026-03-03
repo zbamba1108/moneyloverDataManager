@@ -20,35 +20,48 @@ public class QueryBuilder<E> {
 
     private final boolean mapDetails;
 
+    private final boolean count;
+
     private HashMap<String, String> remappedOptionalParams;
 
-    private String[] dateRange;
+    private final ResultFilters resultFilters;
+
+    private TypedQuery<?> query;
 
     private EntityGraph<E> entityGraph;
 
     private List<String> ids;
 
-    public QueryBuilder(EntityManager em, Class<E> clazz, String userId, boolean mapDetails) {
+    public QueryBuilder(EntityManager em, Class<E> clazz, String userId, ResultFilters resultFilters, boolean mapDetails, boolean count) {
         this.em = em;
         this.clazz = clazz;
         this.userId = userId;
-        sb = new StringBuilder()
-                .append("SELECT e from ")
-                .append(clazz.getSimpleName())
-                .append(" e where e.user.id = :userId");
+        this.resultFilters = resultFilters;
         this.mapDetails = mapDetails;
+        this.count = count;
+        sb = new StringBuilder()
+                .append(count ? "SELECT COUNT(e) FROM " : "SELECT e FROM ")
+                .append(clazz.getSimpleName())
+                .append(" e WHERE e.user.id = :userId");
     }
 
-    public TypedQuery<E> build() {
-        TypedQuery<E> query = em.createQuery(sb.toString(), clazz)
-                .setParameter("userId", userId);
+    public QueryBuilder<E> createQuery() {
+        if (!count) {
+            sb.append(" ORDER BY e.user.id ASC");
+        }
+        this.query = count ? em.createQuery(sb.toString(), Long.class) : em.createQuery(sb.toString(), clazz);
 
-        addHint(query);
-        addIds(query);
-        addRemappedOptionalParams(query);
-        addDateRange(query);
+        return this;
+    }
 
-        return query;
+    public TypedQuery<?> build() {
+        this.query.setParameter("userId", userId);
+        addHintParam();
+        addIdsParam();
+        addRemappedOptionalParams();
+        addDateRangeParam();
+
+        return this.query;
     }
 
     public QueryBuilder<E> addEntityGraph() {
@@ -67,12 +80,11 @@ public class QueryBuilder<E> {
         return this;
     }
 
-    public QueryBuilder<E> addDateRange(ResultFilters resultFilters) {
+    public QueryBuilder<E> addDateRange() {
         if (resultFilters != null
                 && resultFilters.getDateRange() != null
                 && resultFilters.getDateRange().length == 2) {
             sb.append(" AND e.createdAt >= :startDate AND e.createdAt <= :endDate");
-            dateRange = resultFilters.getDateRange();
         }
         return this;
     }
@@ -85,13 +97,13 @@ public class QueryBuilder<E> {
         return this;
     }
 
-    private void addHint(TypedQuery<E> query) {
+    private void addHintParam() {
         if (entityGraph != null) {
             query.setHint(Constants.EntityGraph.HINT_NAME_FETCHGRAPH, entityGraph);
         }
     }
 
-    private void addIds(TypedQuery<E> query) {
+    private void addIdsParam() {
         if (ids != null && !ids.isEmpty()) {
             query.setParameter(
                     "ids",
@@ -101,14 +113,15 @@ public class QueryBuilder<E> {
         }
     }
 
-    private void addRemappedOptionalParams(TypedQuery<E> query) {
+    private void addRemappedOptionalParams() {
         if (remappedOptionalParams != null && !remappedOptionalParams.isEmpty()) {
             remappedOptionalParams.forEach(query::setParameter);
         }
     }
 
-    private void addDateRange(TypedQuery<E> query) {
-        if (dateRange != null) {
+    private void addDateRangeParam() {
+        if (resultFilters != null && resultFilters.getDateRange() != null) {
+            String[] dateRange = resultFilters.getDateRange();
             query.setParameter(
                     "startDate",
                     new Timestamp(Long
@@ -118,6 +131,14 @@ public class QueryBuilder<E> {
                     new Timestamp(Long
                             .parseLong(dateRange[1])));
         }
+    }
+
+    public QueryBuilder<E> addPaginationParam(ResultFilters resultFilters) {
+        if (resultFilters != null && resultFilters.getPage() != null && resultFilters.getPageSize() != null) {
+            query.setFirstResult(resultFilters.getPage() * resultFilters.getPageSize());
+            query.setMaxResults(resultFilters.getPageSize());
+        }
+        return this;
     }
 
 }

@@ -1,4 +1,6 @@
 package dev.boog.moneyloverdatamanager.dtos.response;
 
-public class ResponseEventDto {
+import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
+
+public class ResponseEventDto extends BaseEntityDto {
 }

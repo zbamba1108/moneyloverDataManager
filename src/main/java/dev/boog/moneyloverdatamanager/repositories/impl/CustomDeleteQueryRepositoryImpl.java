@@ -1,8 +1,9 @@
-package dev.boog.moneyloverdatamanager.repositories;
+package dev.boog.moneyloverdatamanager.repositories.impl;
 
 import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.entities.User;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
+import dev.boog.moneyloverdatamanager.repositories.CustomDeleteQueryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;

@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.dtos.response;
+package dev.boog.moneyloverdatamanager.dtos.response.models;
 
 import lombok.*;
 import lombok.experimental.*;
@@ -7,7 +7,7 @@ import lombok.experimental.*;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseResponseDto {
+public class BaseEntityDto {
 
     private Long id;
 

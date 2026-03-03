@@ -1,27 +1,23 @@
 package dev.boog.moneyloverdatamanager.dtos.response;
 
-import dev.boog.moneyloverdatamanager.dtos.response.models.CategoryDto;
-import dev.boog.moneyloverdatamanager.dtos.response.models.WalletDto;
+import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import lombok.experimental.*;
 
-@Setter
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResponseTransactionDto extends BaseResponseDto {
+@AllArgsConstructor
+public class ResponseTransactionDto extends BaseEntityDto {
 
-    private Long id;
+    private ResponseWalletDto wallet;
 
-    private WalletDto wallet;
-
-    private CategoryDto category;
+    private ResponseCategoryDto category;
 
     private BigDecimal amount;
 
     private String comment;
-
 }

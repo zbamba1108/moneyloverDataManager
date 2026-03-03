@@ -1,6 +1,8 @@
-package dev.boog.moneyloverdatamanager.controllers;
+package dev.boog.moneyloverdatamanager.controllers.impl;
 
+import dev.boog.moneyloverdatamanager.controllers.CRUDController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
 import dev.boog.moneyloverdatamanager.services.CategoryService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -27,8 +28,8 @@ public class CategoryController implements CRUDController<RequestCategoryDto, Re
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<ResponseCategoryDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                                         @RequestBody(required = false) RequestCategoryDto req) {
+    public ResponseEntity<ResponseDto<ResponseCategoryDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                                @RequestBody(required = false) RequestCategoryDto req) {
         return service.get(userId, req);
     }
 

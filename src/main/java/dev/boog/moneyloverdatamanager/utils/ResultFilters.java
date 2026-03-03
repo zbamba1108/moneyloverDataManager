@@ -10,7 +10,9 @@ import org.springframework.data.domain.*;
 @Builder
 public class ResultFilters {
 
-    private Pageable pageable;
+    private Integer page;
+
+    private Integer pageSize;
 
     private Sort sort;
 

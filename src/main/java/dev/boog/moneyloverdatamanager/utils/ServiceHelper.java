@@ -36,7 +36,8 @@ public class ServiceHelper {
         return req != null ?
                 ResultFilters.builder()
                     .sort(null)
-                    .pageable(null)
+                    .page(req.getPage())
+                    .pageSize(req.getPageSize())
                     .dateRange(req.getDateRange())
                     .build()
                 : null;

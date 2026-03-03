@@ -1,6 +1,8 @@
-package dev.boog.moneyloverdatamanager.controllers;
+package dev.boog.moneyloverdatamanager.controllers.impl;
 
+import dev.boog.moneyloverdatamanager.controllers.CRUDController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseUserDto;
 import dev.boog.moneyloverdatamanager.services.UserService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
@@ -8,8 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/users")
@@ -32,8 +32,8 @@ public class UserController implements CRUDController<RequestUserDto, ResponseUs
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<ResponseUserDto>> get(@RequestHeader(value = Constants.Headers.USER_ID, required = false) String userId,
-                                                     @RequestBody(required = false) RequestUserDto req) {
+    public ResponseEntity<ResponseDto<ResponseUserDto>> get(@RequestHeader(value = Constants.Headers.USER_ID, required = false) String userId,
+                                                            @RequestBody(required = false) RequestUserDto req) {
         return service.get(userId, req);
     }
     @PutMapping

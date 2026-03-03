@@ -1,17 +1,18 @@
 package dev.boog.moneyloverdatamanager.dtos.response;
 
-import lombok.*;
+import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-import lombok.experimental.*;
-
-@Setter
-@Getter
-@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseUserDto extends BaseResponseDto {
+@SuperBuilder
+public class ResponseUserDto extends BaseEntityDto {
 
-    private Long id;
-
+    private String email;
 }

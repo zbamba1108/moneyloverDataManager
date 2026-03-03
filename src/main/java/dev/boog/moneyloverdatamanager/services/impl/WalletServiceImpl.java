@@ -1,13 +1,17 @@
 package dev.boog.moneyloverdatamanager.services.impl;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
-import dev.boog.moneyloverdatamanager.mappers.WalletMapper;
+import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
+import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
 import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.*;
 import java.util.logging.*;
+
+import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
 import org.springframework.dao.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,20 +41,28 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
         }
     }
 
-    public ResponseEntity<List<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
+    public ResponseEntity<ResponseDto<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
         try {
-            List<ResponseWalletDto> responseDtoList = walletRepository
+            final QueryResult<Wallet> queryResult = walletRepository
                     .searchByUserIdAndIds(
                             Wallet.class,
                             userId,
                             req != null ? req.getIds() : null,
                             ServiceHelper.filter(req),
                             false
-                    )
-                    .stream()
-                    .map(WalletMapper.INSTANCE::toResponseDto)
-                    .toList();
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+                    );
+
+            final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
+                    .<ResponseWalletDto>builder()
+                    .data(queryResult
+                            .getResults()
+                            .stream()
+                            .map(WalletMapper.INSTANCE::toResponseDto)
+                            .toList())
+                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                    .build();
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -64,8 +76,9 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
     public ResponseEntity<ResponseWalletDto> update(String userId, RequestWalletDto req) {
         try {
             ResponseWalletDto responseDto = WalletMapper.INSTANCE
-                    .toResponseDto(walletRepository.save(WalletMapper.INSTANCE
-                            .toEntity(req)));
+                    .toResponseDto(walletRepository
+                            .save(WalletMapper.INSTANCE
+                                    .toEntity(req)));
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
@@ -97,20 +110,28 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
     }
 
     @Override
-    public ResponseEntity<List<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
+    public ResponseEntity<ResponseDto<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
         try {
-            List<ResponseWalletDto> responseDtoList = walletRepository
+            final QueryResult<Wallet> queryResult = walletRepository
                     .searchByUserIdAndIds(
                             Wallet.class,
                             userId,
                             req != null ? req.getIds() : null,
                             ServiceHelper.filter(req),
                             true
-                    )
-                    .stream()
-                    .map(WalletMapper.INSTANCE::toResponseDtoDetails)
-                    .toList();
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+                    );
+
+            final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
+                    .<ResponseWalletDto>builder()
+                    .data(queryResult
+                            .getResults()
+                            .stream()
+                            .map(WalletMapper.INSTANCE::toResponseDtoDetails)
+                            .toList())
+                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                    .build();
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

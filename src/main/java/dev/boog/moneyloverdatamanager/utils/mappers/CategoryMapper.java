@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.mappers;
+package dev.boog.moneyloverdatamanager.utils.mappers;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
@@ -7,7 +7,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface CategoryMapper extends BaseMapper<Category, RequestCategoryDto, ResponseCategoryDto> {
+public interface CategoryMapper extends BaseEntityMapper<Category, RequestCategoryDto, ResponseCategoryDto> {
 
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 

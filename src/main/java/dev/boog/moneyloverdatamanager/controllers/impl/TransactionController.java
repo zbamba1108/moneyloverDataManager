@@ -1,6 +1,9 @@
-package dev.boog.moneyloverdatamanager.controllers;
+package dev.boog.moneyloverdatamanager.controllers.impl;
 
+import dev.boog.moneyloverdatamanager.controllers.CRUDController;
+import dev.boog.moneyloverdatamanager.controllers.DetailsController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
@@ -8,12 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/api/transactions")
 public class TransactionController implements CRUDController<RequestTransactionDto, ResponseTransactionDto>,
-                                              DetailsController<RequestTransactionDto, ResponseTransactionDto> {
+        DetailsController<RequestTransactionDto, ResponseTransactionDto> {
 
     private final TransactionService<RequestTransactionDto, ResponseTransactionDto> service;
 
@@ -28,14 +29,14 @@ public class TransactionController implements CRUDController<RequestTransactionD
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<ResponseTransactionDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                                            @RequestBody(required = false) RequestTransactionDto req) {
+    public ResponseEntity<ResponseDto<ResponseTransactionDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                                   @RequestBody(required = false) RequestTransactionDto req) {
         return service.get(userId, req);
     }
 
     @PostMapping("/search/details")
-    public ResponseEntity<List<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                                                @RequestBody(required = false) RequestTransactionDto req) {
+    public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                                       @RequestBody(required = false) RequestTransactionDto req) {
         return service.details(userId, req);
     }
 

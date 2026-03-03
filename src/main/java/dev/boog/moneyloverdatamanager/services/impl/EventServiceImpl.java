@@ -1,6 +1,7 @@
 package dev.boog.moneyloverdatamanager.services.impl;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestEventDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseEventDto;
 import dev.boog.moneyloverdatamanager.repositories.EventRepository;
 import dev.boog.moneyloverdatamanager.services.EventService;
@@ -21,7 +22,7 @@ public class EventServiceImpl implements EventService<RequestEventDto, ResponseE
         return null;
     }
 
-    public ResponseEntity<List<ResponseEventDto>> get(String userId, RequestEventDto req) {
+    public ResponseEntity<ResponseDto<ResponseEventDto>> get(String userId, RequestEventDto req) {
         return null;
     }
 

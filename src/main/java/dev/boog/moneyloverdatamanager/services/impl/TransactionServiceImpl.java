@@ -1,15 +1,16 @@
 package dev.boog.moneyloverdatamanager.services.impl;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
-import dev.boog.moneyloverdatamanager.mappers.TransactionMapper;
-import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
+import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
+import dev.boog.moneyloverdatamanager.utils.mappers.TransactionMapper;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 
-import dev.boog.moneyloverdatamanager.services.CRUDService;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
+import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,20 +45,28 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
         }
     }
 
-    public ResponseEntity<List<ResponseTransactionDto>> get(String userId, RequestTransactionDto req) {
+    public ResponseEntity<ResponseDto<ResponseTransactionDto>> get(String userId, RequestTransactionDto req) {
         try {
-            final List<ResponseTransactionDto> responseDtoList = transactionRepository
+            final QueryResult<Transaction> queryResult = transactionRepository
                     .searchByUserIdAndOptionalParams(
                             Transaction.class,
                             userId,
                             ServiceHelper.mapQueryParams(userId, req),
                             ServiceHelper.filter(req),
                             false
-                    )
-                    .stream()
-                    .map(TransactionMapper.INSTANCE::toResponseDto)
-                    .toList();
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+                    );
+
+            final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
+                    .<ResponseTransactionDto>builder()
+                    .data(queryResult
+                            .getResults()
+                            .stream()
+                            .map(TransactionMapper.INSTANCE::toResponseDto)
+                            .toList())
+                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                    .build();
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -99,20 +108,28 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
     }
 
     @Override
-    public ResponseEntity<List<ResponseTransactionDto>> details(String userId, RequestTransactionDto req) {
+    public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(String userId, RequestTransactionDto req) {
         try {
-            final List<ResponseTransactionDto> responseDtoList = transactionRepository
+            final QueryResult<Transaction> queryResult = transactionRepository
                     .searchByUserIdAndOptionalParams(
                             Transaction.class,
                             userId,
                             ServiceHelper.mapQueryParams(userId, req),
                             ServiceHelper.filter(req),
                             true
-                    )
-                    .stream()
-                    .map(TransactionMapper.INSTANCE::toResponseDtoDetails)
-                    .toList();
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+                    );
+
+            final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
+                    .<ResponseTransactionDto>builder()
+                    .data(queryResult
+                            .getResults()
+                            .stream()
+                            .map(TransactionMapper.INSTANCE::toResponseDtoDetails)
+                            .toList())
+                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                    .build();
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

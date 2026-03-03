@@ -1,13 +1,12 @@
 package dev.boog.moneyloverdatamanager.services.impl;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseUserDto;
 import dev.boog.moneyloverdatamanager.entities.User;
-import dev.boog.moneyloverdatamanager.mappers.UserMapper;
-import dev.boog.moneyloverdatamanager.repositories.BaseRepository;
+import dev.boog.moneyloverdatamanager.utils.mappers.UserMapper;
 import dev.boog.moneyloverdatamanager.repositories.UserRepository;
 
-import dev.boog.moneyloverdatamanager.services.CRUDService;
 import dev.boog.moneyloverdatamanager.services.UserService;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService<RequestUserDto, ResponseUser
         }
     }
 
-    public ResponseEntity<List<ResponseUserDto>> get(String userId, RequestUserDto req) {
+    public ResponseEntity<ResponseDto<ResponseUserDto>> get(String userId, RequestUserDto req) {
         try {
             List<ResponseUserDto> responseDtoList;
 
@@ -59,7 +58,14 @@ public class UserServiceImpl implements UserService<RequestUserDto, ResponseUser
                         .toList();
             }
 
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+            // TODO implements paging
+
+            ResponseDto<ResponseUserDto> responseDto = ResponseDto
+                    .<ResponseUserDto>builder()
+                    .data(responseDtoList)
+                    .build();
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (InvalidDataAccessApiUsageException e) {
             LOGGER.severe(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -72,6 +78,7 @@ public class UserServiceImpl implements UserService<RequestUserDto, ResponseUser
     @Override
     public ResponseEntity<ResponseUserDto> update(String userId, RequestUserDto req) {
         try {
+
             ResponseUserDto responseDto = UserMapper.INSTANCE
                     .toResponseDto(userRepository.save(UserMapper.INSTANCE
                             .toEntity(req)));

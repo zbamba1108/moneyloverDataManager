@@ -1,8 +1,5 @@
-package dev.boog.moneyloverdatamanager.mappers;
+package dev.boog.moneyloverdatamanager.utils.mappers;
 
-import dev.boog.moneyloverdatamanager.dtos.request.RequestEventDto;
-import dev.boog.moneyloverdatamanager.dtos.response.ResponseEventDto;
-import dev.boog.moneyloverdatamanager.entities.Event;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;

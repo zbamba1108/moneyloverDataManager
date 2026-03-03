@@ -1,23 +1,20 @@
 package dev.boog.moneyloverdatamanager.dtos.response;
 
-import dev.boog.moneyloverdatamanager.dtos.response.models.TransactionDto;
+import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-import lombok.experimental.*;
 
-@Setter
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseWalletDto extends BaseResponseDto {
-
-    private Long id;
+public class ResponseWalletDto extends BaseEntityDto {
 
     private String walletName;
 
-    private String userId;
+    private List<ResponseTransactionDto> transactions;
 
-    private List<TransactionDto> transactionList;
 }
