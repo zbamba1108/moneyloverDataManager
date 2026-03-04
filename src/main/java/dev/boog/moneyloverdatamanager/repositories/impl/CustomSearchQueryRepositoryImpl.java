@@ -2,10 +2,10 @@ package dev.boog.moneyloverdatamanager.repositories.impl;
 
 import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
 import dev.boog.moneyloverdatamanager.utils.*;
-import dev.boog.moneyloverdatamanager.utils.enums.StringBuilderType;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.Page;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.enums.QueryType;
+import dev.boog.moneyloverdatamanager.utils.models.Page;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -53,7 +53,7 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
     private static <E> List<E> getResultList(QueryRequest queryRequest, QueryBuilder queryBuilder) {
         return (List<E>) queryBuilder
                 .initializeQuery(QueryHelper
-                        .getStringBuilder(StringBuilderType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
+                        .getStringBuilder(QueryType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
                 .addEntityGraph()
                 .addIds(queryRequest.getIds())
                 .addOptionalParam(queryRequest.getOptionalParams())
@@ -67,7 +67,7 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
     private static <E> List<E> getResultListFromMatchingIds(QueryRequest queryRequest, QueryBuilder queryBuilder) {
         List<Long> matchingIds = (List<Long>) queryBuilder
                 .initializeQuery(QueryHelper
-                        .getStringBuilder(StringBuilderType.RETRIEVE_IDS, queryRequest.getClazz().getSimpleName()))
+                        .getStringBuilder(QueryType.RETRIEVE_IDS, queryRequest.getClazz().getSimpleName()))
                 .addIds(queryRequest.getIds())
                 .addOptionalParam(queryRequest.getOptionalParams())
                 .addDateRange()
@@ -80,7 +80,7 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
 
         return (List<E>) queryBuilder
                 .initializeQuery(QueryHelper
-                        .getStringBuilder(StringBuilderType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
+                        .getStringBuilder(QueryType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
                 .addEntityGraph()
                 .addIds(matchingIds
                         .stream()
@@ -95,7 +95,7 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
         queryBuilder.setReturnLong(true);
         Long totalRecords = (Long) queryBuilder
                 .initializeQuery(QueryHelper
-                        .getStringBuilder(StringBuilderType.COUNT, queryRequest.getClazz().getSimpleName()))
+                        .getStringBuilder(QueryType.COUNT, queryRequest.getClazz().getSimpleName()))
                 .addIds(queryRequest.getIds())
                 .addOptionalParam(queryRequest.getOptionalParams())
                 .addDateRange()

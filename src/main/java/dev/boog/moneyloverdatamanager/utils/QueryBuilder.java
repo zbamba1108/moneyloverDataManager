@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.utils;
 
+import dev.boog.moneyloverdatamanager.utils.models.ResultFilters;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;

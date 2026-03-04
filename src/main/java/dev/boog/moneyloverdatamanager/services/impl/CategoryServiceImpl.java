@@ -9,12 +9,11 @@ import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.services.CategoryService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
 import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public class CategoryServiceImpl implements CategoryService<RequestCategoryDto, ResponseCategoryDto> {

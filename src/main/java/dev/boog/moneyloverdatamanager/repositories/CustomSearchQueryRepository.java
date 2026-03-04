@@ -1,8 +1,8 @@
 package dev.boog.moneyloverdatamanager.repositories;
 
 
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 
 
 public interface CustomSearchQueryRepository<E> {

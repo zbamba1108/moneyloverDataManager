@@ -1,6 +1,6 @@
 package dev.boog.moneyloverdatamanager.utils.enums;
 
-public enum StringBuilderType {
+public enum QueryType {
 
     COUNT,
     RETRIEVE_IDS,

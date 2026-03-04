@@ -11,7 +11,7 @@ import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.*;
 import java.util.logging.*;
 
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import org.springframework.dao.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

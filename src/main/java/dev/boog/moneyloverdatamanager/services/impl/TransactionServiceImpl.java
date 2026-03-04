@@ -10,12 +10,11 @@ import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public class TransactionServiceImpl implements TransactionService<RequestTransactionDto, ResponseTransactionDto> {

@@ -2,7 +2,7 @@ package dev.boog.moneyloverdatamanager.utils;
 
 import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
-import dev.boog.moneyloverdatamanager.utils.enums.StringBuilderType;
+import dev.boog.moneyloverdatamanager.utils.enums.QueryType;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 
@@ -49,7 +49,7 @@ public final class QueryHelper {
         }
     }
 
-    public static StringBuilder getStringBuilder(StringBuilderType type, String classSimpleName) {
+    public static StringBuilder getStringBuilder(QueryType type, String classSimpleName) {
 
         return switch (type) {
             case COUNT -> new StringBuilder()

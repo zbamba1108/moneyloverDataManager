@@ -1,7 +1,7 @@
 package dev.boog.moneyloverdatamanager.utils.mappers;
 
 import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.Page;
+import dev.boog.moneyloverdatamanager.utils.models.Page;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

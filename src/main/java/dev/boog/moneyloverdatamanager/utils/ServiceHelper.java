@@ -8,7 +8,8 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestEventDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
-import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.utils.models.ResultFilters;
 
 import java.util.HashMap;
 
@@ -27,7 +28,6 @@ public final class ServiceHelper {
     }
 
     private static HashMap<String, String> mapQueryParams(BaseRequestDto req) {
-
         if (req instanceof RequestTransactionDto) {
             return mapTransactionQueryParams((RequestTransactionDto) req);
         } else if (req instanceof RequestWalletDto) {

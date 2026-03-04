@@ -1,6 +1,5 @@
-package dev.boog.moneyloverdatamanager.utils.mappers.models;
+package dev.boog.moneyloverdatamanager.utils.models;
 
-import dev.boog.moneyloverdatamanager.utils.ResultFilters;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
