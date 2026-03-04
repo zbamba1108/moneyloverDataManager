@@ -16,7 +16,6 @@ import org.springframework.dao.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 
 public class WalletServiceImpl implements WalletService<RequestWalletDto, ResponseWalletDto> {
 
@@ -44,14 +43,8 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
     public ResponseEntity<ResponseDto<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
         try {
             final QueryResult<Wallet> queryResult = walletRepository
-                    .searchByUserIdAndIds(
-                            Wallet.class,
-                            userId,
-                            req != null ? req.getIds() : null,
-                            ServiceHelper.filter(req),
-                            false,
-                            true
-                    );
+                    .search(ServiceHelper
+                            .getQueryRequest(Wallet.class, req, userId, false, false));
 
             final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
                     .<ResponseWalletDto>builder()
@@ -114,14 +107,8 @@ public class WalletServiceImpl implements WalletService<RequestWalletDto, Respon
     public ResponseEntity<ResponseDto<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
         try {
             final QueryResult<Wallet> queryResult = walletRepository
-                    .searchByUserIdAndIds(
-                            Wallet.class,
-                            userId,
-                            req != null ? req.getIds() : null,
-                            ServiceHelper.filter(req),
-                            true,
-                            true
-                    );
+                    .search(ServiceHelper
+                            .getQueryRequest(Wallet.class, req, userId, true, true));
 
             final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
                     .<ResponseWalletDto>builder()

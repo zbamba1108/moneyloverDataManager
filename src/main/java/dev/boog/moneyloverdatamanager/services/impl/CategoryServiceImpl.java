@@ -44,15 +44,8 @@ public class CategoryServiceImpl implements CategoryService<RequestCategoryDto, 
     public ResponseEntity<ResponseDto<ResponseCategoryDto>> get(String userId, RequestCategoryDto req) {
         try {
             final QueryResult<Category> queryResult = categoryRepository
-                    .searchByUserIdAndIdsAndOptionalParams(
-                            Category.class,
-                            userId,
-                            req != null ? req.getIds() : null,
-                            ServiceHelper.mapQueryParams(userId, req),
-                            ServiceHelper.filter(req),
-                            false,
-                            false
-                    );
+                    .search(ServiceHelper
+                            .getQueryRequest(Category.class, req, userId, false, false));
 
             final ResponseDto<ResponseCategoryDto> responseDto = ResponseDto.<ResponseCategoryDto>builder()
                     .data(queryResult

@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
-public class QueryBuilder<E> {
+public final class QueryBuilder<E> {
 
     private final EntityManager em;
 
@@ -20,7 +20,7 @@ public class QueryBuilder<E> {
 
     private final boolean mapDetails;
 
-    private final boolean count;
+    private final boolean returnLong;
 
     private HashMap<String, String> remappedOptionalParams;
 
@@ -38,15 +38,15 @@ public class QueryBuilder<E> {
         this.userId = userId;
         this.resultFilters = resultFilters;
         this.mapDetails = mapDetails;
-        this.count = returnLong;
+        this.returnLong = returnLong;
         this.sb = sb;
     }
 
     public QueryBuilder<E> createQuery() {
-        if (!count) {
+        if (!returnLong) {
             sb.append(" ORDER BY e.user.id ASC");
         }
-        this.query = count ? em.createQuery(sb.toString(), Long.class) : em.createQuery(sb.toString(), clazz);
+        this.query = returnLong ? em.createQuery(sb.toString(), Long.class) : em.createQuery(sb.toString(), clazz);
 
         return this;
     }

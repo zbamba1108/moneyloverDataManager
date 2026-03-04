@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
 import dev.boog.moneyloverdatamanager.utils.*;
 import dev.boog.moneyloverdatamanager.utils.enums.StringBuilderType;
 import dev.boog.moneyloverdatamanager.utils.mappers.models.Page;
+import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.utils.mappers.models.QueryResult;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,74 +16,56 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
     @PersistenceContext
     private EntityManager em;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public QueryResult<E> searchByUserId(Class<E> clazz, String userId, ResultFilters resultFilters, boolean mapDetails, boolean hasChildren) {
-        return search(clazz, userId, null, null, resultFilters, mapDetails, hasChildren);
-    }
+    public QueryResult<E> search(QueryRequest queryRequest) {
 
-    @Override
-    public QueryResult<E> searchByUserIdAndIds(Class<E> clazz, String userId, List<String> ids, ResultFilters resultFilters, boolean mapDetails, boolean hasChildren) {
-        return search(clazz, userId, ids, null, resultFilters, mapDetails, hasChildren);
-    }
-
-    @Override
-    public QueryResult<E> searchByUserIdAndOptionalParams(Class<E> clazz, String userId, HashMap<String, String> optionalParams, ResultFilters resultFilters, boolean mapDetails, boolean hasChildren) {
-        return search(clazz, userId, null, optionalParams, resultFilters, mapDetails, hasChildren);
-    }
-
-    @Override
-    public QueryResult<E> searchByUserIdAndIdsAndOptionalParams(Class<E> clazz, String userId, List<String> ids, HashMap<String, String> optionalParams, ResultFilters resultFilters, boolean mapDetails, boolean hasChildren) {
-        return search(clazz, userId, ids, optionalParams, resultFilters, mapDetails, hasChildren);
-    }
-
-    @Override
-    public QueryResult<E> search(Class<E> clazz, String userId, List<String> ids, HashMap<String, String> optionalParams, ResultFilters resultFilters, boolean mapDetails, boolean hasChildren) {
-        List<E> resultList;
-
+        final List<E> resultList;
         Page page = null;
-        if (resultFilters != null && resultFilters.getPageSize() != null && resultFilters.getPage() != null) {
+
+        final boolean count = queryRequest.getResultFilters() != null && queryRequest.getResultFilters().getPageSize() != null && queryRequest.getResultFilters().getPage() != null;
+        if (count) {
             Long totalRecords = (Long) new QueryBuilder<>(em,
-                                                          clazz,
-                                                          QueryHelper.getStringBuilder(StringBuilderType.COUNT, clazz.getSimpleName()),
-                                                          userId,
-                                                          resultFilters,
-                                                          mapDetails,
+                                                          queryRequest.getClazz(),
+                                                          QueryHelper.getStringBuilder(StringBuilderType.COUNT, queryRequest.getClazz().getSimpleName()),
+                                                          queryRequest.getUserId(),
+                                                          queryRequest.getResultFilters(),
+                                                          queryRequest.isMapDetails(),
                                                 true)
                     .addEntityGraph()
-                    .addIds(ids)
-                    .addOptionalParam(optionalParams)
+                    .addIds(queryRequest.getIds())
+                    .addOptionalParam(queryRequest.getOptionalParams())
                     .addDateRange()
                     .createQuery()
                     .build()
                     .getSingleResult();
 
-            boolean hasMore = totalRecords > (long) resultFilters.getPageSize() * (resultFilters.getPage() + 1);
+            boolean hasMore = totalRecords > (long) queryRequest.getResultFilters().getPageSize() * (queryRequest.getResultFilters().getPage() + 1);
             page = new Page(totalRecords, hasMore);
         }
 
-        if (mapDetails && hasChildren) {
+        if (queryRequest.isMapDetails() && queryRequest.isHasChildren()) {
             List<Long> matchingIds = (List<Long>) new QueryBuilder<>(em,
-                                                                     clazz,
-                                                                     QueryHelper.getStringBuilder(StringBuilderType.RETRIEVE_IDS, clazz.getSimpleName()),
-                                                                     userId,
-                                                                     resultFilters,
-                                                                     mapDetails,
+                                                                     queryRequest.getClazz(),
+                                                                     QueryHelper.getStringBuilder(StringBuilderType.RETRIEVE_IDS, queryRequest.getClazz().getSimpleName()),
+                                                                     queryRequest.getUserId(),
+                                                                     queryRequest.getResultFilters(),
+                                                                     queryRequest.isMapDetails(),
                                                            true)
-                    //.addEntityGraph()
-                    .addIds(ids)
-                    .addOptionalParam(optionalParams)
+                    .addIds(queryRequest.getIds())
+                    .addOptionalParam(queryRequest.getOptionalParams())
                     .addDateRange()
                     .createQuery()
-                    .addPaginationParam(resultFilters)
+                    .addPaginationParam(queryRequest.getResultFilters())
                     .build()
                     .getResultList();
 
             resultList = (List<E>) new QueryBuilder<>(em,
-                                                      clazz,
-                                                      QueryHelper.getStringBuilder(StringBuilderType.COMPLETE_QUERY, clazz.getSimpleName()),
-                                                      userId,
+                                                      queryRequest.getClazz(),
+                                                      QueryHelper.getStringBuilder(StringBuilderType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()),
+                                                      queryRequest.getUserId(),
                                             null,
-                                                      mapDetails,
+                                                      queryRequest.isMapDetails(),
                                             false)
                     .addEntityGraph()
                     .addIds(matchingIds
@@ -94,18 +77,18 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
                     .getResultList();
         } else {
             resultList = (List<E>) new QueryBuilder<>(em,
-                                                      clazz,
-                                                      QueryHelper.getStringBuilder(StringBuilderType.COMPLETE_QUERY, clazz.getSimpleName()),
-                                                      userId,
-                                                      resultFilters,
-                                                      mapDetails,
+                                                      queryRequest.getClazz(),
+                                                      QueryHelper.getStringBuilder(StringBuilderType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()),
+                                                      queryRequest.getUserId(),
+                                                      queryRequest.getResultFilters(),
+                                                      queryRequest.isMapDetails(),
                                             false)
                     .addEntityGraph()
-                    .addIds(ids)
-                    .addOptionalParam(optionalParams)
+                    .addIds(queryRequest.getIds())
+                    .addOptionalParam(queryRequest.getOptionalParams())
                     .addDateRange()
                     .createQuery()
-                    .addPaginationParam(resultFilters)
+                    .addPaginationParam(queryRequest.getResultFilters())
                     .build()
                     .getResultList();
         }

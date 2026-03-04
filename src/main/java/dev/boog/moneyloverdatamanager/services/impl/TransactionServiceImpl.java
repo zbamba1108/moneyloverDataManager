@@ -48,14 +48,8 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
     public ResponseEntity<ResponseDto<ResponseTransactionDto>> get(String userId, RequestTransactionDto req) {
         try {
             final QueryResult<Transaction> queryResult = transactionRepository
-                    .searchByUserIdAndOptionalParams(
-                            Transaction.class,
-                            userId,
-                            ServiceHelper.mapQueryParams(userId, req),
-                            ServiceHelper.filter(req),
-                            false,
-                            false
-                    );
+                    .search(ServiceHelper
+                            .getQueryRequest(Transaction.class, req, userId, false, false));
 
             final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
                     .<ResponseTransactionDto>builder()
@@ -112,14 +106,8 @@ public class TransactionServiceImpl implements TransactionService<RequestTransac
     public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(String userId, RequestTransactionDto req) {
         try {
             final QueryResult<Transaction> queryResult = transactionRepository
-                    .searchByUserIdAndOptionalParams(
-                            Transaction.class,
-                            userId,
-                            ServiceHelper.mapQueryParams(userId, req),
-                            ServiceHelper.filter(req),
-                            true,
-                            false
-                    );
+                    .search(ServiceHelper
+                            .getQueryRequest(Transaction.class, req, userId, true, false));
 
             final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
                     .<ResponseTransactionDto>builder()

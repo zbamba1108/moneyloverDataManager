@@ -4,6 +4,6 @@ public enum StringBuilderType {
 
     COUNT,
     RETRIEVE_IDS,
-    COMPLETE_QUERY
+    RETRIEVE_ENTITY_LIST;
 
 }

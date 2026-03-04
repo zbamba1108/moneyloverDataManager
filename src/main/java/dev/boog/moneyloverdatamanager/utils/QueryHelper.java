@@ -9,7 +9,7 @@ import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class QueryHelper {
+public final class QueryHelper {
 
     public static String capitalizeProperty(String property) {
         while (property.contains(".")){
@@ -61,7 +61,7 @@ public class QueryHelper {
                     .append("SELECT e.id FROM ")
                     .append(classSimpleName)
                     .append(" e WHERE e.user.id = :userId");
-        } else if (type.equals(StringBuilderType.COMPLETE_QUERY)) {
+        } else if (type.equals(StringBuilderType.RETRIEVE_ENTITY_LIST)) {
             return new StringBuilder()
                     .append("SELECT e FROM ")
                     .append(classSimpleName)
