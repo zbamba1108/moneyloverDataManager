@@ -1,74 +1,72 @@
 package dev.boog.moneyloverdatamanager.utils;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
-public final class QueryBuilder<E> {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+public final class QueryBuilder {
 
-    private final EntityManager em;
+    private EntityManager em;
 
-    private final StringBuilder sb;
+    private StringBuilder sb;
 
-    private final Class<E> clazz;
+    private Class<?> clazz;
 
-    private final String userId;
-
-    private final boolean mapDetails;
-
-    private final boolean returnLong;
+    private String userId;
 
     private HashMap<String, String> remappedOptionalParams;
 
-    private final ResultFilters resultFilters;
+    private ResultFilters resultFilters;
 
     private TypedQuery<?> query;
 
-    private EntityGraph<E> entityGraph;
+    private EntityGraph<?> entityGraph;
 
     private List<String> ids;
 
-    public QueryBuilder(EntityManager em, Class<E> clazz, StringBuilder sb, String userId, ResultFilters resultFilters, boolean mapDetails, boolean returnLong) {
-        this.em = em;
-        this.clazz = clazz;
-        this.userId = userId;
-        this.resultFilters = resultFilters;
-        this.mapDetails = mapDetails;
-        this.returnLong = returnLong;
-        this.sb = sb;
-    }
+    private boolean mapDetails;
 
-    public QueryBuilder<E> createQuery() {
-        if (!returnLong) {
-            sb.append(" ORDER BY e.user.id ASC");
-        }
+    private boolean returnLong;
+
+    private boolean pagination;
+
+    public TypedQuery<?> buildQuery() {
         this.query = returnLong ? em.createQuery(sb.toString(), Long.class) : em.createQuery(sb.toString(), clazz);
 
-        return this;
-    }
-
-    public TypedQuery<?> build() {
-        this.query.setParameter("userId", userId);
+        addUserIdParam();
         addHintParam();
         addIdsParam();
         addRemappedOptionalParams();
         addDateRangeParam();
+        addPaginationParam();
 
         return this.query;
     }
 
-    public QueryBuilder<E> addEntityGraph() {
+    public QueryBuilder initializeQuery(StringBuilder sb) {
+        this.sb = sb;
+        return this;
+    }
+
+    public QueryBuilder addEntityGraph() {
         if (mapDetails) {
-            entityGraph = (EntityGraph<E>) QueryHelper.getEntityGraph(em, clazz.getSimpleName());
+            entityGraph = QueryHelper.getEntityGraph(em, clazz.getSimpleName());
         }
         return this;
     }
 
-    public QueryBuilder<E> addOptionalParam(HashMap<String, String> optionalParams) {
+    public QueryBuilder addOptionalParam(HashMap<String, String> optionalParams) {
         if (optionalParams != null && !optionalParams.isEmpty()) {
             remappedOptionalParams = new HashMap<>();
             sb.append(" AND ");
@@ -77,7 +75,7 @@ public final class QueryBuilder<E> {
         return this;
     }
 
-    public QueryBuilder<E> addDateRange() {
+    public QueryBuilder addDateRange() {
         if (resultFilters != null
                 && resultFilters.getDateRange() != null
                 && resultFilters.getDateRange().length == 2) {
@@ -86,12 +84,27 @@ public final class QueryBuilder<E> {
         return this;
     }
 
-    public QueryBuilder<E> addIds(List<String> ids) {
+    public QueryBuilder addIds(List<String> ids) {
         if (ids != null && !ids.isEmpty()) {
             sb.append(" AND e.id in (:ids)");
             this.ids = ids;
         }
         return this;
+    }
+
+    public QueryBuilder addOrderBy(ResultFilters resultFilters) {
+        if (resultFilters != null && resultFilters.getSortingOrder() != null && StringUtils.isNotBlank(resultFilters.getSortingField())) {
+            sb.append(" ORDER BY e.")
+                    .append(resultFilters.getSortingField())
+                    .append(" ")
+                    .append(resultFilters.getSortingOrder().toString());
+        }
+
+        return this;
+    }
+
+    private void addUserIdParam() {
+        this.query.setParameter("userId", userId);
     }
 
     private void addHintParam() {
@@ -130,12 +143,11 @@ public final class QueryBuilder<E> {
         }
     }
 
-    public QueryBuilder<E> addPaginationParam(ResultFilters resultFilters) {
-        if (resultFilters != null && resultFilters.getPage() != null && resultFilters.getPageSize() != null) {
+    private void addPaginationParam() {
+        if (pagination && resultFilters != null && resultFilters.getPage() != null && resultFilters.getPageSize() != null) {
             query.setFirstResult(resultFilters.getPage() * resultFilters.getPageSize());
             query.setMaxResults(resultFilters.getPageSize());
         }
-        return this;
     }
 
 }

@@ -49,25 +49,21 @@ public final class QueryHelper {
         }
     }
 
-    public static java.lang.StringBuilder getStringBuilder(StringBuilderType type, String classSimpleName) {
+    public static StringBuilder getStringBuilder(StringBuilderType type, String classSimpleName) {
 
-        if (type.equals(StringBuilderType.COUNT)) {
-            return new StringBuilder()
+        return switch (type) {
+            case COUNT -> new StringBuilder()
                     .append("SELECT COUNT(e) FROM ")
                     .append(classSimpleName)
                     .append(" e WHERE e.user.id = :userId");
-        } else if (type.equals(StringBuilderType.RETRIEVE_IDS)) {
-            return new StringBuilder()
+            case RETRIEVE_IDS -> new StringBuilder()
                     .append("SELECT e.id FROM ")
                     .append(classSimpleName)
                     .append(" e WHERE e.user.id = :userId");
-        } else if (type.equals(StringBuilderType.RETRIEVE_ENTITY_LIST)) {
-            return new StringBuilder()
+            case RETRIEVE_ENTITY_LIST -> new StringBuilder()
                     .append("SELECT e FROM ")
                     .append(classSimpleName)
                     .append(" e WHERE e.user.id = :userId");
-        }
-
-        return null;
+        };
     }
 }

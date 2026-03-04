@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class RequestWalletDto extends BaseRequestDto {
 
-    private String walletName;
+    private String name;
 }

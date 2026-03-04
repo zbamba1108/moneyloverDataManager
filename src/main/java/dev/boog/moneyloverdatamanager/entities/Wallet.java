@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "wallet", uniqueConstraints = {
-        @UniqueConstraint( name = "walletNameAndUserId", columnNames = { "wallet_name", "user_id"})
+        @UniqueConstraint( name = "walletNameAndUserId", columnNames = {"name", "user_id"})
 })
 @NamedEntityGraph(
         name = Constants.EntityGraph.WALLET_TRANSACTION,
@@ -33,8 +33,8 @@ import java.util.List;
 )
 public class Wallet extends BaseEntity {
 
-    @Column(name = "wallet_name", nullable = false)
-    private String walletName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

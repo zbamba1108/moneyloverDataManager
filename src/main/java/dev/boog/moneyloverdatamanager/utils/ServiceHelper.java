@@ -48,10 +48,11 @@ public final class ServiceHelper {
     private static ResultFilters mapResultFilter(BaseRequestDto req) {
         return req != null ?
                 ResultFilters.builder()
-                    .sort(null)
                     .page(req.getPage())
                     .pageSize(req.getPageSize())
                     .dateRange(req.getDateRange())
+                    .sortingField(req.getSortingField())
+                    .sortingOrder(req.getSortingOrder())
                     .build()
                 : null;
     }

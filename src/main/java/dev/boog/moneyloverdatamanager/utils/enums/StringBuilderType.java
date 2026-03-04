@@ -5,5 +5,4 @@ public enum StringBuilderType {
     COUNT,
     RETRIEVE_IDS,
     RETRIEVE_ENTITY_LIST;
-
 }

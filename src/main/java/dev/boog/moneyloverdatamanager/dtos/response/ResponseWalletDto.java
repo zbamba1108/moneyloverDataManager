@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ResponseWalletDto extends BaseEntityDto {
 
-    private String walletName;
+    private String name;
 
     private List<ResponseTransactionDto> transactions;
 

@@ -1,7 +1,7 @@
 package dev.boog.moneyloverdatamanager.utils;
 
+import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import lombok.*;
-import org.springframework.data.domain.*;
 
 @Getter
 @Setter
@@ -14,7 +14,9 @@ public class ResultFilters {
 
     private Integer pageSize;
 
-    private Sort sort;
-
     private String[] dateRange;
+
+    private SortingOrder sortingOrder;
+
+    private String sortingField;
 }
