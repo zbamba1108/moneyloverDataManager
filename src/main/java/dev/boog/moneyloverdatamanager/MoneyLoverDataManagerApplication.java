@@ -59,7 +59,7 @@ public class MoneyLoverDataManagerApplication {
 
                 for (int w = 0; w < walletNumber; w++) {
                     Wallet wallet = Wallet.builder()
-                            .walletName("Wallet #" + (w + 1))
+                            .name("Wallet #" + (w + 1))
                             .user(user)
                             .build();
                     walletRepository.save(wallet);
@@ -112,5 +112,5 @@ public class MoneyLoverDataManagerApplication {
 
             System.out.println("Ready!!!");
         };
-    } */
+    }*/
 }
