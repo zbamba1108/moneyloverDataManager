@@ -43,6 +43,12 @@ public class TransactionController implements CRUDController<RequestTransactionD
     @PostMapping("/search/details")
     public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                                        @RequestBody(required = false) RequestTransactionDto req) {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         return service.details(userId, req);
     }
 
