@@ -8,6 +8,7 @@ import dev.boog.moneyloverdatamanager.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,7 @@ public class WalletController {
                                                                   @Parameter(
                                                                       name = "request",
                                                                       description = "the input request")
-                                                                  @RequestBody(required = false) RequestWalletDto req) {
+                                                                  @RequestBody @Valid RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.details(userId, req));
