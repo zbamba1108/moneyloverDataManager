@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.controllers.impl;
+package dev.boog.moneyloverdatamanager.controllers;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,9 @@ public class WalletController {
                                                  name = "request",
                                                  description = "the input request")
                                          @RequestBody RequestWalletDto req) {
-        return service.create(userId, req);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(service.create(userId, req));
     }
 
     @Operation(description = "search one or more wallets based on input request")
@@ -48,7 +51,9 @@ public class WalletController {
                                                                   name = "request",
                                                                   description = "the input request")
                                                               @RequestBody(required = false) RequestWalletDto req) {
-        return service.get(userId, req);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.get(userId, req));
     }
 
     @Operation(description = "search one or more wallets based on input request, get the details of children")
@@ -62,7 +67,9 @@ public class WalletController {
                                                                       name = "request",
                                                                       description = "the input request")
                                                                   @RequestBody(required = false) RequestWalletDto req) {
-        return service.details(userId, req);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.details(userId, req));
     }
 
     @Operation(description = "update an existing wallet")
@@ -76,7 +83,9 @@ public class WalletController {
                                                         name = "request",
                                                         description = "the input request")
                                                     @RequestBody RequestWalletDto req) {
-        return service.update(userId, req);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.update(userId, req));
     }
 
     @Operation(description = "delete an existing wallet")
@@ -90,6 +99,8 @@ public class WalletController {
                                              name = "request",
                                              description = "the input request")
                                          @RequestBody RequestWalletDto req) {
-        return service.delete(userId, req);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.delete(userId, req));
     }
 }

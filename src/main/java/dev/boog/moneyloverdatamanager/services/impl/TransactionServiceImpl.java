@@ -18,8 +18,6 @@ import java.util.logging.Logger;
 
 public class TransactionServiceImpl implements TransactionService {
 
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(TransactionServiceImpl.class));
-
     private final TransactionRepository transactionRepository;
 
     public TransactionServiceImpl(TransactionRepository transactionRepository) {
@@ -27,103 +25,58 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public ResponseEntity<String> create(String userId, RequestTransactionDto req) {
-        try {
-            Transaction entity = TransactionMapper.INSTANCE
-                    .toEntity(req)
-                    .userId(userId);
-            transactionRepository.save(entity);
-            return new ResponseEntity<>("Transaction created successfully", HttpStatus.CREATED);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public String create(String userId, RequestTransactionDto req) {
+        Transaction entity = TransactionMapper.INSTANCE
+                .toEntity(req)
+                .userId(userId);
+        transactionRepository.save(entity);
+        return "Transaction created successfully";
     }
 
-    public ResponseEntity<ResponseDto<ResponseTransactionDto>> get(String userId, RequestTransactionDto req) {
-        try {
-            final QueryResult<Transaction> queryResult = transactionRepository
-                    .search(ServiceHelper
-                            .getQueryRequest(Transaction.class, req, userId, false, false));
+    public ResponseDto<ResponseTransactionDto> get(String userId, RequestTransactionDto req) {
+        final QueryResult<Transaction> queryResult = transactionRepository
+                .search(ServiceHelper
+                        .getQueryRequest(Transaction.class, req, userId, false, false));
 
-            final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
-                    .<ResponseTransactionDto>builder()
-                    .data(queryResult
-                            .getResults()
-                            .stream()
-                            .map(TransactionMapper.INSTANCE::toResponseDto)
-                            .toList())
-                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
-                    .build();
-
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseDto
+                .<ResponseTransactionDto>builder()
+                .data(queryResult
+                        .getResults()
+                        .stream()
+                        .map(TransactionMapper.INSTANCE::toResponseDto)
+                        .toList())
+                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .build();
     }
 
     @Override
-    public ResponseEntity<ResponseTransactionDto> update(String userId, RequestTransactionDto req) {
-        try {
-            ResponseTransactionDto responseDto = TransactionMapper.INSTANCE
-                    .toResponseDto(transactionRepository
-                            .save(TransactionMapper.INSTANCE
-                                    .toEntity(req)));
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseTransactionDto update(String userId, RequestTransactionDto req) {
+        return TransactionMapper.INSTANCE
+                .toResponseDto(transactionRepository
+                        .save(TransactionMapper.INSTANCE
+                                .toEntity(req)));
     }
 
     @Override
-    public ResponseEntity<String> delete(String userId, RequestTransactionDto req) {
-        try {
-            transactionRepository.delete(TransactionMapper.INSTANCE.toEntity(req));
-            return new ResponseEntity<>("Transaction deleted successfully", HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public String delete(String userId, RequestTransactionDto req) {
+        transactionRepository.delete(TransactionMapper.INSTANCE.toEntity(req));
+        return "Transaction deleted successfully";
     }
 
     @Override
-    public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(String userId, RequestTransactionDto req) {
-        try {
-            final QueryResult<Transaction> queryResult = transactionRepository
-                    .search(ServiceHelper
-                            .getQueryRequest(Transaction.class, req, userId, true, false));
+    public ResponseDto<ResponseTransactionDto> details(String userId, RequestTransactionDto req) {
+        final QueryResult<Transaction> queryResult = transactionRepository
+                .search(ServiceHelper
+                        .getQueryRequest(Transaction.class, req, userId, true, false));
 
-            final ResponseDto<ResponseTransactionDto> responseDto = ResponseDto
-                    .<ResponseTransactionDto>builder()
-                    .data(queryResult
-                            .getResults()
-                            .stream()
-                            .map(TransactionMapper.INSTANCE::toResponseDtoDetails)
-                            .toList())
-                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
-                    .build();
-
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseDto
+                .<ResponseTransactionDto>builder()
+                .data(queryResult
+                        .getResults()
+                        .stream()
+                        .map(TransactionMapper.INSTANCE::toResponseDtoDetails)
+                        .toList())
+                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .build();
     }
 }

@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface DetailsService<I extends BaseRequestDto, O extends BaseEntityDto> {
 
-    ResponseEntity<ResponseDto<O>> details(String userId, I requestDto);
+    ResponseDto<O> details(String userId, I requestDto);
 }

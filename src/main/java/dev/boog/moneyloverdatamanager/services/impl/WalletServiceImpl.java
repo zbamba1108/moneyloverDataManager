@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 
 public class WalletServiceImpl implements WalletService {
 
-    private static final Logger LOGGER = Logger.getLogger(WalletServiceImpl.class.getName());
-
     private final WalletRepository walletRepository;
 
     public WalletServiceImpl(WalletRepository walletRepository) {
@@ -28,105 +26,64 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public ResponseEntity<String> create(String userId, RequestWalletDto req) {
-        try {
-            Wallet entity = WalletMapper.INSTANCE
-                    .toEntity(req)
-                    .userId(userId);
-            walletRepository.save(entity);
-            return new ResponseEntity<>("Wallet created successfully", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public String create(String userId, RequestWalletDto req) {
+        Wallet entity = WalletMapper.INSTANCE
+                .toEntity(req)
+                .userId(userId);
+        walletRepository.save(entity);
+        return "Wallet created successfully";
     }
 
-    public ResponseEntity<ResponseDto<ResponseWalletDto>> get(String userId, RequestWalletDto req) {
-        try {
-            final QueryResult<Wallet> queryResult = walletRepository
-                    .search(ServiceHelper
-                            .getQueryRequest(Wallet.class, req, userId, false, false));
+    public ResponseDto<ResponseWalletDto> get(String userId, RequestWalletDto req) {
+        final QueryResult<Wallet> queryResult = walletRepository
+                .search(ServiceHelper
+                        .getQueryRequest(Wallet.class, req, userId, false, false));
 
-            final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
-                    .<ResponseWalletDto>builder()
-                    .data(queryResult
-                            .getResults()
-                            .stream()
-                            .map(WalletMapper.INSTANCE::toResponseDto)
-                            .toList())
-                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
-                    .build();
-
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseDto
+                .<ResponseWalletDto>builder()
+                .data(queryResult
+                        .getResults()
+                        .stream()
+                        .map(WalletMapper.INSTANCE::toResponseDto)
+                        .toList())
+                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .build();
     }
 
     @Override
-    public ResponseEntity<ResponseWalletDto> update(String userId, RequestWalletDto req) {
-        try {
-            ResponseWalletDto responseDto = WalletMapper.INSTANCE
-                    .toResponseDto(walletRepository
-                            .save(WalletMapper.INSTANCE
-                                    .toEntity(req)));
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseWalletDto update(String userId, RequestWalletDto req) {
+        return WalletMapper.INSTANCE
+                .toResponseDto(walletRepository
+                        .save(WalletMapper.INSTANCE
+                                .toEntity(req)));
     }
 
     @Override
-    public ResponseEntity<String> delete(String userId, RequestWalletDto req) {
-        try {
-            walletRepository.deleteByIds(
-                    Wallet.class,
-                    Long.parseLong(userId),
-                    req.getIds()
-                            .stream()
-                            .map(Long::parseLong)
-                            .toList());
-            return new ResponseEntity<>("Wallet(s) deleted successfully", HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public String delete(String userId, RequestWalletDto req) {
+        walletRepository.deleteByIds(
+                Wallet.class,
+                Long.parseLong(userId),
+                req.getIds()
+                        .stream()
+                        .map(Long::parseLong)
+                        .toList());
+        return "Wallet(s) deleted successfully";
     }
 
     @Override
-    public ResponseEntity<ResponseDto<ResponseWalletDto>> details(String userId, RequestWalletDto req) {
-        try {
-            final QueryResult<Wallet> queryResult = walletRepository
-                    .search(ServiceHelper
-                            .getQueryRequest(Wallet.class, req, userId, true, true));
+    public ResponseDto<ResponseWalletDto> details(String userId, RequestWalletDto req) {
+        final QueryResult<Wallet> queryResult = walletRepository
+                .search(ServiceHelper
+                        .getQueryRequest(Wallet.class, req, userId, true, true));
 
-            final ResponseDto<ResponseWalletDto> responseDto = ResponseDto
-                    .<ResponseWalletDto>builder()
-                    .data(queryResult
-                            .getResults()
-                            .stream()
-                            .map(WalletMapper.INSTANCE::toResponseDtoDetails)
-                            .toList())
-                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
-                    .build();
-
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseDto
+                .<ResponseWalletDto>builder()
+                .data(queryResult
+                        .getResults()
+                        .stream()
+                        .map(WalletMapper.INSTANCE::toResponseDtoDetails)
+                        .toList())
+                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .build();
     }
 }

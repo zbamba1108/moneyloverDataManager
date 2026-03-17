@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface CRUDService<I extends BaseRequestDto, O extends BaseEntityDto> {
 
-    ResponseEntity<String> create(String userId, I req);
+    String create(String userId, I req);
 
-    ResponseEntity<ResponseDto<O>> get(String userId, I req);
+    ResponseDto<O> get(String userId, I req);
 
-    ResponseEntity<O> update(String userId, I req);
+    O update(String userId, I req);
 
-    ResponseEntity<String> delete(String userId, I req);
+    String delete(String userId, I req);
 }

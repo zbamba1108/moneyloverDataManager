@@ -18,8 +18,6 @@ import java.util.logging.Logger;
 
 public class CategoryServiceImpl implements CategoryService {
 
-    private static final Logger LOGGER = Logger.getLogger(CategoryServiceImpl.class.getName());
-
     private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -27,79 +25,48 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<String> create(String userId, RequestCategoryDto req) {
-        try {
-            Category category = CategoryMapper.INSTANCE
-                    .toEntity(req)
-                    .userId(userId);
-            categoryRepository.save(category);
-            return new ResponseEntity<>("Category created successfully", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public String create(String userId, RequestCategoryDto req) {
+        Category category = CategoryMapper.INSTANCE
+                .toEntity(req)
+                .userId(userId);
+        categoryRepository.save(category);
+        return "Category created successfully";
     }
 
     @Override
-    public ResponseEntity<ResponseDto<ResponseCategoryDto>> get(String userId, RequestCategoryDto req) {
-        try {
-            final QueryResult<Category> queryResult = categoryRepository
-                    .search(ServiceHelper
-                            .getQueryRequest(Category.class, req, userId, false, false));
+    public ResponseDto<ResponseCategoryDto> get(String userId, RequestCategoryDto req) {
+        final QueryResult<Category> queryResult = categoryRepository
+                .search(ServiceHelper
+                        .getQueryRequest(Category.class, req, userId, false, false));
 
-            final ResponseDto<ResponseCategoryDto> responseDto = ResponseDto.<ResponseCategoryDto>builder()
-                    .data(queryResult
-                            .getResults()
-                            .stream()
-                            .map(CategoryMapper.INSTANCE::toResponseDto)
-                            .toList())
-                    .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
-                    .build();
-
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseDto.<ResponseCategoryDto>builder()
+                .data(queryResult
+                        .getResults()
+                        .stream()
+                        .map(CategoryMapper.INSTANCE::toResponseDto)
+                        .toList())
+                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .build();
     }
 
     @Override
-    public ResponseEntity<ResponseCategoryDto> update(String userId, RequestCategoryDto req) {
-        try {
-            ResponseCategoryDto responseCategoryDto = CategoryMapper.INSTANCE
-                    .toResponseDto(categoryRepository.save(CategoryMapper.INSTANCE
-                            .toEntity(req)));
-            return new ResponseEntity<>(responseCategoryDto, HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseCategoryDto update(String userId, RequestCategoryDto req) {
+        return CategoryMapper.INSTANCE
+                .toResponseDto(categoryRepository.save(CategoryMapper.INSTANCE
+                        .toEntity(req)));
     }
 
     @Override
-    public ResponseEntity<String> delete(String userId, RequestCategoryDto req) {
-        try {
-            categoryRepository.deleteByIds(
-                    Category.class,
-                    Long.parseLong(userId),
-                    req.getIds()
-                            .stream()
-                            .map(Long::parseLong)
-                            .toList()
-            );
-            return new ResponseEntity<>("Category(s) deleted successfully", HttpStatus.OK);
-        } catch (InvalidDataAccessApiUsageException e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public String delete(String userId, RequestCategoryDto req) {
+        categoryRepository.deleteByIds(
+                Category.class,
+                Long.parseLong(userId),
+                req.getIds()
+                        .stream()
+                        .map(Long::parseLong)
+                        .toList()
+        );
+        return "Category(s) deleted successfully";
     }
 
 }
