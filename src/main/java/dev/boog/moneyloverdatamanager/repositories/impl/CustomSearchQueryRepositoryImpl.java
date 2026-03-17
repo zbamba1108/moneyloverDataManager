@@ -43,7 +43,6 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
         if (executeQueryToRetrieveIdsFirst) {
             resultList = getResultListFromMatchingIds(queryRequest, queryBuilder);
         } else {
-            queryBuilder.setReturnLong(false);
             resultList = getResultList(queryRequest, queryBuilder);
         }
 
@@ -52,6 +51,7 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
 
     @SuppressWarnings("unchecked")
     private static <E> List<E> getResultList(QueryRequest queryRequest, QueryBuilder queryBuilder) {
+        queryBuilder.setReturnLong(false);
         return (List<E>) queryBuilder
                 .initializeQuery(QueryHelper
                         .getStringBuilder(QueryType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
@@ -66,6 +66,8 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
 
     @SuppressWarnings("unchecked")
     private static <E> List<E> getResultListFromMatchingIds(QueryRequest queryRequest, QueryBuilder queryBuilder) {
+        queryBuilder.setReturnLong(true);
+
         List<Long> matchingIds = (List<Long>) queryBuilder
                 .initializeQuery(QueryHelper
                         .getStringBuilder(QueryType.RETRIEVE_IDS, queryRequest.getClazz().getSimpleName()))
