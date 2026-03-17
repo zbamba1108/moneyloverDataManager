@@ -1,7 +1,8 @@
 package dev.boog.moneyloverdatamanager.repositories.impl;
 
 import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
-import dev.boog.moneyloverdatamanager.utils.*;
+import dev.boog.moneyloverdatamanager.utils.QueryBuilder;
+import dev.boog.moneyloverdatamanager.utils.QueryHelper;
 import dev.boog.moneyloverdatamanager.utils.enums.QueryType;
 import dev.boog.moneyloverdatamanager.utils.models.Page;
 import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
@@ -9,7 +10,7 @@ import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import java.util.*;
+import java.util.List;
 
 public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepository<E> {
 

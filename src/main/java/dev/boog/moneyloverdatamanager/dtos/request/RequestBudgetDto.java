@@ -1,6 +1,5 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

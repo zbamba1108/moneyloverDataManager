@@ -1,14 +1,13 @@
 package dev.boog.moneyloverdatamanager.controllers.impl;
 
-import dev.boog.moneyloverdatamanager.controllers.CRUDController;
-import dev.boog.moneyloverdatamanager.controllers.DetailsController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
-import io.swagger.v3.oas.annotations.*;
-import io.swagger.v3.oas.annotations.tags.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag( name = "Wallet API")
 @RestController
 @RequestMapping("/api/wallets")
-public class WalletController implements CRUDController<RequestWalletDto, ResponseWalletDto>,
-        DetailsController<RequestWalletDto, ResponseWalletDto> {
+public class WalletController {
 
-    private final WalletService<RequestWalletDto, ResponseWalletDto> service;
+    private final WalletService service;
 
-    public WalletController(@Qualifier("walletService") WalletService<RequestWalletDto, ResponseWalletDto> service) {
+    public WalletController(@Qualifier("walletService") WalletService service) {
         this.service = service;
     }
 

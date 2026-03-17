@@ -1,6 +1,7 @@
 package dev.boog.moneyloverdatamanager.services.config;
 
 import dev.boog.moneyloverdatamanager.repositories.*;
+import dev.boog.moneyloverdatamanager.services.*;
 import dev.boog.moneyloverdatamanager.services.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,28 +9,28 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ServiceConfiguration {
 
-    @Bean("transactionService")
-    public TransactionServiceImpl transactionService(TransactionRepository transactionRepository) {
+    @Bean
+    public TransactionService transactionService(TransactionRepository transactionRepository) {
         return new TransactionServiceImpl(transactionRepository);
     }
 
-    @Bean("userService")
-    public UserServiceImpl userService(UserRepository userRepository) {
+    @Bean
+    public UserService userService(UserRepository userRepository) {
         return new UserServiceImpl(userRepository);
     }
 
-    @Bean("budgetService")
-    public BudgetServiceImpl budgetService(BudgetRepository budgetRepository) {
+    @Bean
+    public BudgetService budgetService(BudgetRepository budgetRepository) {
         return new BudgetServiceImpl(budgetRepository);
     }
 
-    @Bean("categoryService")
-    public CategoryServiceImpl categoryService(CategoryRepository categoryRepository) {
+    @Bean
+    public CategoryService categoryService(CategoryRepository categoryRepository) {
         return new CategoryServiceImpl(categoryRepository);
     }
 
-    @Bean("eventService")
-    public EventServiceImpl eventService(EventRepository eventRepository) {
+    @Bean
+    public EventService eventService(EventRepository eventRepository) {
         return new EventServiceImpl(eventRepository);
     }
 

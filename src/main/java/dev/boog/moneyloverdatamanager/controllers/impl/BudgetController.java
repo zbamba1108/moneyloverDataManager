@@ -1,25 +1,23 @@
 package dev.boog.moneyloverdatamanager.controllers.impl;
 
-import dev.boog.moneyloverdatamanager.controllers.CRUDController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestBudgetDto;
-import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseBudgetDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.services.BudgetService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
-import io.swagger.v3.oas.annotations.*;
-import io.swagger.v3.oas.annotations.tags.*;
-import org.springframework.beans.factory.annotation.Qualifier;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag( name = "Budget API")
 @RestController
 @RequestMapping("/api/budgets")
-public class BudgetController implements CRUDController<RequestBudgetDto, ResponseBudgetDto> {
+public class BudgetController {
 
-    private final BudgetService<RequestBudgetDto, ResponseBudgetDto> service;
+    private final BudgetService service;
 
-    public BudgetController(@Qualifier("budgetService") BudgetService<RequestBudgetDto, ResponseBudgetDto> service) {
+    public BudgetController(BudgetService service) {
         this.service = service;
     }
 

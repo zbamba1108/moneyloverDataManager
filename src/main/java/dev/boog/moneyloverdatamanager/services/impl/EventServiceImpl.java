@@ -7,9 +7,7 @@ import dev.boog.moneyloverdatamanager.repositories.EventRepository;
 import dev.boog.moneyloverdatamanager.services.EventService;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
-public class EventServiceImpl implements EventService<RequestEventDto, ResponseEventDto> {
+public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
 

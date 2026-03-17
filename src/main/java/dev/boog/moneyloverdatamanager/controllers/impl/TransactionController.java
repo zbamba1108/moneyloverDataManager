@@ -1,27 +1,23 @@
 package dev.boog.moneyloverdatamanager.controllers.impl;
 
-import dev.boog.moneyloverdatamanager.controllers.CRUDController;
-import dev.boog.moneyloverdatamanager.controllers.DetailsController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
-import io.swagger.v3.oas.annotations.*;
-import io.swagger.v3.oas.annotations.tags.*;
-import org.springframework.beans.factory.annotation.Qualifier;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Transaction API")
 @RestController
 @RequestMapping(path = "/api/transactions")
-public class TransactionController implements CRUDController<RequestTransactionDto, ResponseTransactionDto>,
-        DetailsController<RequestTransactionDto, ResponseTransactionDto> {
+public class TransactionController {
 
-    private final TransactionService<RequestTransactionDto, ResponseTransactionDto> service;
+    private final TransactionService service;
 
-    public TransactionController(@Qualifier("transactionService") TransactionService<RequestTransactionDto, ResponseTransactionDto> service) {
+    public TransactionController(TransactionService service) {
         this.service = service;
     }
 
@@ -43,12 +39,6 @@ public class TransactionController implements CRUDController<RequestTransactionD
     @PostMapping("/search/details")
     public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
                                                                        @RequestBody(required = false) RequestTransactionDto req) {
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         return service.details(userId, req);
     }
 

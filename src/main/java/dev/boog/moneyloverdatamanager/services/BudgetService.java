@@ -1,8 +1,8 @@
 package dev.boog.moneyloverdatamanager.services;
 
-import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
-import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestBudgetDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseBudgetDto;
 
-public interface BudgetService<I extends BaseRequestDto, O extends BaseEntityDto> extends CRUDService<I, O> {
+public interface BudgetService extends CRUDService<RequestBudgetDto, ResponseBudgetDto> {
 
 }

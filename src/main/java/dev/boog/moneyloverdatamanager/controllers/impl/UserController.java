@@ -1,26 +1,24 @@
 package dev.boog.moneyloverdatamanager.controllers.impl;
 
-import dev.boog.moneyloverdatamanager.controllers.CRUDController;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseUserDto;
 import dev.boog.moneyloverdatamanager.services.UserService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
-import io.swagger.v3.oas.annotations.*;
-import io.swagger.v3.oas.annotations.tags.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User API")
 @RestController
 @RequestMapping(path = "/api/users")
-public class UserController implements CRUDController<RequestUserDto, ResponseUserDto> {
+public class UserController {
 
-    private final UserService<RequestUserDto, ResponseUserDto> service;
+    private final UserService service;
 
-    public UserController(@Qualifier("userService") UserService<RequestUserDto, ResponseUserDto> service) {
+    public UserController(@Qualifier("userService") UserService service) {
         this.service = service;
     }
 
@@ -28,11 +26,6 @@ public class UserController implements CRUDController<RequestUserDto, ResponseUs
     @PostMapping
     public ResponseEntity<String> create(@RequestBody RequestUserDto dto) {
         return service.create(null, dto);
-    }
-
-    @Override
-    public ResponseEntity<String> create(String userId, RequestUserDto dto) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @Operation(description = "search one or more transactions based on input request")

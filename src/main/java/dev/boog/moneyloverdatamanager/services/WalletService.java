@@ -1,7 +1,7 @@
 package dev.boog.moneyloverdatamanager.services;
 
-import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
-import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 
-public interface WalletService<I extends BaseRequestDto, O extends BaseEntityDto> extends CRUDService<I, O>, DetailsService<I, O> {
+public interface WalletService extends CRUDService<RequestWalletDto, ResponseWalletDto>, DetailsService<RequestWalletDto, ResponseWalletDto> {
 }

@@ -1,13 +1,15 @@
 package dev.boog.moneyloverdatamanager.utils.mappers;
 
-import dev.boog.moneyloverdatamanager.dtos.request.*;
+import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
 import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
-import dev.boog.moneyloverdatamanager.entities.*;
-import java.sql.*;
+import dev.boog.moneyloverdatamanager.entities.BaseEntity;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.Named;
+
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
-
-import org.mapstruct.*;
 
 public interface BaseEntityMapper<E extends BaseEntity,
                             I extends BaseRequestDto,

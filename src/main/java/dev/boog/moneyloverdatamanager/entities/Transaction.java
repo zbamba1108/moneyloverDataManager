@@ -2,10 +2,13 @@ package dev.boog.moneyloverdatamanager.entities;
 
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import lombok.experimental.*;
 
 
 @EqualsAndHashCode(callSuper = true)

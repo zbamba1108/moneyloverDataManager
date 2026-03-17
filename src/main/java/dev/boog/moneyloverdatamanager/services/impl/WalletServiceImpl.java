@@ -4,20 +4,20 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
-import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
-import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
 import dev.boog.moneyloverdatamanager.services.WalletService;
-import dev.boog.moneyloverdatamanager.utils.*;
-import java.util.logging.*;
-
+import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
+import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
+import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
 import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
-import org.springframework.dao.*;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.logging.Logger;
 
-public class WalletServiceImpl implements WalletService<RequestWalletDto, ResponseWalletDto> {
+
+public class WalletServiceImpl implements WalletService {
 
     private static final Logger LOGGER = Logger.getLogger(WalletServiceImpl.class.getName());
 

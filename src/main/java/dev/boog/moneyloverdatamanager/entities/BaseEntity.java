@@ -1,10 +1,14 @@
 package dev.boog.moneyloverdatamanager.entities;
 
 import jakarta.persistence.*;
-import java.sql.*;
-import lombok.*;
-import lombok.experimental.*;
-import org.hibernate.annotations.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
+
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor

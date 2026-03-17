@@ -1,13 +1,13 @@
 package dev.boog.moneyloverdatamanager.services.impl;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
-import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
+import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.entities.Category;
-import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.services.CategoryService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
+import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
 import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.logging.Logger;
 
-public class CategoryServiceImpl implements CategoryService<RequestCategoryDto, ResponseCategoryDto> {
+public class CategoryServiceImpl implements CategoryService {
 
     private static final Logger LOGGER = Logger.getLogger(CategoryServiceImpl.class.getName());
 
