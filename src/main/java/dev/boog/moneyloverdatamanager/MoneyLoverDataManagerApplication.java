@@ -1,24 +1,7 @@
 package dev.boog.moneyloverdatamanager;
 
-import dev.boog.moneyloverdatamanager.entities.Category;
-import dev.boog.moneyloverdatamanager.entities.Transaction;
-import dev.boog.moneyloverdatamanager.entities.User;
-import dev.boog.moneyloverdatamanager.entities.Wallet;
-import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
-import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
-import dev.boog.moneyloverdatamanager.repositories.UserRepository;
-import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class MoneyLoverDataManagerApplication {

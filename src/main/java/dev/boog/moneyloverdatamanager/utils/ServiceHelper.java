@@ -1,13 +1,7 @@
 package dev.boog.moneyloverdatamanager.utils;
 
 
-import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestBudgetDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestEventDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestUserDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import dev.boog.moneyloverdatamanager.dtos.request.*;
 import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.utils.models.ResultFilters;
 

@@ -1,6 +1,7 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 

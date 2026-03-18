@@ -6,6 +6,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface BaseRepository<E, ID> extends CrudRepository<E, ID> {
 
-
     <S extends E> S save(S entity);
 }

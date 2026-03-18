@@ -1,7 +1,7 @@
 package dev.boog.moneyloverdatamanager.utils.models;
 
 import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
-import lombok.*;
+import lombok.Builder;
 
 @Builder
 public record ResultFilters(

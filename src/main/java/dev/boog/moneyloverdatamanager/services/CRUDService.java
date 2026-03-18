@@ -3,7 +3,6 @@ package dev.boog.moneyloverdatamanager.services;
 import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
-import org.springframework.http.ResponseEntity;
 
 public interface CRUDService<I extends BaseRequestDto, O extends BaseEntityDto> {
 

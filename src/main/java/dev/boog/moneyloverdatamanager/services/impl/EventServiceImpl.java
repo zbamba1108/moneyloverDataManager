@@ -5,7 +5,6 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseEventDto;
 import dev.boog.moneyloverdatamanager.repositories.EventRepository;
 import dev.boog.moneyloverdatamanager.services.EventService;
-import org.springframework.http.ResponseEntity;
 
 public class EventServiceImpl implements EventService {
 

@@ -1,10 +1,10 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 

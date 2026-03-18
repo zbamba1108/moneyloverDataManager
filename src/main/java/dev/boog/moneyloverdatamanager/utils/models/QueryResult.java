@@ -1,6 +1,5 @@
 package dev.boog.moneyloverdatamanager.utils.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.util.List;

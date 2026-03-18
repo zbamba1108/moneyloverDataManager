@@ -5,7 +5,6 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseBudgetDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.repositories.BudgetRepository;
 import dev.boog.moneyloverdatamanager.services.BudgetService;
-import org.springframework.http.ResponseEntity;
 
 
 public class BudgetServiceImpl implements BudgetService {

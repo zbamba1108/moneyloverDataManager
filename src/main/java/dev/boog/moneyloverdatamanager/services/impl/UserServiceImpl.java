@@ -7,12 +7,8 @@ import dev.boog.moneyloverdatamanager.entities.User;
 import dev.boog.moneyloverdatamanager.repositories.UserRepository;
 import dev.boog.moneyloverdatamanager.services.UserService;
 import dev.boog.moneyloverdatamanager.utils.mappers.UserMapper;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class UserServiceImpl implements UserService {
 

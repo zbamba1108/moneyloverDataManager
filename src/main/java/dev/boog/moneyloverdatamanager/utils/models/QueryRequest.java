@@ -1,6 +1,6 @@
 package dev.boog.moneyloverdatamanager.utils.models;
 
-import lombok.*;
+import lombok.Builder;
 
 import java.util.HashMap;
 import java.util.List;
