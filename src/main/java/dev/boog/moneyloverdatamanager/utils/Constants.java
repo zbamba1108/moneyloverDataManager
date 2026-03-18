@@ -1,6 +1,10 @@
 package dev.boog.moneyloverdatamanager.utils;
 
-public class Constants {
+public final class Constants {
+
+    private Constants() {
+        throw new UnsupportedOperationException(Constants.Messages.UTILITY_CLASS);
+    }
 
     public static class Headers {
 
@@ -29,5 +33,10 @@ public class Constants {
         public static final String TRANSACTION_WALLET_CATEGORY = "transaction.wallet_category";
         public static final String TRANSACTION_CATEGORY = "transaction.category";
         public static final String WALLET_TRANSACTION = "wallet.transaction";
+    }
+
+    public static class Messages {
+
+        public static final String UTILITY_CLASS = "Utility class!";
     }
 }
