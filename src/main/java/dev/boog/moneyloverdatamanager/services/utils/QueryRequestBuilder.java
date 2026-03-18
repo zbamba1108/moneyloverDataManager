@@ -12,7 +12,7 @@ public final class QueryRequestBuilder {
         throw new IllegalStateException(Constants.Messages.UTILITY_CLASS);
     }
 
-    public static <E extends BaseEntity> QueryRequest<E> build(QueryHelper<E> queryHelper, BaseRequestDto req, String userId) {
+    public static <E extends BaseEntity, R extends BaseRequestDto> QueryRequest<E> build(QueryHelper<E, R> queryHelper, R req, String userId) {
         return QueryRequest.<E>builder()
                 .entityClass(queryHelper.getEntityClass())
                 .userId(userId)
@@ -22,7 +22,7 @@ public final class QueryRequestBuilder {
                 .build();
     }
 
-    private static ResultFilters mapResultFilter(BaseRequestDto request) {
+    private static <R extends BaseRequestDto> ResultFilters mapResultFilter(R request) {
         return request != null ?
                 ResultFilters.builder()
                         .page(request.getPage())

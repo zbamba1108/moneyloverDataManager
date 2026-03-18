@@ -8,22 +8,20 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 
 @Component
-public class WalletQueryHelper extends QueryHelper<Wallet> {
+public class WalletQueryHelper extends QueryHelper<Wallet, RequestWalletDto> {
 
     public WalletQueryHelper() {
         super(Wallet.class);
     }
 
     @Override
-    public HashMap<String, String> mapOptionalParams(BaseRequestDto baseRequestDto) {
+    public HashMap<String, String> mapOptionalParams(RequestWalletDto req) {
         HashMap<String, String> params = new HashMap<>();
 
-        if (baseRequestDto == null) {
+        if (req == null) {
             return params;
         }
-
-        RequestWalletDto req =  (RequestWalletDto) baseRequestDto;
-
+        
         if (req.getName() != null) {
             params.put("name", req.getName());
         }

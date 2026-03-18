@@ -8,21 +8,19 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 
 @Component
-public class CategoryQueryHelper extends QueryHelper<Category> {
+public class CategoryQueryHelper extends QueryHelper<Category, RequestCategoryDto> {
 
     public CategoryQueryHelper() {
         super(Category.class);
     }
 
     @Override
-    public HashMap<String, String> mapOptionalParams(BaseRequestDto baseRequestDto) {
+    public HashMap<String, String> mapOptionalParams(RequestCategoryDto req) {
         HashMap<String, String> params = new HashMap<>();
 
-        if (baseRequestDto == null) {
+        if (req == null) {
             return params;
         }
-
-        RequestCategoryDto req =  (RequestCategoryDto) baseRequestDto;
 
         if (req.getType() != null) {
             params.put("type", String.valueOf(req.getType()));
