@@ -6,20 +6,28 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
-import dev.boog.moneyloverdatamanager.services.TransactionService;
-import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import dev.boog.moneyloverdatamanager.utils.mappers.TransactionMapper;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.services.TransactionService;
+import dev.boog.moneyloverdatamanager.services.utils.QueryHelper;
+import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
+import dev.boog.moneyloverdatamanager.services.utils.TransactionQueryHelper;
+import dev.boog.moneyloverdatamanager.utils.mappers.TransactionMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+    private final TransactionQueryHelper queryHelper;
+
+    public TransactionServiceImpl(TransactionRepository transactionRepository,
+                                  TransactionQueryHelper queryHelper) {
         this.transactionRepository = transactionRepository;
+        this.queryHelper = queryHelper;
     }
 
     @Override
@@ -32,8 +40,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public ResponseDto<ResponseTransactionDto> get(String userId, RequestTransactionDto req) {
-        QueryRequest<Transaction> queryRequest = ServiceHelper
-                .getQueryRequest(Transaction.class, req, userId);
+        QueryRequest<Transaction> queryRequest = QueryRequestBuilder
+                .build(queryHelper, req, userId);
 
         QueryResult<Transaction> queryResult = transactionRepository
                 .findAll(queryRequest);
@@ -69,7 +77,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ResponseDto<ResponseTransactionDto> details(String userId, RequestTransactionDto req) {
-        QueryRequest<Transaction> queryRequest = ServiceHelper.getQueryRequest(Transaction.class, req, userId);
+        QueryRequest<Transaction> queryRequest = QueryRequestBuilder
+                .build(queryHelper, req, userId);
 
         QueryResult<Long> queryResult = transactionRepository
                 .findAllAndSelectIds(queryRequest);

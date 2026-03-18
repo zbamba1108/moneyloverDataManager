@@ -6,21 +6,27 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
-import dev.boog.moneyloverdatamanager.services.WalletService;
-import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.services.WalletService;
+import dev.boog.moneyloverdatamanager.services.utils.QueryHelper;
+import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
+import dev.boog.moneyloverdatamanager.services.utils.WalletQueryHelper;
+import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
 
-    public WalletServiceImpl(WalletRepository walletRepository) {
+    private final WalletQueryHelper queryHelper;
+
+    public WalletServiceImpl(WalletRepository walletRepository, WalletQueryHelper queryHelper) {
         this.walletRepository = walletRepository;
+        this.queryHelper = queryHelper;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public ResponseDto<ResponseWalletDto> get(String userId, RequestWalletDto req) {
-        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(Wallet.class, req, userId);
+        QueryRequest<Wallet> queryRequest = QueryRequestBuilder.build(queryHelper, req, userId);
 
         QueryResult<Wallet> queryResult = walletRepository
                 .findAll(queryRequest);
@@ -74,7 +80,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public ResponseDto<ResponseWalletDto> details(String userId, RequestWalletDto req) {
-        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(Wallet.class, req, userId);
+        QueryRequest<Wallet> queryRequest = QueryRequestBuilder.build(queryHelper, req, userId);
 
         QueryResult<Long> pagedResults = walletRepository
                 .findAllAndSelectIds(queryRequest);

@@ -7,9 +7,11 @@ import dev.boog.moneyloverdatamanager.entities.User;
 import dev.boog.moneyloverdatamanager.repositories.UserRepository;
 import dev.boog.moneyloverdatamanager.services.UserService;
 import dev.boog.moneyloverdatamanager.utils.mappers.UserMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

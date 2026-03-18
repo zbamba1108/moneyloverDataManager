@@ -5,19 +5,26 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
-import dev.boog.moneyloverdatamanager.services.CategoryService;
-import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
-import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.services.CategoryService;
+import dev.boog.moneyloverdatamanager.services.utils.CategoryQueryHelper;
+import dev.boog.moneyloverdatamanager.services.utils.QueryHelper;
+import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
+import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
+import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    private final CategoryQueryHelper queryHelper;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository,  CategoryQueryHelper queryHelper) {
         this.categoryRepository = categoryRepository;
+        this.queryHelper = queryHelper;
     }
 
     @Override
@@ -31,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseDto<ResponseCategoryDto> get(String userId, RequestCategoryDto req) {
-        QueryRequest<Category> queryRequest = ServiceHelper.getQueryRequest(Category.class, req, userId);
+        QueryRequest<Category> queryRequest = QueryRequestBuilder.build(queryHelper, req, userId);
         QueryResult<Category> queryResult = categoryRepository
                 .findAll(queryRequest);
 

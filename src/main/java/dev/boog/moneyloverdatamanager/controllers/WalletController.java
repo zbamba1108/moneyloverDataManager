@@ -21,7 +21,7 @@ public class WalletController {
 
     private final WalletService service;
 
-    public WalletController(@Qualifier("walletService") WalletService service) {
+    public WalletController(WalletService service) {
         this.service = service;
     }
 

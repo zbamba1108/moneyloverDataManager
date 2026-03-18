@@ -1,9 +1,9 @@
 package dev.boog.moneyloverdatamanager.repositories.utils;
 
-import dev.boog.moneyloverdatamanager.utils.Constants;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.Page;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.util.StringUtils;
