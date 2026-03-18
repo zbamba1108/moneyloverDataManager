@@ -9,8 +9,8 @@ import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
 import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
 import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
-import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public ResponseDto<ResponseWalletDto> get(String userId, RequestWalletDto req) {
-        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(req, userId);
 
         QueryResult<Wallet> queryResult = walletRepository
                 .findAll(Wallet.class, queryRequest);
@@ -74,7 +74,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public ResponseDto<ResponseWalletDto> details(String userId, RequestWalletDto req) {
-        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(req, userId);
 
         QueryResult<Long> pagedResults = walletRepository
                 .findAllAndSelectIds(Wallet.class, queryRequest);

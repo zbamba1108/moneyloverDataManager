@@ -1,4 +1,4 @@
-package dev.boog.moneyloverdatamanager.utils.models;
+package dev.boog.moneyloverdatamanager.repositories.utils.models;
 
 import lombok.Builder;
 

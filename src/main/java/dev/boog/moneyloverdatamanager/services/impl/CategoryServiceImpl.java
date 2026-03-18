@@ -9,8 +9,8 @@ import dev.boog.moneyloverdatamanager.services.CategoryService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
 import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
-import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 
 public class CategoryServiceImpl implements CategoryService {
 
@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseDto<ResponseCategoryDto> get(String userId, RequestCategoryDto req) {
-        QueryRequest<Category> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+        QueryRequest<Category> queryRequest = ServiceHelper.getQueryRequest(req, userId);
         QueryResult<Category> queryResult = categoryRepository
                 .findAll(Category.class, queryRequest);
 

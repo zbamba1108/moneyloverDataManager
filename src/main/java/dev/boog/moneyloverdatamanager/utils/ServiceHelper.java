@@ -2,14 +2,14 @@ package dev.boog.moneyloverdatamanager.utils;
 
 
 import dev.boog.moneyloverdatamanager.dtos.request.*;
-import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.models.ResultFilters;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.ResultFilters;
 
 import java.util.HashMap;
 
 public final class ServiceHelper {
 
-    public static <E> QueryRequest<E> getQueryRequest2(BaseRequestDto req, String userId) {
+    public static <E> QueryRequest<E> getQueryRequest(BaseRequestDto req, String userId) {
         return QueryRequest.<E>builder()
                 .userId(userId)
                 .ids(req != null ? req.getIds() : null)

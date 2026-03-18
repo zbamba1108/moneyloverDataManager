@@ -9,8 +9,8 @@ import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
 import dev.boog.moneyloverdatamanager.utils.mappers.TransactionMapper;
-import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public ResponseDto<ResponseTransactionDto> get(String userId, RequestTransactionDto req) {
         QueryRequest<Transaction> queryRequest = ServiceHelper
-                .getQueryRequest2(req, userId);
+                .getQueryRequest(req, userId);
 
         QueryResult<Transaction> queryResult = transactionRepository
                 .findAll(Transaction.class, queryRequest);
@@ -69,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ResponseDto<ResponseTransactionDto> details(String userId, RequestTransactionDto req) {
-        QueryRequest<Transaction> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+        QueryRequest<Transaction> queryRequest = ServiceHelper.getQueryRequest(req, userId);
 
         QueryResult<Long> queryResult = transactionRepository
                 .findAllAndSelectIds(Transaction.class, queryRequest);

@@ -1,9 +1,9 @@
 package dev.boog.moneyloverdatamanager.repositories.impl;
 
 import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
-import dev.boog.moneyloverdatamanager.utils.SearchQueryHelper;
-import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.repositories.utils.SearchQueryHelper;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
