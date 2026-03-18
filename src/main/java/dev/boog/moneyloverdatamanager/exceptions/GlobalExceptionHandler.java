@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     private static final Logger LOGGER = Logger.getLogger(GlobalExceptionHandler.class.getName());
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleInvalidDataAccess(Exception ex) {
         LOGGER.log(Level.WARNING, ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -27,10 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handle(MethodArgumentNotValidException ex) {
-        ex.getBindingResult().getFieldErrors()
-                .forEach(e -> System.out.println(e.getField() + " -> " + e.getDefaultMessage()));
-
+    public ResponseEntity<?> handleArgumentNotValid(MethodArgumentNotValidException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex
