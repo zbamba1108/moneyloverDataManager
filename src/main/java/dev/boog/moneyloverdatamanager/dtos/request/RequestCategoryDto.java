@@ -1,22 +1,19 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
+@Jacksonized
 public class RequestCategoryDto extends BaseRequestDto {
 
-    private String name;
+    private final String name;
 
-    private Integer type;
+    private final Integer type;
 
-    private Long parentId;
+    private final Long parentId;
 }

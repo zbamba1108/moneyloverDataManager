@@ -1,28 +1,25 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
+@Jacksonized
 public class RequestTransactionDto extends BaseRequestDto {
 
-    private Long walletId;
+    private final Long walletId;
 
-    private Long eventId;
+    private final Long eventId;
 
-    private Long categoryId;
+    private final Long categoryId;
 
-    private BigDecimal amount;
+    private final BigDecimal amount;
 
-    private String comment;
+    private final String comment;
 
 }

@@ -1,21 +1,18 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
+@Jacksonized
 public class RequestUserDto extends BaseRequestDto implements Serializable {
 
-    private String email;
+    private final String email;
 
-    private String password;
+    private final String password;
 }

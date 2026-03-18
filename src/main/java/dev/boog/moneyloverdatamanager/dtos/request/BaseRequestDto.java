@@ -4,32 +4,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
-@Data
+@Getter
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
+@Jacksonized
 public class BaseRequestDto {
 
-    private List<String> ids;
+    private final List<String> ids;
 
     @NotNull
-    private Integer page;
+    @Builder.Default
+    private final Integer page = 0;
 
     @NotNull(message = "pageSize cannot be null")
     @Min(value = 1, message = "pageSize cannot be less than 1")
-    private Integer pageSize;
+    @Builder.Default
+    private final Integer pageSize = 5;
 
-    private String[] dateRange;
+    private final String[] dateRange;
 
-    private String sortingField;
+    private final String sortingField;
 
-    private SortingOrder sortingOrder;
+    private final SortingOrder sortingOrder;
 
 }
