@@ -1,31 +1,19 @@
 package dev.boog.moneyloverdatamanager.utils.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class QueryRequest {
+public record QueryRequest<E>( // do not remove E
 
-    private Class<?> clazz;
+        String userId,
 
-    private String userId;
+        List<String> ids,
 
-    private List<String> ids;
+        HashMap<String, String> optionalParams,
 
-    private HashMap<String, String> optionalParams;
-
-    private ResultFilters resultFilters;
-
-    private boolean mapDetails;
-
-    private boolean hasChildren;
+        ResultFilters resultFilters) {
 
 }

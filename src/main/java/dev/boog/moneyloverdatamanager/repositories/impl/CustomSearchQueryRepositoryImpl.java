@@ -1,14 +1,17 @@
 package dev.boog.moneyloverdatamanager.repositories.impl;
 
 import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
-import dev.boog.moneyloverdatamanager.utils.QueryBuilder;
 import dev.boog.moneyloverdatamanager.utils.QueryHelper;
-import dev.boog.moneyloverdatamanager.utils.enums.QueryType;
 import dev.boog.moneyloverdatamanager.utils.models.Page;
 import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -18,95 +21,79 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
     private EntityManager em;
 
     @Override
-    public QueryResult<E> search(QueryRequest queryRequest) {
-        final List<E> resultList;
+    public QueryResult<E> findAll(Class<E> clazz, QueryRequest<E> queryRequest) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<E> query = cb.createQuery(clazz);
+        Root<E> root = query.from(clazz);
 
-        QueryBuilder queryBuilder = QueryBuilder.builder()
-                .em(em)
-                .clazz(queryRequest.getClazz())
-                .userId(queryRequest.getUserId())
-                .resultFilters(queryRequest.getResultFilters())
-                .ids(queryRequest.getIds())
-                .mapDetails(queryRequest.isMapDetails())
-                .build();
+        Predicate predicate = QueryHelper
+                .buildSpecification(queryRequest)
+                .toPredicate(root, query, cb);
 
-        final boolean pagination = queryRequest.getResultFilters() != null
-                && queryRequest.getResultFilters().getPageSize() != null
-                && queryRequest.getResultFilters().getPage() != null;
-
-        Page page = pagination ? getPage(queryRequest, queryBuilder) : null;
-
-        queryBuilder.setPagination(pagination);
-
-        boolean executeQueryToRetrieveIdsFirst = queryRequest.isMapDetails() && queryRequest.isHasChildren();
-
-        if (executeQueryToRetrieveIdsFirst) {
-            resultList = getResultListFromMatchingIds(queryRequest, queryBuilder);
-        } else {
-            resultList = getResultList(queryRequest, queryBuilder);
+        if (predicate != null) {
+            query.where(predicate);
         }
 
-        return new QueryResult<>(resultList, page);
+        TypedQuery<E> typedQuery = em.createQuery(query);
+
+        typedQuery.setFirstResult(queryRequest.resultFilters().page() * queryRequest.resultFilters().pageSize());
+        typedQuery.setMaxResults(queryRequest.resultFilters().pageSize() + 1);
+
+        List<E> results = typedQuery.getResultList();
+
+        boolean hasNext = results != null && results.size() > queryRequest.resultFilters().pageSize();
+
+        if (hasNext) {
+            results = results.subList(0,  queryRequest.resultFilters().pageSize());
+        }
+
+        return QueryResult.<E>builder()
+                .results(results)
+                .page(Page
+                        .builder()
+                        .hasNext(hasNext)
+                        .records(results != null ? results.size() : 0)
+                        .build())
+        .build();
     }
 
-    @SuppressWarnings("unchecked")
-    private static <E> List<E> getResultList(QueryRequest queryRequest, QueryBuilder queryBuilder) {
-        queryBuilder.setReturnLong(false);
-        return (List<E>) queryBuilder
-                .initializeQuery(QueryHelper
-                        .getStringBuilder(QueryType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
-                .addEntityGraph()
-                .addIds(queryRequest.getIds())
-                .addOptionalParam(queryRequest.getOptionalParams())
-                .addDateRange()
-                .addOrderBy(queryRequest.getResultFilters())
-                .buildQuery()
-                .getResultList();
-    }
+    @Override
+    public QueryResult<Long> findAllAndSelectIds(Class<E> clazz, QueryRequest<E> queryRequest) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<E> root = query.from(clazz);
 
-    @SuppressWarnings("unchecked")
-    private static <E> List<E> getResultListFromMatchingIds(QueryRequest queryRequest, QueryBuilder queryBuilder) {
-        queryBuilder.setReturnLong(true);
+        Predicate predicate = QueryHelper
+                .buildSpecification(queryRequest)
+                .toPredicate(root, query, cb);
 
-        List<Long> matchingIds = (List<Long>) queryBuilder
-                .initializeQuery(QueryHelper
-                        .getStringBuilder(QueryType.RETRIEVE_IDS, queryRequest.getClazz().getSimpleName()))
-                .addIds(queryRequest.getIds())
-                .addOptionalParam(queryRequest.getOptionalParams())
-                .addDateRange()
-                .buildQuery()
-                .getResultList();
+        if (predicate != null) {
+            query.where(predicate);
+        }
 
-        queryBuilder.setResultFilters(null);
-        queryBuilder.setReturnLong(false);
-        queryBuilder.setPagination(false);
+        query.select(root.get("id"));
 
-        return (List<E>) queryBuilder
-                .initializeQuery(QueryHelper
-                        .getStringBuilder(QueryType.RETRIEVE_ENTITY_LIST, queryRequest.getClazz().getSimpleName()))
-                .addEntityGraph()
-                .addIds(matchingIds
-                        .stream()
-                        .map(Object::toString)
-                        .toList())
-                .addOrderBy(queryRequest.getResultFilters())
-                .buildQuery()
-                .getResultList();
-    }
+        TypedQuery<Long> typedQuery = em.createQuery(query);
 
-    private static Page getPage(QueryRequest queryRequest, QueryBuilder queryBuilder) {
-        queryBuilder.setReturnLong(true);
-        Long totalRecords = (Long) queryBuilder
-                .initializeQuery(QueryHelper
-                        .getStringBuilder(QueryType.COUNT, queryRequest.getClazz().getSimpleName()))
-                .addIds(queryRequest.getIds())
-                .addOptionalParam(queryRequest.getOptionalParams())
-                .addDateRange()
-                .buildQuery()
-                .getSingleResult();
+        typedQuery.setFirstResult(queryRequest.resultFilters().page() * queryRequest.resultFilters().pageSize());
+        typedQuery.setMaxResults(queryRequest.resultFilters().pageSize() + 1);
 
-        boolean hasMore = totalRecords > (long) queryRequest.getResultFilters().getPageSize() * (queryRequest.getResultFilters().getPage() + 1);
-        return new Page(totalRecords, hasMore);
+        List<Long> results = typedQuery.getResultList();
+
+        boolean hasNext = results != null && results.size() > queryRequest.resultFilters().pageSize();;
+
+        if (hasNext) {
+            results = results.subList(0,  queryRequest.resultFilters().pageSize());
+        }
+
+        return QueryResult.<Long>builder()
+                .results(results)
+                .page(Page
+                        .builder()
+                        .hasNext(hasNext)
+                        .records(results != null ? results.size() : 0)
+                        .build())
+                .build();
     }
 
 }

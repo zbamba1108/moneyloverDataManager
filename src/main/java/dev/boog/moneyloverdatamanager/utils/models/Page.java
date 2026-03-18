@@ -5,13 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class Page {
-
-    private long totalRecords;
-
-    private boolean hasMore;
+public record Page(long records, boolean hasNext) {
 }

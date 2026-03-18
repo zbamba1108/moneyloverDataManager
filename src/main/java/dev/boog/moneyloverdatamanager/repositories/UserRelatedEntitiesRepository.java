@@ -10,4 +10,5 @@ public interface UserRelatedEntitiesRepository<E, ID> extends BaseRepository<E, 
     E getByUserIdAndId(final ID userId, final ID id);
 
     List<E> getAllByUserId(final ID userId);
+
 }

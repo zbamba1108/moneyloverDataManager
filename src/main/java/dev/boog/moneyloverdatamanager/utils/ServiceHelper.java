@@ -15,15 +15,12 @@ import java.util.HashMap;
 
 public final class ServiceHelper {
 
-    public static QueryRequest getQueryRequest(Class<?> clazz, BaseRequestDto req, String userId, boolean mapDetails, boolean hasChildren) {
-        return QueryRequest.builder()
-                .clazz(clazz)
+    public static <E> QueryRequest<E> getQueryRequest2(BaseRequestDto req, String userId) {
+        return QueryRequest.<E>builder()
                 .userId(userId)
                 .ids(req != null ? req.getIds() : null)
                 .optionalParams(mapQueryParams(req))
                 .resultFilters(mapResultFilter(req))
-                .mapDetails(mapDetails)
-                .hasChildren(hasChildren)
                 .build();
     }
 
@@ -84,6 +81,12 @@ public final class ServiceHelper {
     }
 
     private static HashMap<String, String> mapWalletQueryParams(RequestWalletDto req) {
-        return null;
+        HashMap<String, String> params = new HashMap<>();
+
+        if (req.getName() != null) {
+            params.put("name", req.getName());
+        }
+
+        return params;
     }
 }

@@ -9,12 +9,8 @@ import dev.boog.moneyloverdatamanager.services.CategoryService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
 import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.util.logging.Logger;
 
 public class CategoryServiceImpl implements CategoryService {
 
@@ -35,17 +31,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseDto<ResponseCategoryDto> get(String userId, RequestCategoryDto req) {
-        final QueryResult<Category> queryResult = categoryRepository
-                .search(ServiceHelper
-                        .getQueryRequest(Category.class, req, userId, false, false));
+        QueryRequest<Category> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+        QueryResult<Category> queryResult = categoryRepository
+                .findAll(Category.class, queryRequest);
 
         return ResponseDto.<ResponseCategoryDto>builder()
                 .data(queryResult
-                        .getResults()
+                        .results()
                         .stream()
                         .map(CategoryMapper.INSTANCE::toResponseDto)
                         .toList())
-                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .page(PageMapper.INSTANCE.toDto(queryResult.page()))
                 .build();
     }
 

@@ -7,6 +7,7 @@ import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
 
 public interface CustomSearchQueryRepository<E> {
 
-    QueryResult<E> search(QueryRequest queryRequest);
+    QueryResult<E> findAll(Class<E> clazz, QueryRequest<E> queryRequest);
 
+    QueryResult<Long> findAllAndSelectIds(Class<E> clazz, QueryRequest<E> queryRequest);
 }

@@ -3,20 +3,17 @@ package dev.boog.moneyloverdatamanager.utils.models;
 import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ResultFilters {
+public record ResultFilters(
 
-    private Integer page;
+    Integer page,
 
-    private Integer pageSize;
+    Integer pageSize,
 
-    private String[] dateRange;
+    String[] dateRange,
 
-    private SortingOrder sortingOrder;
+    SortingOrder sortingOrder,
 
-    private String sortingField;
+    String sortingField) {
+
 }

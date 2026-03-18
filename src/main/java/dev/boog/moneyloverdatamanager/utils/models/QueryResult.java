@@ -2,18 +2,10 @@ package dev.boog.moneyloverdatamanager.utils.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class QueryResult<E> {
+public record QueryResult<E>(List<E> results, Page page) {
 
-    private List<E> results;
-
-    private Page page;
 }

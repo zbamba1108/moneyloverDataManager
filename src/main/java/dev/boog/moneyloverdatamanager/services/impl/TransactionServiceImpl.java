@@ -3,18 +3,16 @@ package dev.boog.moneyloverdatamanager.services.impl;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
+import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
 import dev.boog.moneyloverdatamanager.utils.mappers.TransactionMapper;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.util.logging.Logger;
+import java.util.List;
 
 public class TransactionServiceImpl implements TransactionService {
 
@@ -34,18 +32,24 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public ResponseDto<ResponseTransactionDto> get(String userId, RequestTransactionDto req) {
-        final QueryResult<Transaction> queryResult = transactionRepository
-                .search(ServiceHelper
-                        .getQueryRequest(Transaction.class, req, userId, false, false));
+        QueryRequest<Transaction> queryRequest = ServiceHelper
+                .getQueryRequest2(req, userId);
+
+        QueryResult<Transaction> queryResult = transactionRepository
+                .findAll(Transaction.class, queryRequest);
 
         return ResponseDto
                 .<ResponseTransactionDto>builder()
                 .data(queryResult
-                        .getResults()
+                        .results()
                         .stream()
                         .map(TransactionMapper.INSTANCE::toResponseDto)
                         .toList())
-                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .page(PageDto
+                        .builder()
+                        .hasNext(queryResult.page().hasNext())
+                        .records(queryResult.results().size())
+                        .build())
                 .build();
     }
 
@@ -65,18 +69,25 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ResponseDto<ResponseTransactionDto> details(String userId, RequestTransactionDto req) {
-        final QueryResult<Transaction> queryResult = transactionRepository
-                .search(ServiceHelper
-                        .getQueryRequest(Transaction.class, req, userId, true, false));
+        QueryRequest<Transaction> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
 
-        return ResponseDto
-                .<ResponseTransactionDto>builder()
-                .data(queryResult
-                        .getResults()
+        QueryResult<Long> queryResult = transactionRepository
+                .findAllAndSelectIds(Transaction.class, queryRequest);
+
+        List<Transaction> results = transactionRepository
+                .findAllByIdIn(queryResult.results());
+
+        return ResponseDto.
+                <ResponseTransactionDto>builder()
+                .data(results
                         .stream()
                         .map(TransactionMapper.INSTANCE::toResponseDtoDetails)
                         .toList())
-                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .page(PageDto
+                        .builder()
+                        .hasNext(queryResult.page().hasNext())
+                        .records(queryResult.results().size())
+                        .build())
                 .build();
     }
 }

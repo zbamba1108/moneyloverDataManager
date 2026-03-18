@@ -1,69 +1,45 @@
 package dev.boog.moneyloverdatamanager.utils;
 
-import dev.boog.moneyloverdatamanager.entities.Transaction;
-import dev.boog.moneyloverdatamanager.entities.Wallet;
-import dev.boog.moneyloverdatamanager.utils.enums.QueryType;
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.EntityManager;
-
-import java.util.HashMap;
-import java.util.Iterator;
+import dev.boog.moneyloverdatamanager.repositories.specifications.SpecificationBuilder;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
+import jakarta.persistence.criteria.Path;
+import org.springframework.data.jpa.domain.Specification;
 
 public final class QueryHelper {
 
-    public static String capitalizeProperty(String property) {
-        while (property.contains(".")){
-            int letterToCapitalizeIndex = property.indexOf(".") + 1;
-            String capitalizedLetter = String.valueOf(property.charAt(letterToCapitalizeIndex)).toUpperCase();
-            property = property.substring(0, letterToCapitalizeIndex-1)
-                    + capitalizedLetter
-                    + property.substring(letterToCapitalizeIndex+1);
+    public static Path<?> resolvePath(Path<?> path, String key) {
+        String[] parts = key.split("\\.");
+
+        for (String part : parts) {
+            path = path.get(part);
         }
 
-        return property;
+        return path;
     }
 
-    public static EntityGraph<?> getEntityGraph(EntityManager em, String classSimpleName) {
-        if (classSimpleName.equals(Transaction.class.getSimpleName())) {
-            return em.getEntityGraph(Constants.EntityGraph.TRANSACTION_WALLET_CATEGORY);
-        } else if (classSimpleName.equals(Wallet.class.getSimpleName())) {
-            return em.getEntityGraph(Constants.EntityGraph.WALLET_TRANSACTION);
+    public static <E> Specification<E> buildSpecification(QueryRequest<E> request) {
+        Specification<E> specification = Specification.where(
+                SpecificationBuilder.hasUserId(request.userId()));
+
+        if (request.ids() != null && !request.ids().isEmpty()) {
+            specification = specification.and(
+                    SpecificationBuilder.fieldIn("id", request.ids()));
         }
 
-        return null;
-    }
-
-    public static void buildQueryAndCreateQueryParam(StringBuilder sb, HashMap<String, String> inputMap, HashMap<String, String> outputMap) {
-
-        Iterator<String> iterator = inputMap.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            String capitalizedProperty = QueryHelper.capitalizeProperty(key);
-            outputMap.put(capitalizedProperty, inputMap.get(key));
-            sb.append(" e.").append(key).append(" = :").append(capitalizedProperty);
-
-            if (iterator.hasNext()) {
-                sb.append(" AND");
+        if (request.optionalParams() != null && !request.optionalParams().isEmpty()) {
+            for (String key : request.optionalParams().keySet()) {
+                specification = specification.and(
+                        SpecificationBuilder.withFieldEquals(key, request.optionalParams().get(key)));
             }
         }
-    }
 
-    public static StringBuilder getStringBuilder(QueryType type, String classSimpleName) {
+        if (request.resultFilters() != null
+                && request.resultFilters().dateRange() != null
+                && request.resultFilters().dateRange().length == 2) {
+            specification = specification.and(
+                    SpecificationBuilder.withDateBetween(request.resultFilters().dateRange()));
+        }
 
-        return switch (type) {
-            case COUNT -> new StringBuilder()
-                    .append("SELECT COUNT(e) FROM ")
-                    .append(classSimpleName)
-                    .append(" e WHERE e.user.id = :userId");
-            case RETRIEVE_IDS -> new StringBuilder()
-                    .append("SELECT e.id FROM ")
-                    .append(classSimpleName)
-                    .append(" e WHERE e.user.id = :userId");
-            case RETRIEVE_ENTITY_LIST -> new StringBuilder()
-                    .append("SELECT e FROM ")
-                    .append(classSimpleName)
-                    .append(" e WHERE e.user.id = :userId");
-        };
+        return specification;
     }
 }

@@ -3,18 +3,16 @@ package dev.boog.moneyloverdatamanager.services.impl;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
+import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
 import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.ServiceHelper;
-import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
 import dev.boog.moneyloverdatamanager.utils.mappers.WalletMapper;
+import dev.boog.moneyloverdatamanager.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.utils.models.QueryResult;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.util.logging.Logger;
+import java.util.List;
 
 
 public class WalletServiceImpl implements WalletService {
@@ -35,18 +33,22 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public ResponseDto<ResponseWalletDto> get(String userId, RequestWalletDto req) {
-        final QueryResult<Wallet> queryResult = walletRepository
-                .search(ServiceHelper
-                        .getQueryRequest(Wallet.class, req, userId, false, false));
+        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+
+        QueryResult<Wallet> queryResult = walletRepository
+                .findAll(Wallet.class, queryRequest);
 
         return ResponseDto
                 .<ResponseWalletDto>builder()
                 .data(queryResult
-                        .getResults()
+                        .results()
                         .stream()
                         .map(WalletMapper.INSTANCE::toResponseDto)
                         .toList())
-                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .page(PageDto.builder()
+                        .hasNext(queryResult.page().hasNext())
+                        .records(queryResult.results().size())
+                        .build())
                 .build();
     }
 
@@ -72,18 +74,24 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public ResponseDto<ResponseWalletDto> details(String userId, RequestWalletDto req) {
-        final QueryResult<Wallet> queryResult = walletRepository
-                .search(ServiceHelper
-                        .getQueryRequest(Wallet.class, req, userId, true, true));
+        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest2(req, userId);
+
+        QueryResult<Long> pagedResults = walletRepository
+                .findAllAndSelectIds(Wallet.class, queryRequest);
+
+        List<Wallet> results = walletRepository
+                .findAllByIdIn(pagedResults.results());
 
         return ResponseDto
                 .<ResponseWalletDto>builder()
-                .data(queryResult
-                        .getResults()
+                .data(results
                         .stream()
                         .map(WalletMapper.INSTANCE::toResponseDtoDetails)
                         .toList())
-                .page(PageMapper.INSTANCE.toDto(queryResult.getPage()))
+                .page(PageDto.builder()
+                        .hasNext(pagedResults.page().hasNext())
+                        .records(results.size())
+                        .build())
                 .build();
     }
 }
