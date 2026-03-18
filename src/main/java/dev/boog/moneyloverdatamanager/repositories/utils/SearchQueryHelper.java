@@ -70,21 +70,19 @@ public final class SearchQueryHelper {
         }
 
         if (request.optionalParams() != null && !request.optionalParams().isEmpty()) {
-            request.optionalParams().keySet().forEach(field -> {
-                predicates.add(
-                        cb.equal(resolvePath(root, field),
-                        request.optionalParams().get(field)));
-            });
+            request.optionalParams().keySet().forEach(field -> predicates.add(
+                    cb.equal(resolvePath(root, field),
+                    request.optionalParams().get(field))));
         }
 
         if (request.resultFilters() != null
                 && request.resultFilters().dateRange() != null
                 && request.resultFilters().dateRange().length == 2) {
-            String startDate = request.resultFilters().dateRange()[0];
-            String endDate = request.resultFilters().dateRange()[1];
+            Long startDate = request.resultFilters().dateRange()[0];
+            Long endDate = request.resultFilters().dateRange()[1];
             predicates.add(cb.between(root.get("createdAt"),
-                    new Timestamp(Long.parseLong(startDate)),
-                    new Timestamp(Long.parseLong(endDate))
+                    new Timestamp(startDate),
+                    new Timestamp(endDate)
                     )
             );
         }

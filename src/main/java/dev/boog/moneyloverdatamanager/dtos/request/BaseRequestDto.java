@@ -3,6 +3,7 @@ package dev.boog.moneyloverdatamanager.dtos.request;
 import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -26,10 +27,13 @@ public class BaseRequestDto {
     @Builder.Default
     private final Integer pageSize = 5;
 
-    private final String[] dateRange;
+    @Size(min = 2, max = 2)
+    private final Long[] dateRange;
 
-    private final String sortingField;
+    @Builder.Default
+    private final String sortingField = "id";
 
-    private final SortingOrder sortingOrder;
+    @Builder.Default
+    private final SortingOrder sortingOrder = SortingOrder.ASC;
 
 }

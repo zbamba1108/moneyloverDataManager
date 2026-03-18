@@ -6,6 +6,7 @@ import dev.boog.moneyloverdatamanager.entities.Wallet;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class WalletQueryHelper extends QueryHelper<Wallet, RequestWalletDto> {
@@ -15,13 +16,13 @@ public class WalletQueryHelper extends QueryHelper<Wallet, RequestWalletDto> {
     }
 
     @Override
-    public HashMap<String, String> mapOptionalParams(RequestWalletDto req) {
-        HashMap<String, String> params = new HashMap<>();
+    public Map<String, Object> mapOptionalParams(RequestWalletDto req) {
+        Map<String, Object> params = new HashMap<>();
 
         if (req == null) {
             return params;
         }
-        
+
         if (req.getName() != null) {
             params.put("name", req.getName());
         }

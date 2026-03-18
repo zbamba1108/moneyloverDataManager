@@ -4,6 +4,7 @@ import lombok.Builder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Builder
 public record QueryRequest<E>( // do not remove E
@@ -14,7 +15,7 @@ public record QueryRequest<E>( // do not remove E
 
         List<String> ids,
 
-        HashMap<String, String> optionalParams,
+        Map<String, Object> optionalParams,
 
         ResultFilters resultFilters) {
 

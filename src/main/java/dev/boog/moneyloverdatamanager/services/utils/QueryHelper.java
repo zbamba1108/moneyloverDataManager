@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
 import dev.boog.moneyloverdatamanager.entities.BaseEntity;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class QueryHelper<E extends BaseEntity, R extends BaseRequestDto> {
 
@@ -13,7 +14,7 @@ public abstract class QueryHelper<E extends BaseEntity, R extends BaseRequestDto
         this.entityClass = entityClass;
     }
 
-    public abstract HashMap<String, String> mapOptionalParams(R req);
+    public abstract Map<String, Object> mapOptionalParams(R req);
 
     public final Class<E> getEntityClass() {
         return entityClass;

@@ -1,11 +1,11 @@
 package dev.boog.moneyloverdatamanager.services.utils;
 
-import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class TransactionQueryHelper extends QueryHelper<Transaction, RequestTransactionDto> {
@@ -15,18 +15,18 @@ public class TransactionQueryHelper extends QueryHelper<Transaction, RequestTran
     }
 
     @Override
-    public HashMap<String, String> mapOptionalParams(RequestTransactionDto req) {
-        HashMap<String, String> params = new HashMap<>();
+    public Map<String, Object> mapOptionalParams(RequestTransactionDto req) {
+        Map<String, Object> params = new HashMap<>();
 
         if (req == null) {
             return params;
         }
 
         if (req.getWalletId() != null) {
-            params.put("wallet.id", String.valueOf(req.getWalletId()));
+            params.put("wallet.id", req.getWalletId());
         }
         if (req.getCategoryId() != null) {
-            params.put("category.id", String.valueOf(req.getCategoryId()));
+            params.put("category.id", req.getCategoryId());
         }
 
         return params;

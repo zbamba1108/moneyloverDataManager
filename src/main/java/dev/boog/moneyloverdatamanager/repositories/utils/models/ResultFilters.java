@@ -10,7 +10,7 @@ public record ResultFilters(
 
     Integer pageSize,
 
-    String[] dateRange,
+    Long[] dateRange,
 
     SortingOrder sortingOrder,
 
