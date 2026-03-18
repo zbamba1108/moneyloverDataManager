@@ -61,11 +61,11 @@ public class Transaction extends BaseEntity {
     @Column(name = "comment")
     private String comment;
 
-    public Transaction userId(String userId) {
+    public Transaction userId(Long userId) {
         if (this.user == null) {
             this.user = new User();
         }
-        this.user.setId(Long.parseLong(userId));
+        this.user.setId(userId);
         return this;
     }
 

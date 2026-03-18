@@ -30,7 +30,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public String create(String userId, RequestWalletDto req) {
+    public String create(Long userId, RequestWalletDto req) {
         Wallet entity = WalletMapper.INSTANCE
                 .toEntity(req)
                 .userId(userId);
@@ -38,7 +38,7 @@ public class WalletServiceImpl implements WalletService {
         return "Wallet created successfully";
     }
 
-    public ResponseDto<ResponseWalletDto> get(String userId, RequestWalletDto req) {
+    public ResponseDto<ResponseWalletDto> get(Long userId, RequestWalletDto req) {
         QueryRequest<Wallet> queryRequest = QueryRequestBuilder.build(queryHelper, req, userId);
 
         QueryResult<Wallet> queryResult = walletRepository
@@ -59,7 +59,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public ResponseWalletDto update(String userId, RequestWalletDto req) {
+    public ResponseWalletDto update(Long userId, RequestWalletDto req) {
         return WalletMapper.INSTANCE
                 .toResponseDto(walletRepository
                         .save(WalletMapper.INSTANCE
@@ -67,19 +67,16 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public String delete(String userId, RequestWalletDto req) {
+    public String delete(Long userId, RequestWalletDto req) {
         walletRepository.deleteByIds(
                 Wallet.class,
-                Long.parseLong(userId),
-                req.getIds()
-                        .stream()
-                        .map(Long::parseLong)
-                        .toList());
+                userId,
+                req.getIds());
         return "Wallet(s) deleted successfully";
     }
 
     @Override
-    public ResponseDto<ResponseWalletDto> details(String userId, RequestWalletDto req) {
+    public ResponseDto<ResponseWalletDto> details(Long userId, RequestWalletDto req) {
         QueryRequest<Wallet> queryRequest = QueryRequestBuilder.build(queryHelper, req, userId);
 
         QueryResult<Long> pagedResults = walletRepository

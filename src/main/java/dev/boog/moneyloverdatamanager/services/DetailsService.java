@@ -6,5 +6,5 @@ import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
 
 public interface DetailsService<I extends BaseRequestDto, O extends BaseEntityDto> {
 
-    ResponseDto<O> details(String userId, I requestDto);
+    ResponseDto<O> details(Long userId, I requestDto);
 }

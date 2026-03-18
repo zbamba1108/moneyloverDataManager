@@ -35,11 +35,11 @@ public class Category extends BaseEntity {
     @ToString.Exclude
     private Category parent;
 
-    public Category userId(String userId) {
+    public Category userId(Long userId) {
         if (this.user == null) {
             this.user = new User();
         }
-        this.user.setId(Long.parseLong(userId));
+        this.user.setId(userId);
         return this;
     }
 

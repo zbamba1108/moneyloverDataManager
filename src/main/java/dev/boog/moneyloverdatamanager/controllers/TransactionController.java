@@ -3,12 +3,15 @@ package dev.boog.moneyloverdatamanager.controllers;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Transaction API")
@@ -24,8 +27,10 @@ public class TransactionController {
 
     @Operation(description = "create a new transaction")
     @PostMapping
-    public ResponseEntity<String> create(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                         @RequestBody RequestTransactionDto transaction) {
+    public ResponseEntity<String> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                         @RequestBody
+                                         @Validated(Write.class)
+                                         RequestTransactionDto transaction) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(service.create(userId, transaction));
@@ -33,8 +38,10 @@ public class TransactionController {
 
     @Operation(description = "search one or more transactions based on input request")
     @PostMapping("/search")
-    public ResponseEntity<ResponseDto<ResponseTransactionDto>> get(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                                                   @RequestBody(required = false) RequestTransactionDto req) {
+    public ResponseEntity<ResponseDto<ResponseTransactionDto>> get(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                                                   @RequestBody(required = false)
+                                                                   @Validated(Read.class)
+                                                                   RequestTransactionDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.get(userId, req));
@@ -42,8 +49,10 @@ public class TransactionController {
 
     @Operation(description = "search one or more wallets based on input request, get the details of children")
     @PostMapping("/search/details")
-    public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                                                       @RequestBody(required = false) RequestTransactionDto req) {
+    public ResponseEntity<ResponseDto<ResponseTransactionDto>> details(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                                                       @RequestBody(required = false)
+                                                                       @Validated(Read.class)
+                                                                       RequestTransactionDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.details(userId, req));
@@ -51,8 +60,10 @@ public class TransactionController {
 
     @Operation(description = "update an existing transaction")
     @PutMapping
-    public ResponseEntity<ResponseTransactionDto> update(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                                         @RequestBody RequestTransactionDto dto) {
+    public ResponseEntity<ResponseTransactionDto> update(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                                         @RequestBody
+                                                         @Validated(Write.class)
+                                                         RequestTransactionDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.update(userId, dto));
@@ -60,8 +71,10 @@ public class TransactionController {
 
     @Operation(description = "delete an existing transaction")
     @DeleteMapping
-    public ResponseEntity<String> delete(@RequestHeader(Constants.Headers.USER_ID) String userId,
-                                         @RequestBody RequestTransactionDto dto) {
+    public ResponseEntity<String> delete(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                         @RequestBody
+                                         @Validated(Write.class)
+                                         RequestTransactionDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.delete(userId, dto));

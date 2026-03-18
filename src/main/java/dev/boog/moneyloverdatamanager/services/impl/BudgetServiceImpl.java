@@ -17,22 +17,22 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public String create(String userId, RequestBudgetDto req) {
+    public String create(Long userId, RequestBudgetDto req) {
         return null;
     }
 
     @Override
-    public ResponseDto<ResponseBudgetDto> get(String userId, RequestBudgetDto req) {
+    public ResponseDto<ResponseBudgetDto> get(Long userId, RequestBudgetDto req) {
         return null;
     }
 
     @Override
-    public ResponseBudgetDto update(String userId, RequestBudgetDto req) {
+    public ResponseBudgetDto update(Long userId, RequestBudgetDto req) {
         return null;
     }
 
     @Override
-    public String delete(String userId, RequestBudgetDto req) {
+    public String delete(Long userId, RequestBudgetDto req) {
         return null;
     }
 }

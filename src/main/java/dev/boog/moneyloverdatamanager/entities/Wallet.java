@@ -48,11 +48,11 @@ public class Wallet extends BaseEntity {
     @ToString.Exclude
     private List<Transaction> transactionList;
 
-    public Wallet userId(String userId) {
+    public Wallet userId(Long userId) {
         if (this.user == null) {
             this.user = new User();
         }
-        this.user.setId(Long.parseLong(userId));
+        this.user.setId(userId);
         return this;
     }
 

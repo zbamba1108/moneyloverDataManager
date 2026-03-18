@@ -17,21 +17,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String create(String userId, RequestEventDto req) {
+    public String create(Long userId, RequestEventDto req) {
         return null;
     }
 
-    public ResponseDto<ResponseEventDto> get(String userId, RequestEventDto req) {
-        return null;
-    }
-
-    @Override
-    public ResponseEventDto update(String userId, RequestEventDto req) {
+    public ResponseDto<ResponseEventDto> get(Long userId, RequestEventDto req) {
         return null;
     }
 
     @Override
-    public String delete(String userId, RequestEventDto req) {
+    public ResponseEventDto update(Long userId, RequestEventDto req) {
+        return null;
+    }
+
+    @Override
+    public String delete(Long userId, RequestEventDto req) {
         return null;
     }
 }

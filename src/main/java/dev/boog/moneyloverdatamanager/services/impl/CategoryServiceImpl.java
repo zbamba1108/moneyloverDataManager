@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String create(String userId, RequestCategoryDto req) {
+    public String create(Long userId, RequestCategoryDto req) {
         Category category = CategoryMapper.INSTANCE
                 .toEntity(req)
                 .userId(userId);
@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseDto<ResponseCategoryDto> get(String userId, RequestCategoryDto req) {
+    public ResponseDto<ResponseCategoryDto> get(Long userId, RequestCategoryDto req) {
         QueryRequest<Category> queryRequest = QueryRequestBuilder.build(queryHelper, req, userId);
         QueryResult<Category> queryResult = categoryRepository
                 .findAll(queryRequest);
@@ -53,21 +53,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto update(String userId, RequestCategoryDto req) {
+    public ResponseCategoryDto update(Long userId, RequestCategoryDto req) {
         return CategoryMapper.INSTANCE
                 .toResponseDto(categoryRepository.save(CategoryMapper.INSTANCE
                         .toEntity(req)));
     }
 
     @Override
-    public String delete(String userId, RequestCategoryDto req) {
+    public String delete(Long userId, RequestCategoryDto req) {
         categoryRepository.deleteByIds(
                 Category.class,
-                Long.parseLong(userId),
+                userId,
                 req.getIds()
-                        .stream()
-                        .map(Long::parseLong)
-                        .toList()
         );
         return "Category(s) deleted successfully";
     }

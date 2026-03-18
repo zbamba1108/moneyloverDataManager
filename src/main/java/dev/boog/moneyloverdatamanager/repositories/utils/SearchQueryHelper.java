@@ -61,7 +61,7 @@ public final class SearchQueryHelper {
     private static <E> List<Predicate> buildPredicates(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if (StringUtils.hasText(request.userId())){
+        if (request.userId() != null){
             predicates.add(cb.equal(root.get("user").get("id"), request.userId()));
         }
 

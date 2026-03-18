@@ -31,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String create(String userId, RequestTransactionDto req) {
+    public String create(Long userId, RequestTransactionDto req) {
         Transaction entity = TransactionMapper.INSTANCE
                 .toEntity(req)
                 .userId(userId);
@@ -39,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
         return "Transaction created successfully";
     }
 
-    public ResponseDto<ResponseTransactionDto> get(String userId, RequestTransactionDto req) {
+    public ResponseDto<ResponseTransactionDto> get(Long userId, RequestTransactionDto req) {
         QueryRequest<Transaction> queryRequest = QueryRequestBuilder
                 .build(queryHelper, req, userId);
 
@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public ResponseTransactionDto update(String userId, RequestTransactionDto req) {
+    public ResponseTransactionDto update(Long userId, RequestTransactionDto req) {
         return TransactionMapper.INSTANCE
                 .toResponseDto(transactionRepository
                         .save(TransactionMapper.INSTANCE
@@ -70,13 +70,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String delete(String userId, RequestTransactionDto req) {
+    public String delete(Long userId, RequestTransactionDto req) {
         transactionRepository.delete(TransactionMapper.INSTANCE.toEntity(req));
         return "Transaction deleted successfully";
     }
 
     @Override
-    public ResponseDto<ResponseTransactionDto> details(String userId, RequestTransactionDto req) {
+    public ResponseDto<ResponseTransactionDto> details(Long userId, RequestTransactionDto req) {
         QueryRequest<Transaction> queryRequest = QueryRequestBuilder
                 .build(queryHelper, req, userId);
 

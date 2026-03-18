@@ -11,9 +11,9 @@ public record QueryRequest<E>( // do not remove E
 
         Class<E> entityClass,
 
-        String userId,
+        Long userId,
 
-        List<String> ids,
+        List<Long> ids,
 
         Map<String, Object> optionalParams,
 

@@ -12,7 +12,7 @@ public final class QueryRequestBuilder {
         throw new IllegalStateException(Constants.Messages.UTILITY_CLASS);
     }
 
-    public static <E extends BaseEntity, R extends BaseRequestDto> QueryRequest<E> build(QueryHelper<E, R> queryHelper, R req, String userId) {
+    public static <E extends BaseEntity, R extends BaseRequestDto> QueryRequest<E> build(QueryHelper<E, R> queryHelper, R req, Long userId) {
         return QueryRequest.<E>builder()
                 .entityClass(queryHelper.getEntityClass())
                 .userId(userId)
@@ -27,7 +27,7 @@ public final class QueryRequestBuilder {
                 ResultFilters.builder()
                         .page(request.getPage())
                         .pageSize(request.getPageSize())
-                        .dateRange(request.getDateRange())
+                        .dateRange(new Long[]{request.getStartDate(), request.getEndDate()})
                         .sortingField(request.getSortingField())
                         .sortingOrder(request.getSortingOrder())
                         .build()

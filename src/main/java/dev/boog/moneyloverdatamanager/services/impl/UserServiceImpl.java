@@ -21,19 +21,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String create(String userId, RequestUserDto req) {
+    public String create(Long userId, RequestUserDto req) {
         userRepository.save(UserMapper.INSTANCE.toEntity(req));
         return "User created successfully";
     }
 
-    public ResponseDto<ResponseUserDto> get(String userId, RequestUserDto req) {
+    public ResponseDto<ResponseUserDto> get(Long userId, RequestUserDto req) {
         List<ResponseUserDto> responseDtoList;
 
         if (req != null && req.getIds() != null && !req.getIds().isEmpty()) {
-            responseDtoList = userRepository.getUserById(req.getIds()
-                            .stream()
-                            .map(Long::parseLong)
-                            .toList())
+            responseDtoList = userRepository.getUserById(req.getIds())
                     .stream()
                     .map(UserMapper.INSTANCE::toResponseDto)
                     .toList();
@@ -53,21 +50,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseUserDto update(String userId, RequestUserDto req) {
+    public ResponseUserDto update(Long userId, RequestUserDto req) {
         return UserMapper.INSTANCE
                 .toResponseDto(userRepository.save(UserMapper.INSTANCE
                         .toEntity(req)));
     }
 
     @Override
-    public String delete(String userId, RequestUserDto req) {
+    public String delete(Long userId, RequestUserDto req) {
         userRepository.deleteByIds(
                 User.class,
                 null,
-                req.getIds()
-                        .stream()
-                        .map(Long::parseLong)
-                        .toList());
+                req.getIds());
         return "User(s) deleted successfully";
     }
 }

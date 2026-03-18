@@ -42,7 +42,7 @@ public interface BaseEntityMapper<E extends BaseEntity,
     }
 
     @Named("getFirstId")
-    default Long getFirstId(List<String> ids) {
-        return Long.parseLong(Objects.requireNonNull(ids.stream().findFirst().orElse(null)));
+    default Long getFirstId(List<Long> ids) {
+        return ids.stream().findFirst().orElse(null);
     }
 }

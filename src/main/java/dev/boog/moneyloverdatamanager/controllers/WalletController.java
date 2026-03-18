@@ -3,6 +3,8 @@ package dev.boog.moneyloverdatamanager.controllers;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag( name = "Wallet API")
@@ -31,11 +34,13 @@ public class WalletController {
                                             name = "USER-ID",
                                             description = "the userid of the calling customer",
                                             required = true)
-                                         @RequestHeader(Constants.Headers.USER_ID) String userId,
+                                         @RequestHeader(Constants.Headers.USER_ID) Long userId,
                                          @Parameter(
                                                  name = "request",
                                                  description = "the input request")
-                                         @RequestBody RequestWalletDto req) {
+                                         @RequestBody
+                                         @Validated(Write.class)
+                                         RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(service.create(userId, req));
@@ -47,11 +52,13 @@ public class WalletController {
                                                                   name = "USER-ID",
                                                                   description = "the userid of the calling customer",
                                                                   required = true)
-                                                              @RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                              @RequestHeader(Constants.Headers.USER_ID) Long userId,
                                                               @Parameter(
                                                                   name = "request",
                                                                   description = "the input request")
-                                                              @RequestBody(required = false) RequestWalletDto req) {
+                                                              @RequestBody(required = false)
+                                                              @Validated(Read.class)
+                                                              RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.get(userId, req));
@@ -63,11 +70,13 @@ public class WalletController {
                                                                       name = "USER-ID",
                                                                       description = "the userid of the calling customer",
                                                                       required = true)
-                                                                  @RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                                  @RequestHeader(Constants.Headers.USER_ID) Long userId,
                                                                   @Parameter(
                                                                       name = "request",
                                                                       description = "the input request")
-                                                                  @RequestBody @Valid RequestWalletDto req) {
+                                                                  @RequestBody
+                                                                  @Validated(Read.class)
+                                                                  RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.details(userId, req));
@@ -79,11 +88,13 @@ public class WalletController {
                                                         name = "USER-ID",
                                                         description = "the userid of the calling customer",
                                                         required = true)
-                                                    @RequestHeader(Constants.Headers.USER_ID) String userId,
+                                                    @RequestHeader(Constants.Headers.USER_ID) Long userId,
                                                     @Parameter(
                                                         name = "request",
                                                         description = "the input request")
-                                                    @RequestBody RequestWalletDto req) {
+                                                    @RequestBody
+                                                    @Validated(Write.class)
+                                                    RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.update(userId, req));
@@ -95,11 +106,13 @@ public class WalletController {
                                              name = "USER-ID",
                                              description = "the userid of the calling customer",
                                              required = true)
-                                         @RequestHeader(Constants.Headers.USER_ID) String userId,
+                                         @RequestHeader(Constants.Headers.USER_ID) Long userId,
                                          @Parameter(
                                              name = "request",
                                              description = "the input request")
-                                         @RequestBody RequestWalletDto req) {
+                                         @RequestBody
+                                         @Validated(Write.class)
+                                         RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.delete(userId, req));
