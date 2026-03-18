@@ -48,7 +48,7 @@ public final class SearchQueryHelper {
                 .build();
     }
 
-    public static Path<?> resolvePath(Path<?> path, String key) {
+    private static Path<?> resolvePath(Path<?> path, String key) {
         String[] parts = key.split("\\.");
 
         for (String part : parts) {

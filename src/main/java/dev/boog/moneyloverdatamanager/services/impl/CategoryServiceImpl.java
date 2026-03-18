@@ -31,9 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseDto<ResponseCategoryDto> get(String userId, RequestCategoryDto req) {
-        QueryRequest<Category> queryRequest = ServiceHelper.getQueryRequest(req, userId);
+        QueryRequest<Category> queryRequest = ServiceHelper.getQueryRequest(Category.class, req, userId);
         QueryResult<Category> queryResult = categoryRepository
-                .findAll(Category.class, queryRequest);
+                .findAll(queryRequest);
 
         return ResponseDto.<ResponseCategoryDto>builder()
                 .data(queryResult

@@ -8,6 +8,8 @@ import java.util.List;
 @Builder
 public record QueryRequest<E>( // do not remove E
 
+        Class<E> entityClass,
+
         String userId,
 
         List<String> ids,

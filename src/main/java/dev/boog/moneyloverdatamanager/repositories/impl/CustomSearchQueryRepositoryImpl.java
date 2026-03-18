@@ -5,7 +5,6 @@ import dev.boog.moneyloverdatamanager.repositories.utils.SearchQueryHelper;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -15,14 +14,18 @@ import java.util.List;
 
 public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepository<E> {
 
-    @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
+
+    public CustomSearchQueryRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
-    public QueryResult<E> findAll(Class<E> clazz, QueryRequest<E> queryRequest) {
+    public QueryResult<E> findAll(QueryRequest<E> queryRequest) {
+        Class<E> entityClass = queryRequest.entityClass();
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<E> query = cb.createQuery(clazz);
-        Root<E> root = query.from(clazz);
+        CriteriaQuery<E> query = cb.createQuery(entityClass);
+        Root<E> root = query.from(entityClass);
 
         SearchQueryHelper.addPredicate(query, queryRequest, root, cb);
 
@@ -35,10 +38,11 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
     }
 
     @Override
-    public QueryResult<Long> findAllAndSelectIds(Class<E> clazz, QueryRequest<E> queryRequest) {
+    public QueryResult<Long> findAllAndSelectIds(QueryRequest<E> queryRequest) {
+        Class<E> entityClass = queryRequest.entityClass();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<E> root = query.from(clazz);
+        Root<E> root = query.from(entityClass);
 
         SearchQueryHelper.addPredicate(query, queryRequest, root, cb);
 

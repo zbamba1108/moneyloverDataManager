@@ -33,10 +33,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     public ResponseDto<ResponseTransactionDto> get(String userId, RequestTransactionDto req) {
         QueryRequest<Transaction> queryRequest = ServiceHelper
-                .getQueryRequest(req, userId);
+                .getQueryRequest(Transaction.class, req, userId);
 
         QueryResult<Transaction> queryResult = transactionRepository
-                .findAll(Transaction.class, queryRequest);
+                .findAll(queryRequest);
 
         return ResponseDto
                 .<ResponseTransactionDto>builder()
@@ -69,10 +69,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ResponseDto<ResponseTransactionDto> details(String userId, RequestTransactionDto req) {
-        QueryRequest<Transaction> queryRequest = ServiceHelper.getQueryRequest(req, userId);
+        QueryRequest<Transaction> queryRequest = ServiceHelper.getQueryRequest(Transaction.class, req, userId);
 
         QueryResult<Long> queryResult = transactionRepository
-                .findAllAndSelectIds(Transaction.class, queryRequest);
+                .findAllAndSelectIds(queryRequest);
 
         List<Transaction> results = transactionRepository
                 .findAllByIdIn(queryResult.results());

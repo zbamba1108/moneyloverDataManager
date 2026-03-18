@@ -9,8 +9,9 @@ import java.util.HashMap;
 
 public final class ServiceHelper {
 
-    public static <E> QueryRequest<E> getQueryRequest(BaseRequestDto req, String userId) {
+    public static <E> QueryRequest<E> getQueryRequest(Class<E> clazz, BaseRequestDto req, String userId) {
         return QueryRequest.<E>builder()
+                .entityClass(clazz)
                 .userId(userId)
                 .ids(req != null ? req.getIds() : null)
                 .optionalParams(mapQueryParams(req))

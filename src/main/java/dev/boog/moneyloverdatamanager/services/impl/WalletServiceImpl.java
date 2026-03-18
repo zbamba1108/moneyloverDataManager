@@ -33,10 +33,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public ResponseDto<ResponseWalletDto> get(String userId, RequestWalletDto req) {
-        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(req, userId);
+        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(Wallet.class, req, userId);
 
         QueryResult<Wallet> queryResult = walletRepository
-                .findAll(Wallet.class, queryRequest);
+                .findAll(queryRequest);
 
         return ResponseDto
                 .<ResponseWalletDto>builder()
@@ -74,10 +74,10 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public ResponseDto<ResponseWalletDto> details(String userId, RequestWalletDto req) {
-        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(req, userId);
+        QueryRequest<Wallet> queryRequest = ServiceHelper.getQueryRequest(Wallet.class, req, userId);
 
         QueryResult<Long> pagedResults = walletRepository
-                .findAllAndSelectIds(Wallet.class, queryRequest);
+                .findAllAndSelectIds(queryRequest);
 
         List<Wallet> results = walletRepository
                 .findAllByIdIn(pagedResults.results());
