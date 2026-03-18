@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.exceptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,14 @@ public class GlobalExceptionHandler {
                         .stream()
                         .map(e -> new ValidationFields(e.getField(), e.getDefaultMessage()))
                         .toList());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(Exception ex) {
+        LOGGER.log(Level.WARNING, ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(Exception.class)
