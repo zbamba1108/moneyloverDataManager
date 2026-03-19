@@ -27,10 +27,23 @@ public final class QueryRequestBuilder {
                 ResultFilters.builder()
                         .page(request.getPage())
                         .pageSize(request.getPageSize())
-                        .dateRange(new Long[]{request.getStartDate(), request.getEndDate()})
+                        .dateRange(mapDateRange(request))
                         .sortingField(request.getSortingField())
                         .sortingOrder(request.getSortingOrder())
                         .build()
                 : null;
+    }
+
+    private static <R extends BaseRequestDto> Long[] mapDateRange(R request) {
+
+        if (request.getStartDate() != null && request.getEndDate() != null) {
+            Long[] dateRange = new Long[2];
+            dateRange[0] = request.getStartDate();
+            dateRange[1] = request.getEndDate();
+
+            return dateRange;
+        }
+
+        return null;
     }
 }
