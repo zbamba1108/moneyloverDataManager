@@ -62,11 +62,11 @@ public final class SearchQueryHelper {
         List<Predicate> predicates = new ArrayList<>();
 
         if (request.userId() != null){
-            predicates.add(cb.equal(root.get("user").get("id"), request.userId()));
+            predicates.add(cb.equal(root.get(Constants.Fields.USER).get(Constants.Fields.ID), request.userId()));
         }
 
         if (request.ids() != null && !request.ids().isEmpty()) {
-            predicates.add(root.get("id").in(request.ids()));
+            predicates.add(root.get(Constants.Fields.ID).in(request.ids()));
         }
 
         if (request.optionalParams() != null && !request.optionalParams().isEmpty()) {
@@ -80,7 +80,7 @@ public final class SearchQueryHelper {
                 && request.resultFilters().dateRange().length == 2) {
             Long startDate = request.resultFilters().dateRange()[0];
             Long endDate = request.resultFilters().dateRange()[1];
-            predicates.add(cb.between(root.get("createdAt"),
+            predicates.add(cb.between(root.get(Constants.Fields.CREATED_AT),
                     new Timestamp(startDate),
                     new Timestamp(endDate)
                     )

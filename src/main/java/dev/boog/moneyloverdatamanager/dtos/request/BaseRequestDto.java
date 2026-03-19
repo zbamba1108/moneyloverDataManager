@@ -3,6 +3,7 @@ package dev.boog.moneyloverdatamanager.dtos.request;
 import dev.boog.moneyloverdatamanager.exceptions.validations.FieldsDependencies;
 import dev.boog.moneyloverdatamanager.exceptions.validations.FieldsDependency;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
@@ -39,7 +40,7 @@ public class BaseRequestDto {
 
     @NotBlank(groups = {Read.class})
     @Builder.Default
-    private final String sortingField = "id";
+    private final String sortingField = Constants.Fields.ID;
 
     @Builder.Default
     private final SortingOrder sortingOrder = SortingOrder.ASC;

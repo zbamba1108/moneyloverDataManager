@@ -2,6 +2,7 @@ package dev.boog.moneyloverdatamanager.services.utils;
 
 import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -23,10 +24,10 @@ public class TransactionQueryHelper extends QueryHelper<Transaction, RequestTran
         }
 
         if (req.getWalletId() != null) {
-            params.put("wallet.id", req.getWalletId());
+            params.put(Constants.Fields.WALLET_ID, req.getWalletId());
         }
         if (req.getCategoryId() != null) {
-            params.put("category.id", req.getCategoryId());
+            params.put(Constants.Fields.CATEGORY_ID, req.getCategoryId());
         }
 
         return params;

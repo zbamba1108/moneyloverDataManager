@@ -3,6 +3,7 @@ package dev.boog.moneyloverdatamanager.services.utils;
 import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class WalletQueryHelper extends QueryHelper<Wallet, RequestWalletDto> {
         }
 
         if (req.getName() != null) {
-            params.put("name", req.getName());
+            params.put(Constants.Fields.NAME, req.getName());
         }
 
         return params;
