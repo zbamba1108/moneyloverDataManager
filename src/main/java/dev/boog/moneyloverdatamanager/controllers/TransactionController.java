@@ -70,14 +70,13 @@ public class TransactionController {
     }
 
     @Operation(description = "delete an existing transaction")
-    @DeleteMapping
-    public ResponseEntity<String> delete(@RequestHeader(Constants.Headers.USER_ID) Long userId,
-                                         @RequestBody
-                                         @Validated(Write.class)
-                                         RequestTransactionDto dto) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                         @PathVariable Long id) {
+        service.delete(id,userId);
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(service.delete(userId, dto));
+                .status(HttpStatus.NO_CONTENT)
+                .body(null);
     }
 
 }

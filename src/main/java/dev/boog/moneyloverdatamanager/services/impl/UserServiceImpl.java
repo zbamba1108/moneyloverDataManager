@@ -59,11 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String delete(Long userId, RequestUserDto req) {
-        userRepository.deleteByIds(
-                User.class,
-                null,
-                req.getIds());
-        return "User(s) deleted successfully";
+    public void delete(Long id, Long userId) {
+        userRepository.deleteById(id);
     }
 }

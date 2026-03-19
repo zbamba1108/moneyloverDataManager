@@ -3,6 +3,8 @@ package dev.boog.moneyloverdatamanager.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -23,7 +25,12 @@ public class Category extends BaseEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(
+        name = "user_id",
+        nullable = false,
+        foreignKey = @ForeignKey(name = "fk_category_user")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private User user;
 
@@ -31,7 +38,11 @@ public class Category extends BaseEntity {
     private Integer type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(
+        name = "parent_id",
+        foreignKey = @ForeignKey( name = "fk_category_parent")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Category parent;
 

@@ -69,9 +69,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String delete(Long userId, RequestTransactionDto req) {
-        transactionRepository.delete(TransactionMapper.INSTANCE.toEntity(req));
-        return "Transaction deleted successfully";
+    public void delete(Long id, Long userId) {
+        transactionRepository.deleteByIdAndUserId(id,userId);
     }
 
     @Override

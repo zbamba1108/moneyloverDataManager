@@ -4,6 +4,8 @@ import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
@@ -40,7 +42,12 @@ public class Wallet extends BaseEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(
+        name = "user_id",
+        nullable = false,
+        foreignKey = @ForeignKey(name = "fk_wallet_user")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private User user;
 

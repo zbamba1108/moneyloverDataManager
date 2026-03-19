@@ -10,6 +10,7 @@ import dev.boog.moneyloverdatamanager.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -99,20 +100,19 @@ public class WalletController {
     }
 
     @Operation(description = "delete an existing wallet")
-    @DeleteMapping
-    public ResponseEntity<String> delete(@Parameter(
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@Parameter(
                                              name = "USER-ID",
                                              description = "the userid of the calling customer",
                                              required = true)
                                          @RequestHeader(Constants.Headers.USER_ID) Long userId,
                                          @Parameter(
-                                             name = "request",
-                                             description = "the input request")
-                                         @RequestBody
-                                         @Validated(Write.class)
-                                         RequestWalletDto req) {
+                                             name = "id",
+                                             description = "the id of object to be deleted")
+                                         @PathVariable Long id) {
+        service.delete(id, userId);
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(service.delete(userId, req));
+                .status(HttpStatus.NO_CONTENT)
+                .body(null);
     }
 }

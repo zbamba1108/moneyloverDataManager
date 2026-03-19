@@ -4,6 +4,8 @@ import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
@@ -36,22 +38,41 @@ import java.util.Objects;
 public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = Constants.Transaction.ColumnsName.WALLET, nullable = false)
+    @JoinColumn(
+            name = Constants.Transaction.ColumnsName.WALLET,
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_transaction_wallet")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Wallet wallet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = Constants.Transaction.ColumnsName.USER, nullable = false)
+    @JoinColumn(
+        name = Constants.Transaction.ColumnsName.USER,
+        nullable = false,
+        foreignKey = @ForeignKey(name = "fk_transaction_user")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = Constants.Transaction.ColumnsName.EVENT)
+    @JoinColumn(
+        name = Constants.Transaction.ColumnsName.EVENT,
+        foreignKey = @ForeignKey(name = "fk_transaction_event")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = Constants.Transaction.ColumnsName.CATEGORY, nullable = false)
+    @JoinColumn(
+        name = Constants.Transaction.ColumnsName.CATEGORY,
+        nullable = false,
+        foreignKey = @ForeignKey(name = "fk_transaction_category")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Category category;
 

@@ -12,5 +12,5 @@ public interface CRUDService<I extends BaseRequestDto, O extends BaseEntityDto> 
 
     O update(Long userId, I req);
 
-    String delete(Long userId, I req);
+    void delete(Long id, Long userId);
 }

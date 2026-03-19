@@ -66,12 +66,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public String delete(Long userId, RequestWalletDto req) {
-        walletRepository.deleteByIds(
-                Wallet.class,
-                userId,
-                req.getIds());
-        return "Wallet(s) deleted successfully";
+    public void delete(Long id, Long userId) {
+        walletRepository.deleteByIdAndUserId(id, userId);
     }
 
     @Override

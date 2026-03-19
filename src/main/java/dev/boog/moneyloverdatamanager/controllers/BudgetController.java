@@ -57,13 +57,12 @@ public class BudgetController {
     }
 
     @Operation(description = "delete an existing budget")
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@RequestHeader(Constants.Headers.USER_ID) Long userId,
-                                         @RequestBody
-                                         @Validated(Write.class)
-                                         RequestBudgetDto dto) {
+                                         @PathVariable Long id) {
+        service.delete(id, userId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.delete(userId, dto));
+                .body(null);
     }
 }

@@ -53,12 +53,11 @@ public class UserController {
     }
 
     @Operation(description = "delete an existing transaction")
-    @DeleteMapping
-    public ResponseEntity<String> delete(@RequestBody
-                                         @Validated(Write.class)
-                                         RequestUserDto dto) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        service.delete(id, null);
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(service.delete(null, dto));
+                .status(HttpStatus.NO_CONTENT)
+                .body(null);
     }
 }

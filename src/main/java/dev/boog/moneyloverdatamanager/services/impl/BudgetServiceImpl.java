@@ -32,7 +32,6 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public String delete(Long userId, RequestBudgetDto req) {
-        return null;
+    public void delete(Long id, Long userId) {
     }
 }

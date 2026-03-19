@@ -59,13 +59,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String delete(Long userId, RequestCategoryDto req) {
-        categoryRepository.deleteByIds(
-                Category.class,
-                userId,
-                req.getIds()
-        );
-        return "Category(s) deleted successfully";
+    public void delete(Long id, Long userId) {
+        categoryRepository.deleteById(id);
     }
 
 }

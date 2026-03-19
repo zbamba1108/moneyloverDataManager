@@ -31,7 +31,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String delete(Long userId, RequestEventDto req) {
-        return null;
+    public void delete(Long id, Long userId) {
+
     }
 }
