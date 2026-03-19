@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PageDto {
 
-    private int records;
+    private Long records;
 
     private boolean hasNext;
 }

@@ -42,6 +42,9 @@ public interface BaseEntityMapper<E extends BaseEntity,
 
     @Named("getFirstId")
     default Long getFirstId(List<Long> ids) {
-        return ids.stream().findFirst().orElse(null);
+        if (ids != null && !ids.isEmpty()) {
+            return ids.get(0);
+        }
+        return null;
     }
 }

@@ -2,22 +2,19 @@ package dev.boog.moneyloverdatamanager.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 @Entity
 @Table(name = "budget")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Budget {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Budget extends BaseEntity {
 
     @Column(name = "category_id", nullable = false)
     private Long category;
@@ -35,11 +32,11 @@ public class Budget {
     @Column(name = "amount", nullable = false, precision = 8, scale = 2)
     private BigDecimal amount;
 
-    public Budget userId(String userId) {
+    public Budget userId(Long userId) {
         if (this.user == null) {
             this.user = new User();
         }
-        this.user.setId(Long.parseLong(userId));
+        this.user.setId(userId);
         return this;
     }
 

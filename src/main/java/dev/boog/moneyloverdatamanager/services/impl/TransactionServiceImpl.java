@@ -55,7 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .page(PageDto
                         .builder()
                         .hasNext(queryResult.page().hasNext())
-                        .records(queryResult.results().size())
+                        .records(queryResult.page().records())
                         .build())
                 .build();
     }
@@ -94,7 +94,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .page(PageDto
                         .builder()
                         .hasNext(queryResult.page().hasNext())
-                        .records(queryResult.results().size())
+                        .records(queryResult.page().records())
                         .build())
                 .build();
     }

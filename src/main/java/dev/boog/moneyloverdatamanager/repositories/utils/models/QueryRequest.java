@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @Builder
-public record QueryRequest<E>( // do not remove E
+public record QueryRequest<E>(
 
         Class<E> entityClass,
 
