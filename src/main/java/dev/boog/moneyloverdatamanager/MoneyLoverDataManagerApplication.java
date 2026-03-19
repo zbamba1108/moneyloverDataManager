@@ -1,7 +1,35 @@
 package dev.boog.moneyloverdatamanager;
 
+import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
+import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import dev.boog.moneyloverdatamanager.entities.Category;
+import dev.boog.moneyloverdatamanager.entities.User;
+import dev.boog.moneyloverdatamanager.entities.Wallet;
+import dev.boog.moneyloverdatamanager.entities.Transaction;
+import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
+import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
+import dev.boog.moneyloverdatamanager.repositories.UserRepository;
+import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
+import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
+import dev.boog.moneyloverdatamanager.services.utils.CategoryQueryHelper;
+import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
+import dev.boog.moneyloverdatamanager.services.utils.WalletQueryHelper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootApplication
 public class MoneyLoverDataManagerApplication {
@@ -10,11 +38,32 @@ public class MoneyLoverDataManagerApplication {
         SpringApplication.run(MoneyLoverDataManagerApplication.class, args);
     }
 
-    /*@Autowired
-    private UserRepository userRepository;
+    @Autowired
+    private DBPopulator dbPopulator;
+
+    //@Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+        return args -> {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+
+            dbPopulator.populateDBAsync();
+
+            System.out.println("stopWatchTime: " + stopWatch.getTime(TimeUnit.MILLISECONDS));
+            System.out.println("Ready!!!");
+        };
+    }
+
+
+}
+
+@Component
+class DBPopulator {
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
-    private WalletRepository walletRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -22,78 +71,101 @@ public class MoneyLoverDataManagerApplication {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Bean
-    public  CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-        return args -> {
+    @Autowired
+    private WalletRepository walletRepository;
 
-            int userNumber = 10;
+    int userNumber = 10;
 
-            int walletNumber = 50;
+    int walletNumber = 50;
 
-            int transactionNumber = 1000;
+    int transactionNumber = 1000;
 
-            int categoryNumber = 100;
+    int categoryNumber = 100;
 
+    AtomicInteger count = new AtomicInteger(0);
+
+    @Transactional
+    public void populateDBAsync() throws InterruptedException {
+        ExecutorService executorService = new ThreadPoolExecutor(
+                10,
+                10,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<>(20),
+                new ThreadPoolExecutor.CallerRunsPolicy());
+
+        try {
             for (int i = 0; i < userNumber; i++) {
-                User user = userRepository.save(User.builder()
-                        .email("User#" + (i + 1))
-                        .password("password")
-                        .build());
-
-                for (int w = 0; w < walletNumber; w++) {
-                    Wallet wallet = Wallet.builder()
-                            .name("Wallet #" + (w + 1))
-                            .user(user)
-                            .build();
-                    walletRepository.save(wallet);
-                }
-
-                for (int c = 0; c < categoryNumber; c++) {
-                    Category category = Category.builder()
-                            .name("Category #" + (c + 1))
-                            .type(1)
-                            .user(user)
-                            .build();
-
-                    categoryRepository.save(category);
-                }
-                List<Long> walletIds = walletRepository
-                        .getAllByUserId(user.getId())
-                        .stream()
-                        .map(Wallet::getId)
-                        .toList();
-
-                List<Long> categoryids = categoryRepository
-                        .getAllByUserId(user.getId())
-                        .stream()
-                        .map(Category::getId)
-                        .toList();
-
-                for (int t = 0; t < transactionNumber; t++) {
-                    int randomWalletIndex = ThreadLocalRandom.current().nextInt(0, walletIds.size()-1);
-                    int randomCategoryId = ThreadLocalRandom.current().nextInt(0, categoryids.size()-1);
-                    int randomAmount = ThreadLocalRandom.current().nextInt(1, 5000);
-
-                    Wallet wallet = Wallet.builder()
-                            .id(walletIds.get(randomWalletIndex))
-                            .build();
-
-                    Category category = Category.builder()
-                            .id(categoryids.get(randomCategoryId))
-                            .build();
-
-                    Transaction transaction = Transaction.builder()
-                            .amount(new BigDecimal(randomAmount))
-                            .category(category)
-                            .wallet(wallet)
-                            .user(user)
-                            .build();
-
-                    transactionRepository.save(transaction);
-                }
+                executorService.execute(this::process);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
+            int counter = 0;
+            while(!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                counter++;
+                System.out.println("working.. " + counter + " S");
+            }
+        }
+    }
 
-            System.out.println("Ready!!!");
-        };
-    }*/
+    private void process() {
+        User user = userRepository.save(new User("User" + (count.getAndIncrement() + 1) + "@mail.com","password"));
+
+        for (int w = 0; w < walletNumber; w++) {
+            Wallet wallet = Wallet.builder()
+                    .name("Wallet #" + (w + 1))
+                    .user(user)
+                    .build();
+            walletRepository.save(wallet);
+        }
+
+        for (int c = 0; c < categoryNumber; c++) {
+            Category category = Category.builder()
+                    .name("Category #" + (c + 1))
+                    .type(ThreadLocalRandom.current().nextInt(2))
+                    .user(user)
+                    .build();
+
+            categoryRepository.save(category);
+        }
+        QueryRequest<Wallet> walletQueryRequest = QueryRequestBuilder.build(new WalletQueryHelper(), RequestWalletDto.builder().build(), user.getId());
+        List<Long> walletIds = walletRepository
+                .findAll(walletQueryRequest)
+                .results()
+                .stream()
+                .map(Wallet::getId)
+                .toList();
+
+        QueryRequest<Category> categoryQueryRequest = QueryRequestBuilder.build(new CategoryQueryHelper(), RequestCategoryDto.builder().build(), user.getId());
+        List<Long> categoryids = categoryRepository
+                .findAll(categoryQueryRequest)
+                .results()
+                .stream()
+                .map(Category::getId)
+                .toList();
+
+        for (int j = 0; j < transactionNumber; j++) {
+            int randomWalletId = ThreadLocalRandom.current().nextInt(0, walletIds.size());
+            int randomCategoryId = ThreadLocalRandom.current().nextInt(0, categoryids.size());
+            int randomAmount = ThreadLocalRandom.current().nextInt(1, 5000);
+
+            Wallet wallet = entityManager.getReference(Wallet.class, walletIds.get(randomWalletId));
+
+            Category category = entityManager.getReference(Category.class, categoryids.get(randomCategoryId));
+
+            Transaction transaction = Transaction.builder()
+                    .amount(new BigDecimal(randomAmount))
+                    .category(category)
+                    .wallet(wallet)
+                    .user(user)
+                    .build();
+
+            transactionRepository.save(transaction);
+        }
+
+    }
+
 }
+
