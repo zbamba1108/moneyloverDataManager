@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.repositories.utils.models.Page;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 import dev.boog.moneyloverdatamanager.utils.Constants;
+import dev.boog.moneyloverdatamanager.utils.enums.SortingOrder;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 
@@ -17,24 +18,39 @@ public final class SearchQueryHelper {
         throw new UnsupportedOperationException(Constants.Messages.UTILITY_CLASS);
     }
 
-    public static <E> void paginateQuery(TypedQuery<E> typedQuery, QueryRequest<?> queryRequest) {
-        typedQuery.setFirstResult(queryRequest.resultFilters().page() * queryRequest.resultFilters().pageSize());
-        typedQuery.setMaxResults(queryRequest.resultFilters().pageSize() + 1);
+    public static <E> void applyPagination(TypedQuery<E> typedQuery, QueryRequest<?> queryRequest) {
+        typedQuery.setFirstResult(queryRequest.pagination().page() * queryRequest.pagination().pageSize());
+        typedQuery.setMaxResults(queryRequest.pagination().pageSize() + 1);
     }
 
-    public static <E> void addPredicate(CriteriaQuery<?> query, QueryRequest<E> queryRequest, Root<E> root, CriteriaBuilder cb) {
+    public static <E> void applyPredicates(QueryRequest<E> queryRequest, CriteriaQuery<?> query, Root<E> root, CriteriaBuilder cb) {
         List<Predicate> predicates = buildPredicates(queryRequest, root, cb);
 
         if (!predicates.isEmpty()) {
             query.where(predicates.toArray(new Predicate[0]));
         }
+    } 
+    
+    public static <E> void applySorting(QueryRequest<E> queryRequest, CriteriaQuery<?> query, Root<E> root, CriteriaBuilder cb) {
+        Order order = queryRequest.sorting().sortOrder() == SortingOrder.ASC ?
+                cb.asc(root.get(queryRequest.sorting().field()))
+                : cb.desc(root.get(queryRequest.sorting().field()));
+        
+        query.orderBy(order);
+    }
+
+    public static <E> void applySortingById(CriteriaQuery<?> query, Root<E> root, CriteriaBuilder cb) {
+        Order order = cb.asc(root.get(Constants.Fields.ID));
+
+        query.orderBy(order);
     }
 
     public static <E> QueryResult<E> buildQueryResult(List<E> results, QueryRequest<?> queryRequest) {
-        boolean hasNext = results != null && results.size() > queryRequest.resultFilters().pageSize();;
+        Integer pageSize = queryRequest.pagination().pageSize();
+        boolean hasNext = results != null && results.size() > pageSize;
 
         if (hasNext) {
-            results = results.subList(0,  queryRequest.resultFilters().pageSize());
+            results = results.subList(0,  pageSize);
         }
 
         return QueryResult.<E>builder()
@@ -47,6 +63,52 @@ public final class SearchQueryHelper {
                 .build();
     }
 
+    private static <E> List<Predicate> buildPredicates(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        whereUserId(request, root, cb, predicates);
+
+        whereIdIn(request, root, predicates);
+
+        whereOptionalParams(request, root, cb, predicates);
+
+        whereDateRange(request, root, cb, predicates);
+
+        return predicates;
+    }
+
+    private static <E> void whereDateRange(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb, List<Predicate> predicates) {
+        if (request.dateRange() != null && request.dateRange().length == 2) {
+            Long startDate = request.dateRange()[0];
+            Long endDate = request.dateRange()[1];
+            predicates.add(cb.between(root.get(Constants.Fields.CREATED_AT),
+                    new Timestamp(startDate),
+                    new Timestamp(endDate)
+                    )
+            );
+        }
+    }
+
+    private static <E> void whereOptionalParams(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb, List<Predicate> predicates) {
+        if (request.optionalParams() != null && !request.optionalParams().isEmpty()) {
+            request.optionalParams().keySet().forEach(field -> predicates.add(
+                    cb.equal(resolvePath(root, field),
+                    request.optionalParams().get(field))));
+        }
+    }
+
+    private static <E> void whereIdIn(QueryRequest<E> request, Root<E> root, List<Predicate> predicates) {
+        if (request.ids() != null && !request.ids().isEmpty()) {
+            predicates.add(root.get(Constants.Fields.ID).in(request.ids()));
+        }
+    }
+
+    private static <E> void whereUserId(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb, List<Predicate> predicates) {
+        if (request.userId() != null){
+            predicates.add(cb.equal(root.get(Constants.Fields.USER).get(Constants.Fields.ID), request.userId()));
+        }
+    }
+
     private static Path<?> resolvePath(Path<?> path, String key) {
         String[] parts = key.split("\\.");
 
@@ -55,37 +117,5 @@ public final class SearchQueryHelper {
         }
 
         return path;
-    }
-
-    private static <E> List<Predicate> buildPredicates(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb) {
-        List<Predicate> predicates = new ArrayList<>();
-
-        if (request.userId() != null){
-            predicates.add(cb.equal(root.get(Constants.Fields.USER).get(Constants.Fields.ID), request.userId()));
-        }
-
-        if (request.ids() != null && !request.ids().isEmpty()) {
-            predicates.add(root.get(Constants.Fields.ID).in(request.ids()));
-        }
-
-        if (request.optionalParams() != null && !request.optionalParams().isEmpty()) {
-            request.optionalParams().keySet().forEach(field -> predicates.add(
-                    cb.equal(resolvePath(root, field),
-                    request.optionalParams().get(field))));
-        }
-
-        if (request.resultFilters() != null
-                && request.resultFilters().dateRange() != null
-                && request.resultFilters().dateRange().length == 2) {
-            Long startDate = request.resultFilters().dateRange()[0];
-            Long endDate = request.resultFilters().dateRange()[1];
-            predicates.add(cb.between(root.get(Constants.Fields.CREATED_AT),
-                    new Timestamp(startDate),
-                    new Timestamp(endDate)
-                    )
-            );
-        }
-
-        return predicates;
     }
 }

@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
 import dev.boog.moneyloverdatamanager.repositories.utils.SearchQueryHelper;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
+import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -27,11 +28,13 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
         CriteriaQuery<E> query = cb.createQuery(entityClass);
         Root<E> root = query.from(entityClass);
 
-        SearchQueryHelper.addPredicate(query, queryRequest, root, cb);
+        SearchQueryHelper.applyPredicates(queryRequest, query, root, cb);
+
+        SearchQueryHelper.applySorting(queryRequest, query, root, cb);
 
         TypedQuery<E> typedQuery = em.createQuery(query);
 
-        SearchQueryHelper.paginateQuery(typedQuery, queryRequest);
+        SearchQueryHelper.applyPagination(typedQuery, queryRequest);
         List<E> results = typedQuery.getResultList();
 
         return SearchQueryHelper.buildQueryResult(results, queryRequest);
@@ -44,13 +47,15 @@ public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepo
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<E> root = query.from(entityClass);
 
-        SearchQueryHelper.addPredicate(query, queryRequest, root, cb);
+        SearchQueryHelper.applyPredicates(queryRequest, query, root, cb);
 
-        query.select(root.get("id"));
+        SearchQueryHelper.applySortingById(query, root, cb);
+
+        query.select(root.get(Constants.Fields.ID));
 
         TypedQuery<Long> typedQuery = em.createQuery(query);
 
-        SearchQueryHelper.paginateQuery(typedQuery, queryRequest);
+        SearchQueryHelper.applyPagination(typedQuery, queryRequest);
 
         return SearchQueryHelper.buildQueryResult(
                 typedQuery.getResultList(), queryRequest);

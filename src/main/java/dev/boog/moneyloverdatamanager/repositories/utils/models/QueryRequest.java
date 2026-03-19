@@ -16,6 +16,10 @@ public record QueryRequest<E>( // do not remove E
 
         Map<String, Object> optionalParams,
 
-        ResultFilters resultFilters) {
+        Long[] dateRange,
+
+        Pagination pagination,
+
+        Sorting sorting) {
 
 }
