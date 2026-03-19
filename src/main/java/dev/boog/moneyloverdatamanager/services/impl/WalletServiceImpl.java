@@ -52,7 +52,7 @@ public class WalletServiceImpl implements WalletService {
                         .toList())
                 .page(PageDto.builder()
                         .hasNext(queryResult.page().hasNext())
-                        .records(queryResult.results().size())
+                        .records(queryResult.page().records())
                         .build())
                 .build();
     }
@@ -92,7 +92,7 @@ public class WalletServiceImpl implements WalletService {
                         .toList())
                 .page(PageDto.builder()
                         .hasNext(pagedResults.page().hasNext())
-                        .records(results.size())
+                        .records(pagedResults.page().records())
                         .build())
                 .build();
     }
