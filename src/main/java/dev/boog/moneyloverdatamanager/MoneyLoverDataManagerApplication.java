@@ -86,9 +86,10 @@ class DBPopulator {
 
     @Transactional
     public void populateDBAsync() throws InterruptedException {
+        int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService executorService = new ThreadPoolExecutor(
-                10,
-                10,
+                cores,
+                cores,
                 0L,
                 TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(20),
