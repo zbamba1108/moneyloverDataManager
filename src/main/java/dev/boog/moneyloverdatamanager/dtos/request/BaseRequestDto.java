@@ -15,11 +15,8 @@ import java.util.List;
 @Getter
 @SuperBuilder
 @Jacksonized
-@FieldsDependencies({
-        @FieldsDependency(message = "also endDate must exists", fieldName = "startDate", dependsOn = "endDate"),
-        @FieldsDependency(message = "also startDate must exist", fieldName = "endDate", dependsOn = "startDate")
-})
-
+@FieldsDependency(fieldName = "startDate", dependsOn = "endDate", groups = Read.class)
+@FieldsDependency(fieldName = "endDate", dependsOn = "startDate", groups = Read.class)
 public class BaseRequestDto {
 
     @Size(min = 1, max = 10, groups = {Read.class})

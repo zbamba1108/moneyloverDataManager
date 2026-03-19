@@ -39,8 +39,17 @@ public class FieldsDependencyValidator implements ConstraintValidator<FieldsDepe
     }
 
     private Object getField(Object object, String fieldName) throws Exception {
-        Field field = object.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return field.get(object);
+        Class<?> clazz = object.getClass();
+
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(object);
+            } catch (NoSuchFieldException nsfe) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        return null;
     }
 }
