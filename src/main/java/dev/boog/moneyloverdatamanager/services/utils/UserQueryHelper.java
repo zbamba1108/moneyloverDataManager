@@ -20,12 +20,10 @@ public class UserQueryHelper extends QueryHelper<User, RequestUserDto> {
     public Map<String, Object> mapOptionalParams(RequestUserDto req) {
         Map<String, Object> params = new HashMap<>();
 
-        if (req == null) {
-            return params;
-        }
-
-        if (StringUtils.hasText(req.getEmail())) {
-            params.put(Constants.Fields.EMAIL, req.getEmail());
+        if (req != null) {
+            if (StringUtils.hasText(req.getEmail())) {
+                params.put(Constants.Fields.EMAIL, req.getEmail());
+            }
         }
 
         return params;

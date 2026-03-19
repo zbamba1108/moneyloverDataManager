@@ -19,15 +19,13 @@ public class TransactionQueryHelper extends QueryHelper<Transaction, RequestTran
     public Map<String, Object> mapOptionalParams(RequestTransactionDto req) {
         Map<String, Object> params = new HashMap<>();
 
-        if (req == null) {
-            return params;
-        }
-
-        if (req.getWalletId() != null) {
-            params.put(Constants.Fields.WALLET_ID, req.getWalletId());
-        }
-        if (req.getCategoryId() != null) {
-            params.put(Constants.Fields.CATEGORY_ID, req.getCategoryId());
+        if (req != null) {
+            if (req.getWalletId() != null) {
+                params.put(Constants.Fields.WALLET_ID, req.getWalletId());
+            }
+            if (req.getCategoryId() != null) {
+                params.put(Constants.Fields.CATEGORY_ID, req.getCategoryId());
+            }
         }
 
         return params;

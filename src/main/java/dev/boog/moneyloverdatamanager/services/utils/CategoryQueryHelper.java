@@ -19,15 +19,13 @@ public class CategoryQueryHelper extends QueryHelper<Category, RequestCategoryDt
     public Map<String, Object> mapOptionalParams(RequestCategoryDto req) {
         Map<String, Object> params = new HashMap<>();
 
-        if (req == null) {
-            return params;
-        }
-
-        if (req.getType() != null) {
-            params.put(Constants.Fields.TYPE, req.getType());
-        }
-        if (req.getParentId() != null) {
-            params.put(Constants.Fields.PARENT_ID, req.getParentId());
+        if (req != null) {
+            if (req.getType() != null) {
+                params.put(Constants.Fields.TYPE, req.getType());
+            }
+            if (req.getParentId() != null) {
+                params.put(Constants.Fields.PARENT_ID, req.getParentId());
+            }
         }
 
         return params;
