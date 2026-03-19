@@ -9,7 +9,6 @@ import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
-import dev.boog.moneyloverdatamanager.services.utils.QueryHelper;
 import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
 import dev.boog.moneyloverdatamanager.services.utils.TransactionQueryHelper;
 import dev.boog.moneyloverdatamanager.utils.mappers.TransactionMapper;

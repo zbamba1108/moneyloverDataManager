@@ -9,7 +9,6 @@ import org.mapstruct.Named;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Objects;
 
 public interface BaseEntityMapper<E extends BaseEntity,
                             I extends BaseRequestDto,

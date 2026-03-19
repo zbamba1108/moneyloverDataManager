@@ -9,7 +9,6 @@ import dev.boog.moneyloverdatamanager.services.UserService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

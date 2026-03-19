@@ -6,7 +6,6 @@ import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 import dev.boog.moneyloverdatamanager.utils.Constants;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
-import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

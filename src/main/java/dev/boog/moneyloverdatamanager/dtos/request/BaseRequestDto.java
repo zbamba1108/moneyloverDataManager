@@ -1,6 +1,5 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
-import dev.boog.moneyloverdatamanager.exceptions.validations.FieldsDependencies;
 import dev.boog.moneyloverdatamanager.exceptions.validations.FieldsDependency;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
 import dev.boog.moneyloverdatamanager.utils.Constants;

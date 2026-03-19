@@ -3,7 +3,6 @@ package dev.boog.moneyloverdatamanager.dtos.request;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;

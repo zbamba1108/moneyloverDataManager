@@ -1,6 +1,5 @@
 package dev.boog.moneyloverdatamanager.services.utils;
 
-import dev.boog.moneyloverdatamanager.dtos.request.BaseRequestDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
 import dev.boog.moneyloverdatamanager.utils.Constants;

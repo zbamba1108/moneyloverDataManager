@@ -9,7 +9,6 @@ import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
 import dev.boog.moneyloverdatamanager.services.CategoryService;
 import dev.boog.moneyloverdatamanager.services.utils.CategoryQueryHelper;
-import dev.boog.moneyloverdatamanager.services.utils.QueryHelper;
 import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
 import dev.boog.moneyloverdatamanager.utils.mappers.CategoryMapper;
 import dev.boog.moneyloverdatamanager.utils.mappers.PageMapper;
