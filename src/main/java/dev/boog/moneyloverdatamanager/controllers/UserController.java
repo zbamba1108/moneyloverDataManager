@@ -6,7 +6,6 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseUserDto;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import dev.boog.moneyloverdatamanager.services.UserService;
-import dev.boog.moneyloverdatamanager.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -35,34 +34,31 @@ public class UserController {
 
     @Operation(description = "search one or more transactions based on input request")
     @PostMapping("/search")
-    public ResponseEntity<ResponseDto<ResponseUserDto>> get(@RequestHeader(value = Constants.Headers.USER_ID, required = false) Long userId,
-                                                            @RequestBody(required = false)
+    public ResponseEntity<ResponseDto<ResponseUserDto>> get(@RequestBody(required = false)
                                                             @Validated(Read.class)
                                                             RequestUserDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.get(userId, req));
+                .body(service.get(null, req));
     }
 
     @Operation(description = "update an existing transaction")
     @PutMapping
-    public ResponseEntity<ResponseUserDto> update(@RequestHeader(value = Constants.Headers.USER_ID, required = false) Long userId,
-                                                  @RequestBody
+    public ResponseEntity<ResponseUserDto> update(@RequestBody
                                                   @Validated(Write.class)
                                                   RequestUserDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.update(userId, dto));
+                .body(service.update(null, dto));
     }
 
     @Operation(description = "delete an existing transaction")
     @DeleteMapping
-    public ResponseEntity<String> delete(@RequestHeader(value = Constants.Headers.USER_ID, required = false) Long userId,
-                                         @RequestBody
+    public ResponseEntity<String> delete(@RequestBody
                                          @Validated(Write.class)
                                          RequestUserDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.delete(userId, dto));
+                .body(service.delete(null, dto));
     }
 }
