@@ -19,12 +19,10 @@ public class WalletQueryHelper extends QueryHelper<Wallet, RequestWalletDto> {
     public Map<String, Object> mapOptionalParams(RequestWalletDto req) {
         Map<String, Object> params = new HashMap<>();
 
-        if (req == null) {
-            return params;
-        }
-
-        if (req.getName() != null) {
-            params.put(Constants.Fields.NAME, req.getName());
+        if (req != null) {
+            if (req.getName() != null) {
+                params.put(Constants.Fields.NAME, req.getName());
+            }
         }
 
         return params;
