@@ -1,8 +1,10 @@
 package dev.boog.moneyloverdatamanager.repositories;
 
 import dev.boog.moneyloverdatamanager.entities.Category;
+import org.springframework.stereotype.Repository;
 
-public interface CategoryRepository extends UserRelatedEntitiesRepository<Category, Long>,
+@Repository
+public interface CategoryRepository extends BaseRepository<Category, Long>,
                                             CustomSearchQueryRepository<Category>,
                                             CustomDeleteQueryRepository<Category, Long> {
 }

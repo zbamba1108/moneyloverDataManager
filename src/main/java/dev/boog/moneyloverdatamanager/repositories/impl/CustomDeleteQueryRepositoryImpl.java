@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.repositories.impl;
 
+import dev.boog.moneyloverdatamanager.entities.BaseEntity;
 import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.entities.User;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
@@ -10,7 +11,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-public class CustomDeleteQueryRepositoryImpl<E, ID extends Number> implements CustomDeleteQueryRepository<E, ID> {
+public class CustomDeleteQueryRepositoryImpl<E extends BaseEntity, ID extends Number> implements CustomDeleteQueryRepository<E, ID> {
 
     @PersistenceContext
     private EntityManager em;

@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.repositories.impl;
 
+import dev.boog.moneyloverdatamanager.entities.BaseEntity;
 import dev.boog.moneyloverdatamanager.repositories.CustomSearchQueryRepository;
 import dev.boog.moneyloverdatamanager.repositories.utils.SearchQueryHelper;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
@@ -13,7 +14,7 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
-public class CustomSearchQueryRepositoryImpl<E> implements CustomSearchQueryRepository<E> {
+public class CustomSearchQueryRepositoryImpl<E extends BaseEntity> implements CustomSearchQueryRepository<E> {
 
     private final EntityManager em;
 
