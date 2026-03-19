@@ -1,8 +1,6 @@
 package dev.boog.moneyloverdatamanager.repositories;
 
 import dev.boog.moneyloverdatamanager.entities.BaseEntity;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

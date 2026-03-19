@@ -3,9 +3,9 @@ package dev.boog.moneyloverdatamanager;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.entities.Category;
+import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.entities.User;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
-import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 import dev.boog.moneyloverdatamanager.repositories.UserRepository;
@@ -23,7 +23,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
