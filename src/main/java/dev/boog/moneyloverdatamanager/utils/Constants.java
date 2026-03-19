@@ -51,5 +51,6 @@ public final class Constants {
         public static final String CREATED_AT = "createdAt";
         public static final String TYPE = "type";
         public static final String PARENT_ID = "parent.id";
+        public static final String EMAIL = "email";
     }
 }
