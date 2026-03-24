@@ -1,7 +1,6 @@
 package dev.boog.moneyloverdatamanager;
 
-import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
-import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
+import dev.boog.moneyloverdatamanager.configs.datasource.Monitor;
 import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
 import dev.boog.moneyloverdatamanager.entities.User;
@@ -10,10 +9,6 @@ import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 import dev.boog.moneyloverdatamanager.repositories.UserRepository;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
-import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
-import dev.boog.moneyloverdatamanager.services.utils.CategoryQueryHelper;
-import dev.boog.moneyloverdatamanager.services.utils.QueryRequestBuilder;
-import dev.boog.moneyloverdatamanager.services.utils.WalletQueryHelper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.apache.commons.lang3.time.StopWatch;
@@ -23,19 +18,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
+@EnableScheduling
 public class MoneyLoverDataManagerApplication {
 
     public static void main(String[] args) {
@@ -43,39 +39,36 @@ public class MoneyLoverDataManagerApplication {
     }
 
     @Autowired
+    private Monitor monitor;
+
+    @Autowired
     private DBPopulator dbPopulator;
 
-    private CountDownLatch countDownLatch = new CountDownLatch(1);
+    @Autowired
+    private ThreadPoolTaskExecutor dbTaskExecutor;
+
+    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+    private final int schedulerFrequency = 10;
 
     //@Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            ThreadPoolExecutor  executorService = new ThreadPoolExecutor(
-                    10,
-                    10,
-                    0L,
-                    TimeUnit.MILLISECONDS,
-                    new ArrayBlockingQueue<>(200),
-                    new ThreadPoolExecutor.CallerRunsPolicy());
-
-            ScheduledExecutorService monitor = Executors.newSingleThreadScheduledExecutor();
-
+            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+            ThreadPoolExecutor dbExecutor = dbTaskExecutor.getThreadPoolExecutor();
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
 
-            monitor.scheduleAtFixedRate(() -> System.out.println(
-                            "Active: " + executorService.getActiveCount() +
-                            " | Pool: " + executorService.getPoolSize() +
-                            " | Queue: " + executorService.getQueue().size() +
-                            " | Completed: " + executorService.getCompletedTaskCount() +
-                            " | time: " + stopWatch.getTime(TimeUnit.MILLISECONDS)
-            ), 0, 10, TimeUnit.MILLISECONDS);
+            scheduledExecutor.scheduleAtFixedRate(() -> {
+                monitor.logHikariPoolStats(schedulerFrequency);
+                monitor.logDbExecutorStats(stopWatch);
+            }, 0, schedulerFrequency, TimeUnit.MILLISECONDS);
 
             // async
             try {
-                executorService.execute(() -> {
+                dbExecutor.execute(() -> {
                     try {
-                        dbPopulator.populateDB(executorService, countDownLatch);
+                        dbPopulator.populateDB(dbExecutor, countDownLatch);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -84,15 +77,35 @@ public class MoneyLoverDataManagerApplication {
                 e.printStackTrace();
             } finally {
                 countDownLatch.await(1, TimeUnit.HOURS);
-                executorService.shutdown();
-                if (executorService.awaitTermination(1, TimeUnit.MINUTES) && executorService.isTerminated()) {
+                dbExecutor.shutdown();
+                if (dbExecutor.awaitTermination(1, TimeUnit.HOURS) && dbExecutor.isTerminated()) {
                     stopWatch.stop();
-                    monitor.shutdown();
+                    scheduledExecutor.shutdown();
                 }
             }
-            System.out.println("stopWatchTime: " + stopWatch.getTime(TimeUnit.MILLISECONDS));
-            System.out.println("Ready!!!");
+
+            log(stopWatch);
         };
+    }
+
+    private void log(StopWatch stopWatch) {
+        int timeSpentWithDbSaturated = monitor.getSaturatedDbCounter();
+        double percentage = (double) timeSpentWithDbSaturated / stopWatch.getTime(TimeUnit.MILLISECONDS) * 100;
+        System.out.println("stopWatchTime: " + stopWatch.getTime(TimeUnit.MILLISECONDS));
+        System.out.println("time spent with db connection saturated: " + timeSpentWithDbSaturated);
+        System.out.println("time in % " + percentage);
+        System.out.println("-------------------------------");
+        System.out.println("WAITING THREAD MAP");
+        System.out.println("Time spent with no threads waiting: " + monitor.getMaxThreadsWaiting().get(0) + ", percentage: " + ((double) monitor.getMaxThreadsWaiting().get(0) / stopWatch.getTime() * 100));
+
+        int spentWithMoreThan5Threads = monitor.getMaxThreadsWaiting()
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getKey() > 5)
+                .mapToInt(Map.Entry::getValue)
+                .sum();
+        System.out.println("Time spent with more than 5 threads waiting: " + spentWithMoreThan5Threads + ", percentage: " + ((double) spentWithMoreThan5Threads / stopWatch.getTime() * 100));
+        System.out.println("Ready!!!");
     }
 
 
@@ -116,7 +129,7 @@ class DBPopulator {
     public void populateDB(ExecutorService executorService, CountDownLatch countDownLatch) throws InterruptedException {
 
         Iterable<User> users = userPopulator.process();
-        CountDownLatch userCountdown = new CountDownLatch(10);
+        CountDownLatch userCountdown = new CountDownLatch(400);
 
         for (User user : users) {
             executorService.execute(() -> {
@@ -151,7 +164,7 @@ class UserPopulator {
     @Autowired
     private UserRepository userRepository;
 
-    int userNumber = 10;
+    int userNumber = 400;
 
     AtomicInteger count = new AtomicInteger(1);
 
@@ -159,7 +172,7 @@ class UserPopulator {
     public Iterable<User> process() {
         List<User> users = new ArrayList<>();
 
-        for(int i = 0; i < userNumber; i++) {
+        for (int i = 0; i < userNumber; i++) {
             users.add(new User("User" + count.getAndIncrement() + "@mail.com", "password"));
         }
 
