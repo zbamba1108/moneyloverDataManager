@@ -24,16 +24,6 @@ public class Category extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "user_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_category_user")
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude
-    private User user;
-
     @Column(name = "type", nullable = false)
     private Integer type;
 
@@ -45,14 +35,6 @@ public class Category extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Category parent;
-
-    public Category userId(Long userId) {
-        if (this.user == null) {
-            this.user = new User();
-        }
-        this.user.setId(userId);
-        return this;
-    }
 
     @Override
     public final boolean equals(Object o) {

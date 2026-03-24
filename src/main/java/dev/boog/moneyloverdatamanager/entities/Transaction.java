@@ -49,16 +49,6 @@ public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-        name = Constants.Transaction.ColumnsName.USER,
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_transaction_user")
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
         name = Constants.Transaction.ColumnsName.EVENT,
         foreignKey = @ForeignKey(name = "fk_transaction_event")
     )
@@ -81,14 +71,6 @@ public class Transaction extends BaseEntity {
 
     @Column(name = "comment")
     private String comment;
-
-    public Transaction userId(Long userId) {
-        if (this.user == null) {
-            this.user = new User();
-        }
-        this.user.setId(userId);
-        return this;
-    }
 
     @Override
     public final boolean equals(Object o) {

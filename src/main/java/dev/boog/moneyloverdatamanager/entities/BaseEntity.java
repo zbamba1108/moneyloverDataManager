@@ -24,6 +24,9 @@ public class BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @CreationTimestamp(source = SourceType.DB)
     @Column(name = "created_at")
     private Timestamp createdAt;

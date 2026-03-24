@@ -41,27 +41,9 @@ public class Wallet extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "user_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_wallet_user")
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude
-    private User user;
-
     @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Transaction> transactionList;
-
-    public Wallet userId(Long userId) {
-        if (this.user == null) {
-            this.user = new User();
-        }
-        this.user.setId(userId);
-        return this;
-    }
 
     @Override
     public final boolean equals(Object o) {

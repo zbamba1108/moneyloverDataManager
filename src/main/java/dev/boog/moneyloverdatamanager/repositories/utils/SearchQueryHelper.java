@@ -105,7 +105,7 @@ public final class SearchQueryHelper {
 
     private static <E> void whereUserId(QueryRequest<E> request, Root<E> root, CriteriaBuilder cb, List<Predicate> predicates) {
         if (request.userId() != null){
-            predicates.add(cb.equal(root.get(Constants.Fields.USER).get(Constants.Fields.ID), request.userId()));
+            predicates.add(cb.equal(root.get(Constants.Fields.USER_ID), request.userId()));
         }
     }
 

@@ -24,15 +24,6 @@ public class Event extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "user_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_event_user")
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
@@ -41,13 +32,5 @@ public class Event extends BaseEntity {
 
     @Column(name = "amount", nullable = false, precision = 8, scale = 2)
     private BigDecimal amount;
-
-    public Event userId(Long userId) {
-        if (this.user == null) {
-            this.user = new User();
-        }
-        this.user.setId(userId);
-        return this;
-    }
 
 }

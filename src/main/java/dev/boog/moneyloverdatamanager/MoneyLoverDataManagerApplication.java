@@ -3,11 +3,9 @@ package dev.boog.moneyloverdatamanager;
 import dev.boog.moneyloverdatamanager.configs.datasource.Monitor;
 import dev.boog.moneyloverdatamanager.entities.Category;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
-import dev.boog.moneyloverdatamanager.entities.User;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
-import dev.boog.moneyloverdatamanager.repositories.UserRepository;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,7 +15,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -115,9 +112,6 @@ public class MoneyLoverDataManagerApplication {
 class DBPopulator {
 
     @Autowired
-    private UserPopulator userPopulator;
-
-    @Autowired
     private WalletPopulator walletPopulator;
 
     @Autowired
@@ -126,22 +120,28 @@ class DBPopulator {
     @Autowired
     private TransactionPopulator transactionPopulator;
 
+    private final int userCounter = 10;
+
     public void populateDB(ExecutorService executorService, CountDownLatch countDownLatch) throws InterruptedException {
 
-        Iterable<User> users = userPopulator.process();
+        List<Long> userIds = new ArrayList<>();
+
+        for (int i = 0; i < userCounter; i++) {
+            userIds.add(Long.valueOf(i));
+        }
         CountDownLatch userCountdown = new CountDownLatch(400);
 
-        for (User user : users) {
+        for (Long id : userIds) {
             executorService.execute(() -> {
                 try {
-                    Future<List<Long>> futureWalletsId = executorService.submit(() -> walletPopulator.process(user.getId()));
+                    Future<List<Long>> futureWalletsId = executorService.submit(() -> walletPopulator.process(id));
 
-                    Future<List<Long>> futureCategoriesId = executorService.submit(() -> categoryPopulator.process(user.getId()));
+                    Future<List<Long>> futureCategoriesId = executorService.submit(() -> categoryPopulator.process(id));
 
                     for (int i = 0; i < 10; i++) {
                         executorService.execute(() -> {
                             try {
-                                transactionPopulator.process(user.getId(), futureWalletsId.get(), futureCategoriesId.get());
+                                transactionPopulator.process(id, futureWalletsId.get(), futureCategoriesId.get());
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
@@ -159,32 +159,7 @@ class DBPopulator {
 }
 
 @Component
-class UserPopulator {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    int userNumber = 400;
-
-    AtomicInteger count = new AtomicInteger(1);
-
-    @Transactional
-    public Iterable<User> process() {
-        List<User> users = new ArrayList<>();
-
-        for (int i = 0; i < userNumber; i++) {
-            users.add(new User("User" + count.getAndIncrement() + "@mail.com", "password"));
-        }
-
-        return userRepository.saveAll(users);
-    }
-}
-
-@Component
 class CategoryPopulator {
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -200,7 +175,7 @@ class CategoryPopulator {
             Category category = Category.builder()
                     .name("Category #" + (count.getAndIncrement()))
                     .type(ThreadLocalRandom.current().nextInt(2))
-                    .user(entityManager.getReference(User.class, userId))
+                    .userId(userId)
                     .build();
             categories.add(category);
         }
@@ -218,9 +193,6 @@ class CategoryPopulator {
 @Component
 class WalletPopulator {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private WalletRepository walletRepository;
 
@@ -235,7 +207,7 @@ class WalletPopulator {
         for (int i = 0; i < walletNumber; i++) {
             Wallet wallet = Wallet.builder()
                     .name("Wallet #" + (count.getAndIncrement()))
-                    .user(entityManager.getReference(User.class, userId))
+                    .userId(userId)
                     .build();
             wallets.add(wallet);
         }
@@ -280,7 +252,7 @@ class TransactionPopulator {
                     .amount(new BigDecimal(randomAmount))
                     .category(category)
                     .wallet(wallet)
-                    .user(entityManager.getReference(User.class, userId))
+                    .userId(userId)
                     .build();
 
             transactions.add(transaction);
