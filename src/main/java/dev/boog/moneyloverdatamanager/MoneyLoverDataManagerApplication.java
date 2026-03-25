@@ -15,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -129,7 +130,7 @@ class DBPopulator {
         for (int i = 0; i < userCounter; i++) {
             userIds.add(Long.valueOf(i));
         }
-        CountDownLatch userCountdown = new CountDownLatch(400);
+        CountDownLatch userCountdown = new CountDownLatch(userCounter);
 
         for (Long id : userIds) {
             executorService.execute(() -> {
