@@ -31,10 +31,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public String create(Long userId, RequestTransactionDto req) {
-        Transaction entity = TransactionMapper.INSTANCE
-                .toEntity(req)
-                .userId(userId);
-        transactionRepository.save(entity);
+        Transaction transaction = TransactionMapper.INSTANCE
+                .toEntity(req);
+        transaction.setUserId(userId);
+        transactionRepository.save(transaction);
         return "Transaction created successfully";
     }
 

@@ -29,8 +29,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String create(Long userId, RequestCategoryDto req) {
         Category category = CategoryMapper.INSTANCE
-                .toEntity(req)
-                .userId(userId);
+                .toEntity(req);
+        category.setUserId(userId);
         categoryRepository.save(category);
         return "Category created successfully";
     }
