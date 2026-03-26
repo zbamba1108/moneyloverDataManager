@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Transaction API")
 @RestController
-@RequestMapping(path = "/api/transactions")
+@RequestMapping("/api/data/transactions")
 public class TransactionController {
 
     private final TransactionService service;

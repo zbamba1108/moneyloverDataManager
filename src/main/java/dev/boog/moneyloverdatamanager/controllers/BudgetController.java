@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag( name = "Budget API")
 @RestController
-@RequestMapping("/api/budgets")
+@RequestMapping("/api/data/budgets")
 public class BudgetController {
 
     private final BudgetService service;

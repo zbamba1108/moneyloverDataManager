@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag( name = "Wallet API")
 @RestController
-@RequestMapping("/api/wallets")
+@RequestMapping("/api/data/wallets")
 public class WalletController {
 
     private final WalletService service;
