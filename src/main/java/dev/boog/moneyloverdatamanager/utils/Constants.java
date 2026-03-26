@@ -42,7 +42,7 @@ public final class Constants {
 
     public static class Fields {
         public static final String ID = "id";
-        public static final String USER_ID = "user_id";
+        public static final String USER_ID = "userId";
         public static final String NAME = "name";
         public static final String WALLET_ID = "wallet.id";
         public static final String CATEGORY_ID = "category.id";
