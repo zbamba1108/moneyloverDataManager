@@ -29,7 +29,7 @@ public class WalletController {
     @Operation(description = "create a new wallet")
     @PostMapping
     public ResponseEntity<String> create(@Parameter(
-                                            name = "USER-ID",
+                                            name = Constants.Headers.USER_ID,
                                             description = "the userid of the calling customer",
                                             required = true)
                                          @RequestHeader(Constants.Headers.USER_ID) Long userId,
@@ -47,7 +47,7 @@ public class WalletController {
     @Operation(description = "search one or more wallets based on input request")
     @PostMapping("/search")
     public ResponseEntity<ResponseDto<ResponseWalletDto>> get(@Parameter(
-                                                                  name = "USER-ID",
+                                                                  name = Constants.Headers.USER_ID,
                                                                   description = "the userid of the calling customer",
                                                                   required = true)
                                                               @RequestHeader(Constants.Headers.USER_ID) Long userId,
@@ -65,7 +65,7 @@ public class WalletController {
     @Operation(description = "search one or more wallets based on input request, get the details of children")
     @PostMapping("/search/details")
     public ResponseEntity<ResponseDto<ResponseWalletDto>> details(@Parameter(
-                                                                      name = "USER-ID",
+                                                                      name = Constants.Headers.USER_ID,
                                                                       description = "the userid of the calling customer",
                                                                       required = true)
                                                                   @RequestHeader(Constants.Headers.USER_ID) Long userId,
@@ -83,7 +83,7 @@ public class WalletController {
     @Operation(description = "update an existing wallet")
     @PutMapping
     public ResponseEntity<ResponseWalletDto> update(@Parameter(
-                                                        name = "USER-ID",
+                                                        name = Constants.Headers.USER_ID,
                                                         description = "the userid of the calling customer",
                                                         required = true)
                                                     @RequestHeader(Constants.Headers.USER_ID) Long userId,
@@ -101,7 +101,7 @@ public class WalletController {
     @Operation(description = "delete an existing wallet")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@Parameter(
-                                             name = "USER-ID",
+                                             name = Constants.Headers.USER_ID,
                                              description = "the userid of the calling customer",
                                              required = true)
                                          @RequestHeader(Constants.Headers.USER_ID) Long userId,
