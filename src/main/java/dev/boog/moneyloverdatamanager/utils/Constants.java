@@ -8,7 +8,8 @@ public final class Constants {
 
     public static class Headers {
 
-        public static final String USER_ID = "User-ID";
+        public static final String USER_ID = "X-User-ID";
+        public static final String API_KEY = "X-API-Key";
     }
 
     public static class Transaction {
@@ -29,7 +30,6 @@ public final class Constants {
 
     public static class EntityGraph {
 
-        public static final String HINT_NAME_FETCHGRAPH = "jakarta.persistence.fetchgraph";
         public static final String TRANSACTION_WALLET_CATEGORY = "transaction.wallet_category";
         public static final String TRANSACTION_CATEGORY = "transaction.category";
         public static final String WALLET_TRANSACTION = "wallet.transaction";
@@ -50,5 +50,9 @@ public final class Constants {
         public static final String CREATED_AT = "createdAt";
         public static final String TYPE = "type";
         public static final String PARENT_ID = "parent.id";
+    }
+
+    public static class Secrets {
+        public static final String INTERNAL = "api-gateway_secret";
     }
 }
