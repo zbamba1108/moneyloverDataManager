@@ -15,7 +15,7 @@ public class InternalAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String apiKey = request.getHeader(Constants.Headers.API_KEY);
 
-        if (request.getRequestURI().startsWith("/api/") && !Constants.Headers.API_KEY.equals(apiKey)) {
+        if (request.getRequestURI().startsWith("/api/") && !Constants.Secrets.INTERNAL.equals(apiKey)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
