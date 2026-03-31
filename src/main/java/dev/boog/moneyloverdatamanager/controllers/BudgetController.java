@@ -27,7 +27,7 @@ public class BudgetController {
 
     @Operation(description = "create a new budget")
     @PostMapping
-    public ResponseEntity<String> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+    public ResponseEntity<ResponseBudgetDto> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
                                          @RequestBody
                                          @Validated(Write.class)
                                          RequestBudgetDto dto) {

@@ -28,7 +28,7 @@ public class WalletController {
 
     @Operation(description = "create a new wallet")
     @PostMapping
-    public ResponseEntity<String> create(@Parameter(
+    public ResponseEntity<ResponseWalletDto> create(@Parameter(
                                             name = Constants.Headers.USER_ID,
                                             description = "the userid of the calling customer",
                                             required = true)

@@ -17,7 +17,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String create(Long userId, RequestEventDto req) {
+    public ResponseEventDto create(Long userId, RequestEventDto req) {
         return null;
     }
 

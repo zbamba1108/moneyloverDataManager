@@ -29,12 +29,12 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public String create(Long userId, RequestWalletDto req) {
+    public ResponseWalletDto create(Long userId, RequestWalletDto req) {
         Wallet wallet = WalletMapper.INSTANCE
                 .toEntity(req);
         wallet.setUserId(userId);
-        walletRepository.save(wallet);
-        return "Wallet created successfully";
+        return WalletMapper.INSTANCE
+                .toResponseDto(walletRepository.save(wallet));
     }
 
     public ResponseDto<ResponseWalletDto> get(Long userId, RequestWalletDto req) {

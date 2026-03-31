@@ -28,7 +28,7 @@ public class CategoryController {
 
     @Operation(description = "create a new category")
     @PostMapping
-    public ResponseEntity<String> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+    public ResponseEntity<ResponseCategoryDto> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
                                          @RequestBody
                                          @Validated(Write.class)
                                          RequestCategoryDto dto) {

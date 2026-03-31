@@ -27,7 +27,7 @@ public class TransactionController {
 
     @Operation(description = "create a new transaction")
     @PostMapping
-    public ResponseEntity<String> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+    public ResponseEntity<ResponseTransactionDto> create(@RequestHeader(Constants.Headers.USER_ID) Long userId,
                                          @RequestBody
                                          @Validated(Write.class)
                                          RequestTransactionDto transaction) {

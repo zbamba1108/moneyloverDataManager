@@ -6,7 +6,7 @@ import dev.boog.moneyloverdatamanager.dtos.response.models.BaseEntityDto;
 
 public interface CRUDService<I extends BaseRequestDto, O extends BaseEntityDto> {
 
-    String create(Long userId, I req);
+    O create(Long userId, I req);
 
     ResponseDto<O> get(Long userId, I req);
 
