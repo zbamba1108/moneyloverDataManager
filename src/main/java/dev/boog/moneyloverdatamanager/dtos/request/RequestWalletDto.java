@@ -1,5 +1,6 @@
 package dev.boog.moneyloverdatamanager.dtos.request;
 
+import dev.boog.moneyloverdatamanager.exceptions.validations.Update;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,6 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class RequestWalletDto extends BaseRequestDto {
 
-    @NotBlank(groups = Write.class)
+    @NotBlank(groups = {Write.class, Update.class})
     private final String name;
 }

@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Update;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import dev.boog.moneyloverdatamanager.services.TransactionService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
@@ -63,7 +64,7 @@ public class TransactionController {
     public ResponseEntity<ResponseTransactionDto> update(@RequestHeader(Constants.Headers.USER_ID) Long userId,
                                                          @PathVariable Long id,
                                                          @RequestBody
-                                                         @Validated(Write.class)
+                                                         @Validated(Update.class)
                                                          RequestTransactionDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)

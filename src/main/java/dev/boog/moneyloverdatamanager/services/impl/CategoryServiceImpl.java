@@ -30,8 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseCategoryDto create(Long userId, RequestCategoryDto req) {
         Category category = CategoryMapper.INSTANCE
-                .toEntity(req);
-        category.setUserId(userId);
+                .toEntity(req, userId);
 
         return CategoryMapper.INSTANCE
                 .toResponseDto(categoryRepository.save(category));
@@ -55,11 +54,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseCategoryDto update(Long userId, Long id, RequestCategoryDto req) {
-        categoryRepository.findByIdAndUserId(id, userId)
+        Category category = categoryRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(ResourceNotFoundException::new);
+
+        CategoryMapper.INSTANCE.updateEntity(req, category);
+
         return CategoryMapper.INSTANCE
-                .toResponseDto(categoryRepository.save(CategoryMapper.INSTANCE
-                        .toEntity(req)));
+                .toResponseDto(categoryRepository.save(category));
     }
 
     @Override

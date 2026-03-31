@@ -13,11 +13,18 @@ public interface TransactionMapper extends BaseEntityMapper<Transaction, Request
 
     @Override
     @Mappings({
-            @Mapping(target="category.id", source = "categoryId"),
-            @Mapping(target="wallet.id", source = "walletId"),
-            @Mapping(target="event.id", source = "eventId")
+            @Mapping(target="category.id", source = "dto.categoryId"),
+            @Mapping(target="wallet.id", source = "dto.walletId"),
+            @Mapping(target="event.id", source = "dto.eventId")
     })
-    Transaction toEntity(RequestTransactionDto dto);
+    Transaction toEntity(RequestTransactionDto dto, Long userId);
+
+    @Mappings({
+            @Mapping(target="category.id", source = "dto.categoryId"),
+            @Mapping(target="wallet.id", source = "dto.walletId"),
+            @Mapping(target="event.id", source = "dto.eventId")
+    })
+    Transaction updateEntity(RequestTransactionDto dto, @MappingTarget Transaction transaction);
 
     @Override
     @Mappings({

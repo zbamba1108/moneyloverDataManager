@@ -12,8 +12,23 @@ public interface CategoryMapper extends BaseEntityMapper<Category, RequestCatego
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
     @Override
-    @Mapping( target="parent.id", source="parentId")
-    Category toEntity(RequestCategoryDto dto);
+    @Mapping( target="parent.id", source="dto.parentId")
+    Category toEntity(RequestCategoryDto dto, Long userId);
+
+    @Mappings({
+            @Mapping( target="parent.id", source="dto.parentId")
+    })
+    void updateEntity(RequestCategoryDto dto, @MappingTarget Category category);
+
+    @Mappings({
+            @Mapping(target = "id", source = "c.id"),
+            @Mapping(target = "userId", source = "c.userId"),
+            @Mapping(target = "createdAt", source = "c.createdAt"),
+            @Mapping( target="parent.id", source="dto.parentId"),
+            @Mapping( target="name", source="dto.name"),
+            @Mapping( target="type", source="dto.type")
+    })
+    Category toUpdatedEntity(Category c, RequestCategoryDto dto);
 
     @Override
     @Mappings({

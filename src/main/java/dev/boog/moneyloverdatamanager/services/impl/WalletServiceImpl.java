@@ -32,8 +32,8 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public ResponseWalletDto create(Long userId, RequestWalletDto req) {
         Wallet wallet = WalletMapper.INSTANCE
-                .toEntity(req);
-        wallet.setUserId(userId);
+                .toEntity(req, userId);
+
         return WalletMapper.INSTANCE
                 .toResponseDto(walletRepository.save(wallet));
     }
@@ -60,12 +60,12 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public ResponseWalletDto update(Long userId, Long id, RequestWalletDto req) {
-        walletRepository.findByIdAndUserId(id, userId)
+        Wallet wallet = walletRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(ResourceNotFoundException::new);
+
         return WalletMapper.INSTANCE
-                .toResponseDto(walletRepository
-                        .save(WalletMapper.INSTANCE
-                                .toEntity(req)));
+                .toResponseDto(WalletMapper.INSTANCE
+                        .updateEntity(req, wallet));
     }
 
     @Override

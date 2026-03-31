@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Update;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import dev.boog.moneyloverdatamanager.services.WalletService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
@@ -92,7 +93,7 @@ public class WalletController {
                                                         name = "request",
                                                         description = "the input request")
                                                     @RequestBody
-                                                    @Validated(Write.class)
+                                                    @Validated(Update.class)
                                                     RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)

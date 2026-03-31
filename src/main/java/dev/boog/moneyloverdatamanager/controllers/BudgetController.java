@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestBudgetDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseBudgetDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Read;
+import dev.boog.moneyloverdatamanager.exceptions.validations.Update;
 import dev.boog.moneyloverdatamanager.exceptions.validations.Write;
 import dev.boog.moneyloverdatamanager.services.BudgetService;
 import dev.boog.moneyloverdatamanager.utils.Constants;
@@ -50,7 +51,7 @@ public class BudgetController {
     public ResponseEntity<ResponseBudgetDto> update(@RequestHeader(Constants.Headers.USER_ID) Long userId,
                                                     @PathVariable Long id,
                                                     @RequestBody
-                                                    @Validated(Write.class)
+                                                    @Validated(Update.class)
                                                     RequestBudgetDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)

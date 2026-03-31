@@ -13,6 +13,8 @@ public interface WalletMapper extends BaseEntityMapper<Wallet, RequestWalletDto,
 
     WalletMapper INSTANCE = Mappers.getMapper(WalletMapper.class);
 
+    Wallet updateEntity(RequestWalletDto dto, @MappingTarget Wallet entity);
+
     @Override
     @Mappings({
             @Mapping(target = "transactions", ignore = true),

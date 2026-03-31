@@ -13,13 +13,8 @@ import java.util.List;
 public interface BaseEntityMapper<E extends BaseEntity,
                             I extends BaseRequestDto,
                             O extends BaseEntityDto> {
-    @Mappings(
-            {
-                    @Mapping(target = "id", source = "ids", qualifiedByName = "getFirstId")
-            }
-    )
-    E toEntity(I req);
 
+    E toEntity(I req, Long userId);
 
     @Mappings(
             {
@@ -38,13 +33,5 @@ public interface BaseEntityMapper<E extends BaseEntity,
     @Named("timestampToLong")
     default Long timestampToLong(Timestamp timestamp) {
         return timestamp.getTime();
-    }
-
-    @Named("getFirstId")
-    default Long getFirstId(List<Long> ids) {
-        if (ids != null && !ids.isEmpty()) {
-            return ids.get(0);
-        }
-        return null;
     }
 }

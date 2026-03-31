@@ -33,11 +33,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public ResponseTransactionDto create(Long userId, RequestTransactionDto req) {
         Transaction transaction = TransactionMapper.INSTANCE
-                .toEntity(req);
-        transaction.setUserId(userId);
+                .toEntity(req, userId);
 
         return TransactionMapper.INSTANCE
-                .toResponseDto(transactionRepository.save(transaction));
+                .toResponseDtoDetails(transactionRepository.save(transaction));
     }
 
     public ResponseDto<ResponseTransactionDto> get(Long userId, RequestTransactionDto req) {
@@ -64,12 +63,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ResponseTransactionDto update(Long userId, Long id, RequestTransactionDto req) {
-        transactionRepository.findByIdAndUserId(id, userId)
+        Transaction transaction = transactionRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(ResourceNotFoundException::new);
+
         return TransactionMapper.INSTANCE
-                .toResponseDto(transactionRepository
-                        .save(TransactionMapper.INSTANCE
-                                .toEntity(req)));
+                .toResponseDtoDetails(transactionRepository.save(
+                        TransactionMapper.INSTANCE.updateEntity(req, transaction)
+                        )
+                );
     }
 
     @Override
