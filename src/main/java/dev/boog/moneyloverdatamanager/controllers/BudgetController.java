@@ -46,14 +46,15 @@ public class BudgetController {
     }
 
     @Operation(description = "update an existing budget")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ResponseBudgetDto> update(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                                    @PathVariable Long id,
                                                     @RequestBody
                                                     @Validated(Write.class)
                                                     RequestBudgetDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.update(userId, dto));
+                .body(service.update(userId, id, dto));
     }
 
     @Operation(description = "delete an existing budget")

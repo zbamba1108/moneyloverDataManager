@@ -4,6 +4,7 @@ import dev.boog.moneyloverdatamanager.dtos.request.RequestCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseCategoryDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.entities.Category;
+import dev.boog.moneyloverdatamanager.exceptions.customexceptions.ResourceNotFoundException;
 import dev.boog.moneyloverdatamanager.repositories.CategoryRepository;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
@@ -53,7 +54,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto update(Long userId, RequestCategoryDto req) {
+    public ResponseCategoryDto update(Long userId, Long id, RequestCategoryDto req) {
+        categoryRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(ResourceNotFoundException::new);
         return CategoryMapper.INSTANCE
                 .toResponseDto(categoryRepository.save(CategoryMapper.INSTANCE
                         .toEntity(req)));

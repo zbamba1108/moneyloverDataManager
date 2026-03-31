@@ -10,7 +10,7 @@ public interface CRUDService<I extends BaseRequestDto, O extends BaseEntityDto> 
 
     ResponseDto<O> get(Long userId, I req);
 
-    O update(Long userId, I req);
+    O update(Long userId, Long id, I req);
 
     void delete(Long id, Long userId);
 }

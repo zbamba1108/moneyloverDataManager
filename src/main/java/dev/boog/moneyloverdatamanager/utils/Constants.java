@@ -36,8 +36,8 @@ public final class Constants {
     }
 
     public static class Messages {
-
         public static final String UTILITY_CLASS = "Utility class!";
+        public static final String RESOURCE_NOT_FOUND = "Resource not found!";
     }
 
     public static class Fields {

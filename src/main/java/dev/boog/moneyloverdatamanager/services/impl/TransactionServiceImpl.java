@@ -5,6 +5,7 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseTransactionDto;
 import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
 import dev.boog.moneyloverdatamanager.entities.Transaction;
+import dev.boog.moneyloverdatamanager.exceptions.customexceptions.ResourceNotFoundException;
 import dev.boog.moneyloverdatamanager.repositories.TransactionRepository;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
@@ -62,7 +63,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public ResponseTransactionDto update(Long userId, RequestTransactionDto req) {
+    public ResponseTransactionDto update(Long userId, Long id, RequestTransactionDto req) {
+        transactionRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(ResourceNotFoundException::new);
         return TransactionMapper.INSTANCE
                 .toResponseDto(transactionRepository
                         .save(TransactionMapper.INSTANCE

@@ -59,14 +59,15 @@ public class TransactionController {
     }
 
     @Operation(description = "update an existing transaction")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ResponseTransactionDto> update(@RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                                         @PathVariable Long id,
                                                          @RequestBody
                                                          @Validated(Write.class)
                                                          RequestTransactionDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.update(userId, dto));
+                .body(service.update(userId, id, dto));
     }
 
     @Operation(description = "delete an existing transaction")

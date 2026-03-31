@@ -5,6 +5,7 @@ import dev.boog.moneyloverdatamanager.dtos.response.ResponseDto;
 import dev.boog.moneyloverdatamanager.dtos.response.ResponseWalletDto;
 import dev.boog.moneyloverdatamanager.dtos.response.models.PageDto;
 import dev.boog.moneyloverdatamanager.entities.Wallet;
+import dev.boog.moneyloverdatamanager.exceptions.customexceptions.ResourceNotFoundException;
 import dev.boog.moneyloverdatamanager.repositories.WalletRepository;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryRequest;
 import dev.boog.moneyloverdatamanager.repositories.utils.models.QueryResult;
@@ -58,7 +59,9 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public ResponseWalletDto update(Long userId, RequestWalletDto req) {
+    public ResponseWalletDto update(Long userId, Long id, RequestWalletDto req) {
+        walletRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(ResourceNotFoundException::new);
         return WalletMapper.INSTANCE
                 .toResponseDto(walletRepository
                         .save(WalletMapper.INSTANCE

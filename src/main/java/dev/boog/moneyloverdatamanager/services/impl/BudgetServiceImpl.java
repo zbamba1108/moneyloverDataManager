@@ -27,7 +27,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public ResponseBudgetDto update(Long userId, RequestBudgetDto req) {
+    public ResponseBudgetDto update(Long userId, Long id, RequestBudgetDto req) {
         return null;
     }
 

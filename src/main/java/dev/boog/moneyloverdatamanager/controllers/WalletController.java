@@ -81,12 +81,13 @@ public class WalletController {
     }
 
     @Operation(description = "update an existing wallet")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ResponseWalletDto> update(@Parameter(
                                                         name = Constants.Headers.USER_ID,
                                                         description = "the userid of the calling customer",
                                                         required = true)
                                                     @RequestHeader(Constants.Headers.USER_ID) Long userId,
+                                                    @PathVariable Long id,
                                                     @Parameter(
                                                         name = "request",
                                                         description = "the input request")
@@ -95,7 +96,7 @@ public class WalletController {
                                                     RequestWalletDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.update(userId, req));
+                .body(service.update(userId, id, req));
     }
 
     @Operation(description = "delete an existing wallet")
