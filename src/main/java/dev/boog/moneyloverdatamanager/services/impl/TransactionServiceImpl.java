@@ -36,7 +36,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .toEntity(req, userId);
 
         return TransactionMapper.INSTANCE
-                .toResponseDtoDetails(transactionRepository.save(transaction));
+                .toResponseDto(transactionRepository.save(transaction));
     }
 
     public ResponseDto<ResponseTransactionDto> get(Long userId, RequestTransactionDto req) {
@@ -67,7 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(ResourceNotFoundException::new);
 
         return TransactionMapper.INSTANCE
-                .toResponseDtoDetails(transactionRepository.save(
+                .toResponseDto(transactionRepository.save(
                         TransactionMapper.INSTANCE.updateEntity(req, transaction)
                         )
                 );
